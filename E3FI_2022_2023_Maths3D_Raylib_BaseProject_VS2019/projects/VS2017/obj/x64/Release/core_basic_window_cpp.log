@@ -1,0 +1,11 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: Le répertoire intermédiaire (C:\Users\pellegra\Downloads\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\projects\VS2017\\obj\x64\Release\) contient des fichiers partagés provenant d'un autre projet (raylib.vcxproj). Cela peut entraîner un comportement de nettoyage et de régénération incorrect.
+  core_basic_window.cpp
+c:\users\pellegra\downloads\e3fi_2022_2023_maths3d_raylib_baseproject_vs2019\examples\core\core_basic_window.cpp(50): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+c:\users\pellegra\downloads\e3fi_2022_2023_maths3d_raylib_baseproject_vs2019\examples\core\core_basic_window.cpp(50): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+c:\users\pellegra\downloads\e3fi_2022_2023_maths3d_raylib_baseproject_vs2019\examples\core\core_basic_window.cpp(51): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+c:\users\pellegra\downloads\e3fi_2022_2023_maths3d_raylib_baseproject_vs2019\examples\core\core_basic_window.cpp(51): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: Le répertoire intermédiaire (C:\Users\pellegra\Downloads\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\projects\VS2017\\obj\x64\Release\) contient des fichiers partagés provenant d'un autre projet (core_basic_window_cpp.vcxproj). Cela peut entraîner un comportement de nettoyage et de régénération incorrect.
+  Génération de code en cours
+  All 478 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Fin de la génération du code
+  core_basic_window_cpp.vcxproj -> C:\Users\pellegra\Downloads\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\projects\VS2017\\bin\x64\Release\core_basic_window_cpp.exe

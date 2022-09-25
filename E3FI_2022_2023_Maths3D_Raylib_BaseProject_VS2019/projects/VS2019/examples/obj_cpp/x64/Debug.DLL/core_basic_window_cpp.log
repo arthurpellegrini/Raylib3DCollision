@@ -1,0 +1,9 @@
+﻿  core_basic_window.cpp
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1489,75): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1491,74): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1493,67): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1537,31): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1537,24): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1538,32): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\examples\core\core_basic_window.cpp(1538,25): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+  core_basic_window_cpp.vcxproj -> D:\Unity3D Projects\ESIEE\E3FIC_2020_2021_Mathématiques3D_Raylib_RATTRAPAGE\projects\VS2019\bin\x64\Debug.DLL\core_basic_window_cpp.exe
