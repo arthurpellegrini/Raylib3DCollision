@@ -1,1 +1,8 @@
-﻿
+﻿  core_basic_window.cpp
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(95,50): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(131,31): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(131,24): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(132,32): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(132,25): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(78): error C4716: 'CartesianToCylindric' : doit retourner une valeur
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(110): error C4716: 'CartesianToSpherical' : doit retourner une valeur

@@ -1,0 +1,11 @@
+﻿  core_basic_window.cpp
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(95,50): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(131,31): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(131,24): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(132,32): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(132,25): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+  Génération de code en cours
+  Previous IPDB not found, fall back to full compilation.
+  All 478 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Fin de la génération du code
+  core_basic_window_cpp.vcxproj -> C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\projects\VS2019\bin\x64\Release\core_basic_window_cpp.exe

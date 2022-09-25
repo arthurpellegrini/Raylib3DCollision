@@ -109,7 +109,10 @@ Spherical CartesianToSpherical(Vector3 cart)
 	} 
 }
 
-Vector3 SphericalToCartesian(Spherical sph){	return { sph.rho * sinf(sph.phi) * sinf(sph.theta), sph.rho * cosf(sph.phi), sph.rho * sinf(sph.phi) * cosf(sph.theta)};}
+Vector3 SphericalToCartesian(Spherical sph)
+{
+	return { sph.rho * sinf(sph.phi) * sinf(sph.theta), sph.rho * cosf(sph.phi), sph.rho * sinf(sph.phi) * cosf(sph.theta)};
+}
 
 //tester double passage dans les fonctions et vérifier l'égalité
 
@@ -118,6 +121,7 @@ Vector3 SphericalToCartesian(Spherical sph){	return { sph.rho * sinf(sph.phi) 
 * *******************************************************************************************/
 void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 {
+	
 }
 
 int main(int argc, char* argv[])
