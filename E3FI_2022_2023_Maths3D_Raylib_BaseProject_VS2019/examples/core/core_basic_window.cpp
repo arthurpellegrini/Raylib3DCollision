@@ -121,7 +121,43 @@ Vector3 SphericalToCartesian(Spherical sph)
 * *******************************************************************************************/
 void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 {
+	static Spherical sphPos = { 10, PI / 4.f, PI / 4.f }; // la position de départ de la caméra est rho=10m, theta=45° et phi=45°
+	Spherical sphSpeed = { 2.0f, 0.04f, 0.04f }; // 2m/incrément de molette et 0.04 radians/pixel
+
+	float rhoMin = 4; // 4m
+	float rhoMax = 40; // 40m
+
+	Vector2 mousePos;
+	static Vector2 prevMousePos = { 0, 0 };
+	Vector2 mouseVect;
+	Spherical sphDelta;
+
+	mousePos = GetMousePosition(); // on récupère la position de la souris
+	//printf("Position de la souris -> x:%f & y:%f \n", mousePos.x, mousePos.y);
+
+	mouseVect = Vector2Subtract(mousePos, prevMousePos); // on récupère le vecteur de déplacement de la souris
+	//printf("Delta déplacement souris -> x:%f & y:%f \n", mouseVect.x, mouseVect.y);
+
+	prevMousePos = mousePos; // maj de la position précédente de la souris
 	
+
+	float mouseWheelRotation = GetMouseWheelMove(); // le mouvement de la molette de la souris
+
+	if (mouseWheelRotation != 0.0f)
+	{
+		sphPos.rho *= mouseWheelRotation * sphSpeed.rho;
+		if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
+		if (sphPos.rho > rhoMax) sphPos.rho = rhoMax;
+	}
+		
+	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
+	{
+		if (mouseVect.x != 0.0f) sphPos.theta *= mouseVect.x * sphSpeed.theta;
+		if (mouseVect.y != 0.0f) sphPos.phi *= mouseVect.y * sphSpeed.phi;
+		printf("Clic Droit Souris avec Vx -> %f & Vy -> %f\n", mouseVect.x, mouseVect.y);
+	}
+
+	printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
 }
 
 int main(int argc, char* argv[])
