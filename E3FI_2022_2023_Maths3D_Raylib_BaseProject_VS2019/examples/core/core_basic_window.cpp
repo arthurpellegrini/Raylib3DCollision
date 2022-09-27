@@ -85,7 +85,7 @@ Vector3 CylindricToCartesien(Cylindrical cyl)
 struct Spherical {
 	float rho;
 	float theta; 
-	float y;
+	//float y;
 	float phi;
 };
 
@@ -145,19 +145,40 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 
 	if (mouseWheelRotation != 0.0f)
 	{
-		sphPos.rho *= mouseWheelRotation * sphSpeed.rho;
+		sphPos.rho += mouseWheelRotation * sphSpeed.rho;
 		if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
 		if (sphPos.rho > rhoMax) sphPos.rho = rhoMax;
 	}
 		
 	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 	{
-		if (mouseVect.x != 0.0f) sphPos.theta *= mouseVect.x * sphSpeed.theta;
-		if (mouseVect.y != 0.0f) sphPos.phi *= mouseVect.y * sphSpeed.phi;
-		printf("Clic Droit Souris avec Vx -> %f & Vy -> %f\n", mouseVect.x, mouseVect.y);
-	}
+		if (mouseVect.x != 0.0f) sphPos.theta += mouseVect.x  * DEG2RAD * sphSpeed.theta;
+		if (mouseVect.y != 0.0f)
+		{
 
-	printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
+			sphPos.phi += Clamp(mouseVect.y * sphSpeed.phi, -179.0f, 179.0f) * DEG2RAD;
+		
+			// TENTATIVE LIMITATION EN 0° ET 180° pour éviter l'effet GIMBAL LOCK (je crois)
+			//float degre1 = 1.0f * DEG2RAD;
+			//if (sphPos.phi < 0)
+			//{
+			//	if (sphPos.phi < -PI) sphPos.phi = degre1 - PI;
+			//	if (sphPos.phi > degre1) sphPos.phi = degre1;
+			//}
+			//else if (sphPos.phi > 0)
+			//{
+			//	if (sphPos.phi > PI) sphPos.phi = PI - degre1;
+			//	if (sphPos.phi < degre1) sphPos.phi = degre1;
+			//}
+		}
+		//printf("Clic Droit Souris avec Vx -> %f & Vy -> %f\n", mouseVect.x, mouseVect.y);
+	}
+	
+	// MAJ CAMERA
+	Vector3 cameraPos = SphericalToCartesian(sphPos);
+	camera->position = cameraPos; 
+
+	//printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
 }
 
 int main(int argc, char* argv[])
