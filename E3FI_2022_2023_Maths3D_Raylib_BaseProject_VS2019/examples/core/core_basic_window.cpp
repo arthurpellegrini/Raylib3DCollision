@@ -85,26 +85,25 @@ Vector3 CylindricToCartesien(Cylindrical cyl)
 struct Spherical {
 	float rho;
 	float theta; 
-	//float y;
 	float phi;
 };
 
 Spherical CartesianToSpherical(Vector3 cart)
 {
 	Spherical sph; 
-	sph.rho = sqrtf(pow(cart.x, 2) + pow(cart.y, 2) + pow(cart.z, 2));
+	sph.rho = sqrtf(powf(cart.x, 2) + powf(cart.y, 2) + powf(cart.z, 2));
 
 	if (sph.rho < EPSILON) {
-		sph.theta = 0;
-		sph.phi = 0;
+		sph.theta = 0.0f;
+		sph.phi = 0.0f;
 	}
 	else {
 		sph.phi = acosf(cart.y / sph.rho);
-		if ((sph.phi < EPSILON) || (sph.phi > PI - EPSILON)) sph.theta = 0;
+		if ((sph.phi < EPSILON) || (sph.phi > PI - EPSILON)) sph.theta = 0.0f;
 		else {
 			sph.theta = asinf(cart.x / (sph.rho * sinf(sph.phi)));
 			
-			if (cart.z < 0) sph.theta = PI - sph.theta;
+			if (cart.z < 0.0f) sph.theta = PI - sph.theta;
 		}
 	} 
 }
@@ -127,20 +126,21 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	float rhoMin = 4; // 4m
 	float rhoMax = 40; // 40m
 
+	float phiMin = 1.0f * DEG2RAD; 
+	float phiMax = 179.0f * DEG2RAD; 
+
 	Vector2 mousePos;
 	static Vector2 prevMousePos = { 0, 0 };
 	Vector2 mouseVect;
 	Spherical sphDelta;
 
 	mousePos = GetMousePosition(); // on récupère la position de la souris
-	//printf("Position de la souris -> x:%f & y:%f \n", mousePos.x, mousePos.y);
-
 	mouseVect = Vector2Subtract(mousePos, prevMousePos); // on récupère le vecteur de déplacement de la souris
-	//printf("Delta déplacement souris -> x:%f & y:%f \n", mouseVect.x, mouseVect.y);
-
 	prevMousePos = mousePos; // maj de la position précédente de la souris
-	
 
+	//printf("Position de la souris -> x:%f & y:%f \n", mousePos.x, mousePos.y);
+	//printf("Delta déplacement souris -> x:%f & y:%f \n", mouseVect.x, mouseVect.y);
+	
 	float mouseWheelRotation = GetMouseWheelMove(); // le mouvement de la molette de la souris
 
 	if (mouseWheelRotation != 0.0f)
@@ -149,36 +149,19 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 		if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
 		if (sphPos.rho > rhoMax) sphPos.rho = rhoMax;
 	}
-		
+
 	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 	{
-		if (mouseVect.x != 0.0f) sphPos.theta += mouseVect.x  * DEG2RAD * sphSpeed.theta;
-		if (mouseVect.y != 0.0f)
-		{
-
-			sphPos.phi += Clamp(mouseVect.y * sphSpeed.phi, -179.0f, 179.0f) * DEG2RAD;
-		
-			// TENTATIVE LIMITATION EN 0° ET 180° pour éviter l'effet GIMBAL LOCK (je crois)
-			//float degre1 = 1.0f * DEG2RAD;
-			//if (sphPos.phi < 0)
-			//{
-			//	if (sphPos.phi < -PI) sphPos.phi = degre1 - PI;
-			//	if (sphPos.phi > degre1) sphPos.phi = degre1;
-			//}
-			//else if (sphPos.phi > 0)
-			//{
-			//	if (sphPos.phi > PI) sphPos.phi = PI - degre1;
-			//	if (sphPos.phi < degre1) sphPos.phi = degre1;
-			//}
-		}
-		//printf("Clic Droit Souris avec Vx -> %f & Vy -> %f\n", mouseVect.x, mouseVect.y);
+		sphPos.theta += mouseVect.x  * DEG2RAD * sphSpeed.theta;
+		sphPos.phi += Clamp(mouseVect.y, -179.0f, 179.0f) * DEG2RAD * sphSpeed.phi;
+		if (sphPos.phi < phiMin) sphPos.phi = phiMin;
+		if (sphPos.phi > phiMax) sphPos.phi = phiMax;
 	}
 	
-	// MAJ CAMERA
-	Vector3 cameraPos = SphericalToCartesian(sphPos);
-	camera->position = cameraPos; 
+	// MAJ CAMERAS
+	camera->position = SphericalToCartesian(sphPos);
 
-	//printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
+	printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
 }
 
 int main(int argc, char* argv[])
@@ -227,8 +210,25 @@ int main(int argc, char* argv[])
 
 		BeginMode3D(camera);
 		{
-			//
-				
+			
+			// à ajouter l'annexe 1 en .h
+			/*Quaternion qRot1 = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4);
+			Quaternion qRot2 = QuaternionFromAxisAngle({ 0,1,0 }, PI / 2);*/
+
+			//Quaternion qOrient = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4); // permet de changer l'orientation de l'objet
+			//Quaternion qOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
+			
+			//Quaternion qRot = QuaternionFromAxisAngle(Vector3Normalize({ 1, 6, -3 }), time); // Obligé de normaliser le Vecteur car il n'est pas unitaire
+
+			//Quaternion qInitOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
+		
+			//Quaternion qOrient = QuaternionMultiply(qRot, qInitOrient); 		
+
+			//ReferenceFrame refRndBox = { { 0,0,0}, QuaternionIdentity() };
+			//RoundedBox rndBox = { refRndBox, {2,4, 6}, 1};
+			//MyDrawRoundedBox(rndBox, 8);
+
+
 			//3D REFERENTIAL
 			DrawGrid(20, 1.0f);        // Draw a grid
 			DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
