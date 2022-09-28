@@ -1,11 +1,11 @@
 ﻿  core_basic_window.cpp
 C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(135,12): warning C4101: 'sphDelta' : variable locale non référencée
-C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(172,31): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
-C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(172,24): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
-C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(173,32): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
-C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(173,25): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(170,31): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(170,24): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(171,32): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\arthu\Documents\Projects\ESIEE-IT\MATHS_3D_ESIEE-IT\E3FI_2022_2023_Maths3D_Raylib_BaseProject_VS2019\examples\core\core_basic_window.cpp(171,25): warning C4244: 'initialisation' : conversion de 'float' en 'const int', perte possible de données
   Génération de code en cours
-  2 of 484 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  1 of 484 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     3 functions had inline decision re-evaluated but remain unchanged
   Fin de la génération du code

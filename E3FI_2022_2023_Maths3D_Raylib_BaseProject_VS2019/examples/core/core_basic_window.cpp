@@ -38,8 +38,8 @@ template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
 }
 
-/*******************************************************************************************
-* Conversion coordonnées
+/********************************************************************************************
+* Conversion coordonnées																	*
 * *******************************************************************************************/
 struct Polar {
 	float rho;
@@ -113,10 +113,45 @@ Vector3 SphericalToCartesian(Spherical sph)
 	return { sph.rho * sinf(sph.phi) * sinf(sph.theta), sph.rho * cosf(sph.phi), sph.rho * sinf(sph.phi) * cosf(sph.theta)};
 }
 
-//tester double passage dans les fonctions et vérifier l'égalité
+/********************************************************************************************
+* ReferenceFrame																			*
+* *******************************************************************************************/
 
-/*******************************************************************************************
-* Gestion Caméra
+struct ReferenceFrame {
+	Vector3 origin;
+	Vector3 i, j, k;
+	Quaternion q;
+	ReferenceFrame()
+	{
+		origin = { 0,0,0 };
+		i = { 1,0,0 };
+		j = { 0,1,0 };
+		k = { 0,0,1 };
+		q = QuaternionIdentity();
+	}
+	ReferenceFrame(Vector3 origin, Quaternion q)
+	{
+		this->q = q;
+		this->origin = origin;
+		i = Vector3RotateByQuaternion({ 1,0,0 }, q);
+		j = Vector3RotateByQuaternion({ 0,1,0 }, q);
+		k = Vector3RotateByQuaternion({ 0,0,1 }, q);
+	}
+	void Translate(Vector3 vect)
+	{
+		this->origin = Vector3Add(this->origin, vect);
+	}
+	void RotateByQuaternion(Quaternion qRot)
+	{
+		q = QuaternionMultiply(qRot, q);
+		i = Vector3RotateByQuaternion({ 1,0,0 }, q);
+		j = Vector3RotateByQuaternion({ 0,1,0 }, q);
+		k = Vector3RotateByQuaternion({ 0,0,1 }, q);
+	}
+};
+
+/********************************************************************************************
+* Gestion Caméra																			*
 * *******************************************************************************************/
 void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 {
@@ -143,12 +178,9 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	
 	float mouseWheelRotation = GetMouseWheelMove(); // le mouvement de la molette de la souris
 
-	if (mouseWheelRotation != 0.0f)
-	{
-		sphPos.rho += mouseWheelRotation * sphSpeed.rho;
-		if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
-		if (sphPos.rho > rhoMax) sphPos.rho = rhoMax;
-	}
+	sphPos.rho += mouseWheelRotation * sphSpeed.rho;
+	if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
+	if (sphPos.rho > rhoMax) sphPos.rho = rhoMax;
 
 	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 	{
@@ -161,8 +193,9 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	// MAJ CAMERAS
 	camera->position = SphericalToCartesian(sphPos);
 
-	printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
+	//printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -210,14 +243,12 @@ int main(int argc, char* argv[])
 
 		BeginMode3D(camera);
 		{
-			
-			// à ajouter l'annexe 1 en .h
-			/*Quaternion qRot1 = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4);
-			Quaternion qRot2 = QuaternionFromAxisAngle({ 0,1,0 }, PI / 2);*/
+			//Quaternion qRot1 = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4);
+			//Quaternion qRot2 = QuaternionFromAxisAngle({ 0,1,0 }, PI / 2);
 
 			//Quaternion qOrient = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4); // permet de changer l'orientation de l'objet
 			//Quaternion qOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
-			
+			//
 			//Quaternion qRot = QuaternionFromAxisAngle(Vector3Normalize({ 1, 6, -3 }), time); // Obligé de normaliser le Vecteur car il n'est pas unitaire
 
 			//Quaternion qInitOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
@@ -228,6 +259,33 @@ int main(int argc, char* argv[])
 			//RoundedBox rndBox = { refRndBox, {2,4, 6}, 1};
 			//MyDrawRoundedBox(rndBox, 8);
 
+			// LINE (SEGMENT)
+			//Vector3 pt1 = {8,4,8};
+			//Vector3 pt2 = {1,9,0};
+			//DrawSphere(pt1, .1f, PURPLE); // pour afficher un point (optionnel)
+			//DrawSphere(pt2, .1f, DARKBLUE);
+			// 
+			//DrawLine3D(pt1, pt2, DARKGRAY);
+			// FIN LINE
+
+
+			// TRIANGLE
+			/*Vector3 pts[3] = { {8, 4, 8}, { 1,9,0 }, { 4,6,8 } }; // utlisation d'un tableau ou de pts  
+			Vector3 pt1 = {8,4,8};
+			Vector3 pt2 = {1,9,0};
+			Vector3 pt3 = {4,6,8};
+			DrawTriangle3D(pt1, pt2, pt3, DARKBLUE);*/
+			// FIN TRIANGLE
+
+			// PLANE
+			//DrawPlane({0, 0, 0}, {40,40}, PINK);
+			// FIN PLANE
+			
+			// QUAD 
+			
+			// Faire la méthode pour le Quad
+
+			// FIN QUAD
 
 			//3D REFERENTIAL
 			DrawGrid(20, 1.0f);        // Draw a grid
