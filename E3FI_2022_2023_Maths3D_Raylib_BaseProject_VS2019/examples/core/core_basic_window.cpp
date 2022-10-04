@@ -18,7 +18,6 @@
 *   Copyright (c) 2014 Ramon Santamaria (@raysan5)
 *
 ********************************************************************************************/
-
 #include "raylib.h"
 #include <raymath.h>
 #include "rlgl.h"
@@ -26,129 +25,18 @@
 #include <float.h>
 #include <vector>
 
+#include "coordonnees.h"
+#include "reference_frame.h"
+
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
 #else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
 #define GLSL_VERSION            100
 #endif
 
-#define EPSILON 1.e-6f
-
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
 }
-
-/********************************************************************************************
-* Conversion coordonnées																	*
-* *******************************************************************************************/
-struct Polar {
-	float rho;
-	float theta;
-};
-
-Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive = true)
-{
-	Polar polar = { Vector2Length(cart),atan2f(cart.y,cart.x) };
-	if (keepThetaPositive && polar.theta < 0)polar.theta += 2 * PI;
-	return polar;
-}
-
-Vector2 PolarToCartesian(Polar polar)
-{
-	return Vector2Scale({ cosf(polar.theta),sinf(polar.theta) }, polar.rho);
-}
-
-struct Cylindrical {
-	float rho;
-	float theta;
-	float y;
-};
-
-Cylindrical CartesianToCylindric(Vector3 cart)
-{
-	Cylindrical cyl;
-	cyl.y = cart.y;
-	cyl.rho = sqrtf(powf(cart.x, 2) + powf(cart.z, 2));
-
-	if (cyl.rho < EPSILON) cyl.theta = 0;
-	else {
-		cyl.theta = asinf(cart.x / cyl.rho);
-		if (cart.z < 0) cyl.theta = PI - cyl.theta;
-	}
-}
-
-Vector3 CylindricToCartesien(Cylindrical cyl)
-{
-	return { cyl.rho * sinf(cyl.theta), cyl.y, cyl.rho * cosf(cyl.theta) };
-}
-
-struct Spherical {
-	float rho;
-	float theta; 
-	float phi;
-};
-
-Spherical CartesianToSpherical(Vector3 cart)
-{
-	Spherical sph; 
-	sph.rho = sqrtf(powf(cart.x, 2) + powf(cart.y, 2) + powf(cart.z, 2));
-
-	if (sph.rho < EPSILON) {
-		sph.theta = 0.0f;
-		sph.phi = 0.0f;
-	}
-	else {
-		sph.phi = acosf(cart.y / sph.rho);
-		if ((sph.phi < EPSILON) || (sph.phi > PI - EPSILON)) sph.theta = 0.0f;
-		else {
-			sph.theta = asinf(cart.x / (sph.rho * sinf(sph.phi)));
-			
-			if (cart.z < 0.0f) sph.theta = PI - sph.theta;
-		}
-	} 
-}
-
-Vector3 SphericalToCartesian(Spherical sph)
-{
-	return { sph.rho * sinf(sph.phi) * sinf(sph.theta), sph.rho * cosf(sph.phi), sph.rho * sinf(sph.phi) * cosf(sph.theta)};
-}
-
-/********************************************************************************************
-* ReferenceFrame																			*
-* *******************************************************************************************/
-
-struct ReferenceFrame {
-	Vector3 origin;
-	Vector3 i, j, k;
-	Quaternion q;
-	ReferenceFrame()
-	{
-		origin = { 0,0,0 };
-		i = { 1,0,0 };
-		j = { 0,1,0 };
-		k = { 0,0,1 };
-		q = QuaternionIdentity();
-	}
-	ReferenceFrame(Vector3 origin, Quaternion q)
-	{
-		this->q = q;
-		this->origin = origin;
-		i = Vector3RotateByQuaternion({ 1,0,0 }, q);
-		j = Vector3RotateByQuaternion({ 0,1,0 }, q);
-		k = Vector3RotateByQuaternion({ 0,0,1 }, q);
-	}
-	void Translate(Vector3 vect)
-	{
-		this->origin = Vector3Add(this->origin, vect);
-	}
-	void RotateByQuaternion(Quaternion qRot)
-	{
-		q = QuaternionMultiply(qRot, q);
-		i = Vector3RotateByQuaternion({ 1,0,0 }, q);
-		j = Vector3RotateByQuaternion({ 0,1,0 }, q);
-		k = Vector3RotateByQuaternion({ 0,0,1 }, q);
-	}
-};
 
 /********************************************************************************************
 * Gestion Caméra																			*
@@ -171,10 +59,7 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 
 	mousePos = GetMousePosition(); // on récupère la position de la souris
 	mouseVect = Vector2Subtract(mousePos, prevMousePos); // on récupère le vecteur de déplacement de la souris
-	prevMousePos = mousePos; // maj de la position précédente de la souris
-
-	//printf("Position de la souris -> x:%f & y:%f \n", mousePos.x, mousePos.y);
-	//printf("Delta déplacement souris -> x:%f & y:%f \n", mouseVect.x, mouseVect.y);
+	prevMousePos = mousePos; // mise à jour de la position précédente de la souris
 	
 	float mouseWheelRotation = GetMouseWheelMove(); // le mouvement de la molette de la souris
 
@@ -190,9 +75,12 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 		if (sphPos.phi > phiMax) sphPos.phi = phiMax;
 	}
 	
-	// MAJ CAMERAS
+	// Mise à jour de la caméra
 	camera->position = SphericalToCartesian(sphPos);
 
+	// Monitoring
+	//printf("Position de la souris -> x:%f & y:%f \n", mousePos.x, mousePos.y);
+	//printf("Delta déplacement souris -> x:%f & y:%f \n", mouseVect.x, mouseVect.y);
 	//printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
 }
 
@@ -270,11 +158,11 @@ int main(int argc, char* argv[])
 
 
 			// TRIANGLE
-			/*Vector3 pts[3] = { {8, 4, 8}, { 1,9,0 }, { 4,6,8 } }; // utlisation d'un tableau ou de pts  
+			Vector3 pts[3] = { {8, 4, 8}, { 1,9,0 }, { 4,6,8 } }; // utlisation d'un tableau ou de pts  
 			Vector3 pt1 = {8,4,8};
 			Vector3 pt2 = {1,9,0};
 			Vector3 pt3 = {4,6,8};
-			DrawTriangle3D(pt1, pt2, pt3, DARKBLUE);*/
+			DrawTriangle3D(pt1, pt2, pt3, DARKBLUE);
 			// FIN TRIANGLE
 
 			// PLANE
