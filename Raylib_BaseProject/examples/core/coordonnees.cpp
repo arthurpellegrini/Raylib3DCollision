@@ -27,6 +27,7 @@ Cylindrical CartesianToCylindric(Vector3 cart)
 		cyl.theta = asinf(cart.x / cyl.rho);
 		if (cart.z < 0) cyl.theta = PI - cyl.theta;
 	}
+	return cyl;
 }
 
 Vector3 CylindricToCartesien(Cylindrical cyl)
@@ -52,6 +53,7 @@ Spherical CartesianToSpherical(Vector3 cart)
 			if (cart.z < 0.0f) sph.theta = PI - sph.theta;
 		}
 	}
+	return sph;
 }
 
 Vector3 SphericalToCartesian(Spherical sph)
