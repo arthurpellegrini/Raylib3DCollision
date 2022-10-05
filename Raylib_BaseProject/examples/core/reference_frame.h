@@ -2,6 +2,14 @@
 * ReferenceFrame																			
 * ******************************************************************************************/
 
+#include <raymath.h>
+#include <math.h>
+#include <float.h>
+#include <vector>
+
+#ifndef REF_FRAME_STRUCT
+#define REF_FRAME_STRUCT
+
 struct ReferenceFrame {
     Vector3 origin;
     Vector3 i, j, k;
@@ -34,3 +42,5 @@ struct ReferenceFrame {
         k = Vector3RotateByQuaternion({ 0,0,1 }, q);
     }
 };
+
+#endif
