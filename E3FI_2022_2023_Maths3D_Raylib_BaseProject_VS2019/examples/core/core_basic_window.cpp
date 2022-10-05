@@ -27,6 +27,7 @@
 
 #include "coordonnees.h"
 #include "reference_frame.h"
+#include "objets_primitifs.h"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330

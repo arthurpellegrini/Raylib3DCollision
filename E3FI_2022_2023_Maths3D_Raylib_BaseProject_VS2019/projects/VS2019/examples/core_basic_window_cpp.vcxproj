@@ -324,9 +324,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\examples\core\coordonnees.cpp" />
     <ClCompile Include="..\..\..\examples\core\core_basic_window.cpp" />
+    <ClCompile Include="..\..\..\examples\core\objets_primitifs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\examples\core\coordonnees.h" />
+    <ClInclude Include="..\..\..\examples\core\objets_primitifs.h" />
     <ClInclude Include="..\..\..\examples\core\reference_frame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
