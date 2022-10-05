@@ -30,7 +30,7 @@ struct Spherical {
 
 #endif
 
-Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive = true);
+Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive);
 Vector2 PolarToCartesian(Polar polar);
 Cylindrical CartesianToCylindric(Vector3 cart);
 Vector3 CylindricToCartesien(Cylindrical cyl);

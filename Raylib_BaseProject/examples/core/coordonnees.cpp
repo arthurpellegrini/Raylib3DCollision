@@ -4,7 +4,7 @@
 
 #include "coordonnees.h"
 
-Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive)
+Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive = true)
 {
 	Polar polar = { Vector2Length(cart),atan2f(cart.y,cart.x) };
 	if (keepThetaPositive && polar.theta < 0)polar.theta += 2 * PI;

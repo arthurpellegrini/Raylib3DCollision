@@ -62,7 +62,7 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	mouseVect = Vector2Subtract(mousePos, prevMousePos); // on récupère le vecteur de déplacement de la souris
 	prevMousePos = mousePos; // mise à jour de la position précédente de la souris
 	
-	float mouseWheelRotation = GetMouseWheelMove(); // le mouvement de la molette de la souris
+	float mouseWheelRotation = -GetMouseWheelMove(); // le mouvement de la molette de la souris
 
 	sphPos.rho += mouseWheelRotation * sphSpeed.rho;
 	if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
@@ -159,20 +159,21 @@ int main(int argc, char* argv[])
 
 
 			// TRIANGLE
-			Vector3 pts[3] = { {8, 4, 8}, { 1,9,0 }, { 4,6,8 } }; // utlisation d'un tableau ou de pts  
-			Vector3 pt1 = {8,4,8};
-			Vector3 pt2 = {1,9,0};
-			Vector3 pt3 = {4,6,8};
-			DrawTriangle3D(pt1, pt2, pt3, DARKBLUE);
+			//Vector3 pts[3] = { {8, 4, 8}, { 1,9,0 }, { 4,6,8 } }; // utlisation d'un tableau ou de pts  
+			//Vector3 pt1 = {8,4,8};
+			//Vector3 pt2 = {1,9,0};
+			//Vector3 pt3 = {4,6,8};
+			//DrawTriangle3D(pt1, pt2, pt3, DARKBLUE);
 			// FIN TRIANGLE
 
 			// PLANE
 			//DrawPlane({0, 0, 0}, {40,40}, PINK);
 			// FIN PLANE
 			
-			// QUAD 
-			
-			// Faire la méthode pour le Quad
+			// QUAD DISPLAY TEST
+			ReferenceFrame ref = ReferenceFrame({ 0,2,0 },QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
+			Quad quad = { ref,{3,1,5} };
+			MyDrawQuad(quad);
 
 			// FIN QUAD
 
