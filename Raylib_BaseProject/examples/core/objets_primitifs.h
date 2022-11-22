@@ -45,4 +45,5 @@ void MyDrawPolygonQuad(Quad quad, Color color = LIGHTGRAY);
 void MyDrawWireframeQuad(Quad quad, Color color = DARKGRAY);
 void MyDrawQuad(Quad quad, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
-//void MyDrawPlan();
+void MyDrawPlane(Plane plane, Color color = DARKGRAY);
+

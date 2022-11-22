@@ -167,13 +167,13 @@ int main(int argc, char* argv[])
 			// FIN TRIANGLE
 
 			// PLANE
-			//DrawPlane({0, 0, 0}, {40,40}, PINK);
+			// MyDrawPlane(Plane({ 0, 2, 7 }, { 2, 7 }));
 			// FIN PLANE
 			
 			// QUAD DISPLAY TEST
-			ReferenceFrame ref = ReferenceFrame({ 0,2,0 },QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
-			Quad quad = { ref,{3,1,5} };
-			MyDrawQuad(quad);
+			//ReferenceFrame ref = ReferenceFrame({ 0,2,0 },QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 2));
+			//Quad quad = { ref,{3,1,5} };
+			//MyDrawQuad(quad);
 
 			// FIN QUAD
 

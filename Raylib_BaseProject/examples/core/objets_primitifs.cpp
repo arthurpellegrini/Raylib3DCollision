@@ -1,5 +1,6 @@
 #include "objets_primitifs.h"
 #include <rlgl.h>
+#include <iostream>
 
 
 void MyDrawPolygonQuad(Quad quad, Color color)
@@ -67,4 +68,11 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 {
 	if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
 	if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);
+}
+
+void MyDrawPlane(Plane plane, Color color)
+{
+	Vector3 origin = plane.n;
+	Vector2 size = { plane.d, plane.d };
+	DrawPlane(origin, size, color);
 }
