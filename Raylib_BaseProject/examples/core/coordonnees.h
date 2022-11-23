@@ -1,5 +1,5 @@
 /*******************************************************************************************
-* Coordonnées Polaires, Cylindriques et Sphériques
+* Coordonnï¿½es Polaires, Cylindriques et Sphï¿½riques
 * ******************************************************************************************/
 #include <raymath.h>
 #include <math.h>

@@ -1,5 +1,5 @@
 /*******************************************************************************************
-* Fonctions de conversion des différents types de coordonnées				
+* Fonctions de conversion des diffï¿½rents types de coordonnï¿½es				
 * ******************************************************************************************/
 
 #include "coordonnees.h"
