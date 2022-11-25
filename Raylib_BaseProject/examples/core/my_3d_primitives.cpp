@@ -94,7 +94,6 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 
 	float theta = 0;
 	while (theta < 2 * PI){
-		//DrawTriangle3D
 		rlVertex3f(cos(theta), 0, sin(theta));
 		rlVertex3f(0, 0, 0);
 		theta += (2 * PI / nSectors);
@@ -124,7 +123,6 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 		rlVertex3f(cos(theta), 0, sin(theta));
 		
 		// Facultatif (Permet d'afficher les traits qui correspondent aux rayons du disque)
-		//DrawLine3D
 		rlVertex3f(0, 0, 0);
 		rlVertex3f(cos(theta), 0, sin(theta));
 	}
@@ -142,11 +140,133 @@ void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, C
 *							BOX 								  *
 *******************************************************************/
 void MyDrawPolygonBox(Box box, Color color) {
+	int numVertex = 36;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+	rlPushMatrix();
+	rlTranslatef(box.ref.origin.x, box.ref.origin.y, box.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(box.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(box.extents.x, box.extents.y, box.extents.z);
+	rlBegin(RL_TRIANGLES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
 
+	//FRONT  
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(1, -1, -1);
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(1, -1, -1);
+
+	//BACK
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(-1, -1, 1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(-1, 1, -1);
+	
+	//TOP 
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(-1, 1, 1);
+
+	//BOTTOM
+	rlVertex3f(-1, -1, 1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(1, -1, -1);
+	rlVertex3f(1, -1, 1);
+	
+	//LEFT
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(1, -1, -1);
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(1, -1, -1);
+
+	//RIGHT
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(-1, -1, 1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(1, 1, 1);
+	
+	rlEnd();
+	rlPopMatrix();
 }
 
 void MyDrawWireframeBox(Box box, Color color) {
+	int numVertex = 32;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+	rlPushMatrix();
+	rlTranslatef(box.ref.origin.x, box.ref.origin.y, box.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(box.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(box.extents.x, box.extents.y, box.extents.z);
+	rlBegin(RL_LINES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	
+	//FRONT  
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(1, -1, -1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(1, -1, -1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(1, 1, -1);
 
+	//BACK
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(-1, -1, 1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(-1, -1, 1);
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(-1, 1, 1);
+
+	//TOP 
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(-1, 1, -1);
+	rlVertex3f(1, 1, 1);
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(1, 1, -1);
+	rlVertex3f(-1, 1, 1);
+
+	//BOTTOM
+	rlVertex3f(1, -1, -1);
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(-1, -1, 1);
+	rlVertex3f(1, -1, 1);
+	rlVertex3f(-1, -1, -1);
+
+	//LEFT
+	rlVertex3f(-1, -1, -1);
+	rlVertex3f(1, 1, -1);
+
+	//RIGHT
+	rlVertex3f(-1, 1, 1);
+	rlVertex3f(1, -1, 1);
+
+	rlEnd();
+	rlPopMatrix();
 }
 
 void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {

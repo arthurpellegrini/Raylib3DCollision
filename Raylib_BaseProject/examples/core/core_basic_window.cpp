@@ -176,9 +176,18 @@ int main(int argc, char* argv[])
 			//MyDrawQuad(quad);
 
 			// FIN QUAD
-			ReferenceFrame ref = ReferenceFrame({ 0,2,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
-			Disk disk = Disk(ref, 5);
+
+			// DISK
+			ReferenceFrame ref_disk = ReferenceFrame({ 6,2,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 3));
+			Disk disk = { ref_disk, 2.0f };
 			MyDrawDisk(disk, 20);
+			//FIN DISK
+
+			//BOX
+			ReferenceFrame ref_box = ReferenceFrame({ -6,3,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			Box box = { ref_box, {4, 2, 3} };
+			MyDrawBox(box);
+			//FIN BOX
 
 			//3D REFERENTIAL
 			DrawGrid(20, 1.0f);        // Draw a grid

@@ -11,25 +11,15 @@
 struct Quad {
 	ReferenceFrame ref;
 	Vector3 extents;
-	Quad(ReferenceFrame ref, Vector3 extents) {
-		this->ref = ref;
-		this->extents = extents;
-	}
 };
 
 struct Plane {
 	Vector3 n;
 	float d;
-	Plane(Vector3 n, float d) {
-		this->n = n;
-		this->d = d;
-	}
-
 	Plane(Vector3 n, Vector3 pt) {
 		this->n = n;
 		this->d = Vector3DotProduct(n, pt);
 	}
-
 	Plane(Vector3 pt1, Vector3 pt2, Vector3 pt3) {
 		this->n = Vector3CrossProduct(Vector3Subtract(pt2, pt1), Vector3Subtract(pt3, pt2));
 		if (Vector3Length(n) < EPSILON) {
@@ -46,61 +36,34 @@ struct Plane {
 struct Disk {
 	ReferenceFrame ref;
 	float radius;
-	Disk(ReferenceFrame ref, float radius) {
-		this->ref = ref;
-		this->radius = radius;
-	}
 };
 
 struct Box {
 	ReferenceFrame ref;
-	Vector3 extents;	
-	Box(ReferenceFrame ref, Vector3 extents) {
-		this->ref = ref;
-		this->extents = extents;
-	}
+	Vector3 extents;
 };
 
 struct Sphere {
 	ReferenceFrame ref;
 	float radius;
-	Sphere(ReferenceFrame ref, float radius){
-		this->ref = ref;
-		this->radius = radius;
-	}
 };
 
 struct Cylinder {
 	ReferenceFrame ref;
 	float halfHeight;
 	float radius;
-	Cylinder(ReferenceFrame ref, float halfHeight, float radius) {
-		this->ref = ref;
-		this->halfHeight = halfHeight;
-		this->radius = radius;
-	}
 };
 
 struct Capsule {
 	ReferenceFrame ref;
 	float halfHeight;
 	float radius;
-	Capsule(ReferenceFrame ref, float halfHeight, float radius) {
-		this->ref = ref;
-		this->halfHeight = halfHeight;
-		this->radius = radius;
-	}
 };
 
 struct RoundedBox {
 	ReferenceFrame ref;
 	Vector3 extents;
 	float radius;
-	RoundedBox(ReferenceFrame ref, Vector3 extents, float radius) {
-		this->ref = ref;
-		this->extents = extents;
-		this->radius = radius;
-	}
 };
 
 #endif
