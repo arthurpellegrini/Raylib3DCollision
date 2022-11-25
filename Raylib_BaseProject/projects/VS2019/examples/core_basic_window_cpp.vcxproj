@@ -322,13 +322,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\examples\core\coordonnees.cpp" />
+    <ClCompile Include="..\..\..\examples\core\coordinates.cpp" />
     <ClCompile Include="..\..\..\examples\core\core_basic_window.cpp" />
-    <ClCompile Include="..\..\..\examples\core\objets_primitifs.cpp" />
+    <ClCompile Include="..\..\..\examples\core\my_3d_primitives.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\examples\core\coordonnees.h" />
-    <ClInclude Include="..\..\..\examples\core\objets_primitifs.h" />
+    <ClInclude Include="..\..\..\examples\core\coordinates.h" />
+    <ClInclude Include="..\..\..\examples\core\my_3d_primitives.h" />
     <ClInclude Include="..\..\..\examples\core\reference_frame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

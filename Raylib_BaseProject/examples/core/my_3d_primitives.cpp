@@ -1,4 +1,4 @@
-#include "objets_primitifs.h"
+#include "my_3D_primitives.h"
 #include <rlgl.h>
 #include <iostream>
 
@@ -10,20 +10,13 @@ void MyDrawPolygonQuad(Quad quad, Color color)
 {
 	int numVertex = 6;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
-	// BEGINNING OF SPACE TRANSFORMATION INDUCED BY THE LOCAL REFERENCE FRAME
-		// methods should be called in this order: rlTranslatef, rlRotatef & rlScalef
-		// so that transformations occur in the opposite order: scale, then rotation, then translation
 	rlPushMatrix();
-	//TRANSLATION
 	rlTranslatef(quad.ref.origin.x, quad.ref.origin.y, quad.ref.origin.z);
-	//ROTATION
 	Vector3 vect;
 	float angle;
 	QuaternionToAxisAngle(quad.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	//SCALING
 	rlScalef(quad.extents.x, 1, quad.extents.z);
-	// END OF SPACE TRANSFORMATION INDUCED BY THE LOCAL REFERENCE FRAME
 	rlBegin(RL_TRIANGLES);
 	rlColor4ub(color.r, color.g, color.b, color.a);
 	rlVertex3f(1, 0, 1);
@@ -33,8 +26,6 @@ void MyDrawPolygonQuad(Quad quad, Color color)
 	rlVertex3f(-1, 0, -1);
 	rlVertex3f(-1, 0, 1);
 	rlEnd();
-
-	//EVERY rlPushMatrix method call should be followed by a rlPopMatrix method call
 	rlPopMatrix();
 }
 
@@ -91,39 +82,25 @@ void MyDrawPlane(Plane plane, Color color)
 void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 	int numVertex = nSectors;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
-	// BEGINNING OF SPACE TRANSFORMATION INDUCED BY THE LOCAL REFERENCE FRAME
-		// methods should be called in this order: rlTranslatef, rlRotatef & rlScalef
-		// so that transformations occur in the opposite order: scale, then rotation, then translation
 	rlPushMatrix();
-	//TRANSLATION
 	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
-	//ROTATION
 	Vector3 vect;
 	float angle;
 	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	//SCALING
 	rlScalef(disk.radius, 1, disk.radius);
-	// END OF SPACE TRANSFORMATION INDUCED BY THE LOCAL REFERENCE FRAME
 	rlBegin(RL_TRIANGLES);
 	rlColor4ub(color.r, color.g, color.b, color.a);
 
-	angle = 0.0;
-	//rlVertex3f(cos(angle), 0, sin(angle));
-
-	for (int i = 0; i <= nSectors; i++) {
-		rlVertex3f(cos(angle), 0, sin(angle));
+	float theta = 0;
+	while (theta < 2 * PI){
+		//DrawTriangle3D
+		rlVertex3f(cos(theta), 0, sin(theta));
 		rlVertex3f(0, 0, 0);
-		angle = ((2 * PI) / nSectors) * i;
-		rlVertex3f(cos(angle), 0, sin(angle));
-
+		theta += (2 * PI / nSectors);
+		rlVertex3f(cos(theta), 0, sin(theta));
 	}
-
-	//rlVertex3f(cos(angle), 0, sin(angle));
-
 	rlEnd();
-
-	//EVERY rlPushMatrix method call should be followed by a rlPopMatrix method call
 	rlPopMatrix();
 }
 
@@ -140,18 +117,17 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 	rlBegin(RL_LINES);
 	rlColor4ub(color.r, color.g, color.b, color.a);
 
-	angle = 0.0;
-	rlVertex3f(cos(angle), 0, sin(angle));
-
-	for (int i = 0; i <= nSectors; i++) {
-		angle = ((2 * PI) / nSectors) * i;
-		rlVertex3f(cos(angle), 0, sin(angle));
-		rlVertex3f(cos(angle), 0, sin(angle));
-
+	float theta = 0;
+	while (theta < 2 * PI) {
+		rlVertex3f(cos(theta), 0, sin(theta));
+		theta += (2 * PI / nSectors);
+		rlVertex3f(cos(theta), 0, sin(theta));
+		
+		// Facultatif (Permet d'afficher les traits qui correspondent aux rayons du disque)
+		//DrawLine3D
+		rlVertex3f(0, 0, 0);
+		rlVertex3f(cos(theta), 0, sin(theta));
 	}
-
-	rlVertex3f(cos(angle), 0, sin(angle));
-
 	rlEnd();
 	rlPopMatrix();
 }

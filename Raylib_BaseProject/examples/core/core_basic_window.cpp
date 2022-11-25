@@ -25,9 +25,9 @@
 #include <float.h>
 #include <vector>
 
-#include "coordonnees.h"
+#include "coordinates.h"
 #include "reference_frame.h"
-#include "objets_primitifs.h"
+#include "my_3d_primitives.h"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
 			// FIN QUAD
 			ReferenceFrame ref = ReferenceFrame({ 0,2,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
 			Disk disk = Disk(ref, 5);
-			MyDrawDisk(disk, 50);
+			MyDrawDisk(disk, 20);
 
 			//3D REFERENTIAL
 			DrawGrid(20, 1.0f);        // Draw a grid

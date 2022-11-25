@@ -2,7 +2,7 @@
 * Fonctions de conversion des diff�rents types de coordonn�es				
 * ******************************************************************************************/
 
-#include "coordonnees.h"
+#include "coordinates.h"
 
 Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive = true)
 {
