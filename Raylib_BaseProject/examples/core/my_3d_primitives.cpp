@@ -89,17 +89,16 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(disk.radius, 1, disk.radius);
-	rlBegin(RL_TRIANGLES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
 
+	Vector3 pt1, pt2;
 	float theta = 0;
+
 	while (theta < 2 * PI){
-		rlVertex3f(cos(theta), 0, sin(theta));
-		rlVertex3f(0, 0, 0);
+		pt1 = { cos(theta), 0, sin(theta) };
 		theta += (2 * PI / nSectors);
-		rlVertex3f(cos(theta), 0, sin(theta));
+		pt2 = { cos(theta), 0, sin(theta) };
+		DrawTriangle3D(pt1,  { 0 }, pt2, color);
 	}
-	rlEnd();
 	rlPopMatrix();
 }
 
@@ -113,20 +112,17 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(disk.radius, 1, disk.radius);
-	rlBegin(RL_LINES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
 
+	Vector3 pt1, pt2;
 	float theta = 0;
+
 	while (theta < 2 * PI) {
-		rlVertex3f(cos(theta), 0, sin(theta));
+		pt1 = { cos(theta), 0, sin(theta) };
 		theta += (2 * PI / nSectors);
-		rlVertex3f(cos(theta), 0, sin(theta));
-		
-		// Facultatif (Permet d'afficher les traits qui correspondent aux rayons du disque)
-		rlVertex3f(0, 0, 0);
-		rlVertex3f(cos(theta), 0, sin(theta));
+		pt2 = { cos(theta), 0, sin(theta) };
+		DrawLine3D(pt1, pt2, color);
+		DrawLine3D({ 0 }, pt2, color);
 	}
-	rlEnd();
 	rlPopMatrix();
 }
 
@@ -149,63 +145,44 @@ void MyDrawPolygonBox(Box box, Color color) {
 	QuaternionToAxisAngle(box.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(box.extents.x, box.extents.y, box.extents.z);
-	rlBegin(RL_TRIANGLES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
 
+	//{ X -> horizontal; Y -> vertical; Z -> far }
+	Vector3 front_top_left		= { -1,  1,  1 };
+	Vector3 front_top_right		= {  1,  1,  1 };
+	Vector3 front_bottom_left	= { -1, -1,  1 };
+	Vector3 front_bottom_right	= {  1, -1,  1 };
+	Vector3 back_top_left		= { -1,  1, -1 };
+	Vector3 back_top_right		= {  1,  1, -1 };
+	Vector3 back_bottom_left	= { -1, -1, -1 };
+	Vector3 back_bottom_right	= {  1, -1, -1 };
+
+
+	//It is necessary to follow the trigonometric direction to have a good orientation of the triangle.
+	// 
 	//FRONT  
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(1, -1, -1);
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(1, -1, -1);
-
+	DrawTriangle3D(front_bottom_right, front_top_left, front_bottom_left, color);
+	DrawTriangle3D(front_bottom_right, front_top_right, front_top_left, color);
 	//BACK
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(-1, -1, 1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(-1, 1, -1);
-	
+	DrawTriangle3D(back_bottom_left, back_top_left, back_top_right, color);
+	DrawTriangle3D(back_top_right, back_bottom_right, back_bottom_left, color);
 	//TOP 
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(-1, 1, 1);
-
+	DrawTriangle3D(back_top_left, front_top_left, front_top_right, color);
+	DrawTriangle3D(front_top_right, back_top_right, back_top_left, color);
 	//BOTTOM
-	rlVertex3f(-1, -1, 1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(1, -1, -1);
-	rlVertex3f(1, -1, 1);
-	
+	DrawTriangle3D(back_bottom_right, front_bottom_left, back_bottom_left, color);
+	DrawTriangle3D(back_bottom_right, front_bottom_right, front_bottom_left, color);
 	//LEFT
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(1, -1, -1);
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(1, -1, -1);
-
+	DrawTriangle3D(front_bottom_left, back_top_left, back_bottom_left, color);
+	DrawTriangle3D(front_bottom_left, front_top_left, back_top_left, color);
 	//RIGHT
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(-1, -1, 1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(1, 1, 1);
+	DrawTriangle3D(front_top_right, front_bottom_right, back_bottom_right, color);
+	DrawTriangle3D(front_top_right, back_bottom_right, back_top_right, color);
 	
-	rlEnd();
 	rlPopMatrix();
 }
 
 void MyDrawWireframeBox(Box box, Color color) {
-	int numVertex = 32;
+	int numVertex = 36;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(box.ref.origin.x, box.ref.origin.y, box.ref.origin.z);
@@ -214,58 +191,42 @@ void MyDrawWireframeBox(Box box, Color color) {
 	QuaternionToAxisAngle(box.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(box.extents.x, box.extents.y, box.extents.z);
-	rlBegin(RL_LINES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
 	
-	//FRONT  
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(1, -1, -1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(1, -1, -1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(1, 1, -1);
+	//{ X -> horizontal; Y -> vertical; Z -> far }
+	Vector3 front_top_left		= { -1,  1,  1 };
+	Vector3 front_top_right		= {  1,  1,  1 };
+	Vector3 front_bottom_left	= { -1, -1,  1 };
+	Vector3 front_bottom_right	= {  1, -1,  1 };
+	Vector3 back_top_left		= { -1,  1, -1 };
+	Vector3 back_top_right		= {  1,  1, -1 };
+	Vector3 back_bottom_left	= { -1, -1, -1 };
+	Vector3 back_bottom_right	= {  1, -1, -1 };
 
+	//FRONT
+	DrawLine3D(front_top_left, front_top_right, color);
+	DrawLine3D(front_bottom_left, front_bottom_right, color);
+	DrawLine3D(front_top_left, front_bottom_left, color);
+	DrawLine3D(front_top_right, front_bottom_right, color);
+	DrawLine3D(front_bottom_right, front_top_left, color);
 	//BACK
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(-1, -1, 1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(-1, -1, 1);
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(-1, 1, 1);
-
+	DrawLine3D(back_top_left, back_top_right, color);
+	DrawLine3D(back_bottom_left, back_bottom_right, color);
+	DrawLine3D(back_top_left, back_bottom_left, color);
+	DrawLine3D(back_top_right, back_bottom_right, color);
+	DrawLine3D(back_bottom_left, back_top_right, color);
 	//TOP 
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(-1, 1, -1);
-	rlVertex3f(1, 1, 1);
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(1, 1, -1);
-	rlVertex3f(-1, 1, 1);
-
+	DrawLine3D(front_top_left, back_top_left, color);
+	DrawLine3D(front_top_right, back_top_right, color);
+	DrawLine3D(front_top_right, back_top_left, color);
 	//BOTTOM
-	rlVertex3f(1, -1, -1);
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(-1, -1, 1);
-	rlVertex3f(1, -1, 1);
-	rlVertex3f(-1, -1, -1);
-
+	DrawLine3D(front_bottom_left, back_bottom_left, color);
+	DrawLine3D(front_bottom_right, back_bottom_right, color);
+	DrawLine3D(front_bottom_left, back_bottom_right, color);
 	//LEFT
-	rlVertex3f(-1, -1, -1);
-	rlVertex3f(1, 1, -1);
-
+	DrawLine3D(front_bottom_left, back_top_left, color);
 	//RIGHT
-	rlVertex3f(-1, 1, 1);
-	rlVertex3f(1, -1, 1);
+	DrawLine3D(back_bottom_right, front_top_right, color);
 
-	rlEnd();
 	rlPopMatrix();
 }
 

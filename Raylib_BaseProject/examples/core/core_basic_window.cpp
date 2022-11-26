@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 
 			// DISK
 			ReferenceFrame ref_disk = ReferenceFrame({ 6,2,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 3));
-			Disk disk = { ref_disk, 2.0f };
+			Disk disk = { ref_disk, 5.0f };
 			MyDrawDisk(disk, 20);
 			//FIN DISK
 
@@ -190,11 +190,11 @@ int main(int argc, char* argv[])
 			//FIN BOX
 
 			//3D REFERENTIAL
-			DrawGrid(20, 1.0f);        // Draw a grid
-			DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
-			DrawSphere({ 10,0,0 }, .2f, RED);
-			DrawSphere({ 0,10,0 }, .2f, GREEN);
-			DrawSphere({ 0,0,10 }, .2f, BLUE);
+			DrawGrid(30, 1.0f);        // Draw a grid
+			DrawLine3D({ 0 }, { 0,15,0 }, DARKGRAY);
+			DrawSphere({ 15,0,0 }, .2f, RED);
+			DrawSphere({ 0,15,0 }, .2f, GREEN);
+			DrawSphere({ 0,0,15 }, .2f, BLUE);
 		}
 		EndMode3D();
 
