@@ -240,6 +240,47 @@ void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor
 *							SPHERE 								  *
 *******************************************************************/
 void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
+	int numVertex = nMeridians * nParallels;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+	rlPushMatrix();
+	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(sphere.radius, sphere.radius, sphere.radius);
+
+	// Points position for one quad in the sphere
+	// 1-----2
+	// | \   |
+	// |  \  |
+	// |   \ |
+	// 3-----4
+	Vector3 pt1, pt2, pt3, pt4;
+	float delta_parallel = 2 * PI / nParallels;
+	float meridian_delta = PI / nMeridians;
+	float theta = 0, phi = 0; // parallel -> theta && meridian -> phi
+
+	for (int m = 0; m <= nMeridians; ++m)
+	{
+		phi = PI / 2 - m * meridian_delta;
+
+		for (int p = 0; p <= nParallels; ++p)
+		{
+
+			pt1 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
+			phi += meridian_delta;
+			pt2 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
+			theta = p * delta_parallel;
+			pt4 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
+			phi -= meridian_delta;
+			pt3 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
+
+			DrawTriangle3D(pt1, pt4, pt3, color);
+			DrawTriangle3D(pt1, pt2, pt4, color);
+		}
+	}
+	rlPopMatrix();
 
 }
 void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {

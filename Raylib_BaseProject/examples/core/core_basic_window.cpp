@@ -184,13 +184,13 @@ int main(int argc, char* argv[])
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -6,7,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
+			ReferenceFrame ref_box = ReferenceFrame({ -6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
 			Box box = { ref_box, {4, 2, 3} };
 			MyDrawBox(box);
 			//FIN BOX
 
 			// SPHERE
-			ReferenceFrame ref_sphere = ReferenceFrame({ 6,7,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			ReferenceFrame ref_sphere = ReferenceFrame({ 6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
 			Sphere sphere = { ref_sphere, 5.0f };
 			MyDrawSphere(sphere, 20, 20);
 			//FIN SPHERE
