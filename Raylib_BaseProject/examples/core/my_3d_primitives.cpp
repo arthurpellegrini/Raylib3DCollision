@@ -94,9 +94,9 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 	float theta = 0;
 
 	while (theta < 2 * PI){
-		pt1 = { cos(theta), 0, sin(theta) };
+		pt1 = { cosf(theta), 0, sinf(theta) };
 		theta += (2 * PI / nSectors);
-		pt2 = { cos(theta), 0, sin(theta) };
+		pt2 = { cosf(theta), 0, sinf(theta) };
 		DrawTriangle3D(pt1,  { 0 }, pt2, color);
 	}
 	rlPopMatrix();
@@ -117,9 +117,9 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 	float theta = 0;
 
 	while (theta < 2 * PI) {
-		pt1 = { cos(theta), 0, sin(theta) };
+		pt1 = { cosf(theta), 0, sinf(theta) };
 		theta += (2 * PI / nSectors);
-		pt2 = { cos(theta), 0, sin(theta) };
+		pt2 = { cosf(theta), 0, sinf(theta) };
 		DrawLine3D(pt1, pt2, color);
 		DrawLine3D({ 0 }, pt2, color);
 	}
