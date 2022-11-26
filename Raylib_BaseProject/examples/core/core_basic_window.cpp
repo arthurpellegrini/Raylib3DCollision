@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
 	const int screenWidth = 1920 * screenSizeCoef;
 	const int screenHeight = 1080 * screenSizeCoef;
 
-	InitWindow(screenWidth, screenHeight, "ESIEE - E3FI - 2022 - 2023 -Maths 3D");
+	InitWindow(screenWidth, screenHeight, "ESIEE - E3FI - 2022/2023 - Maths 3D - Arthur PELLEGRINI, Clement BRISSARD, Tristan MARTIN");
 
 	SetTargetFPS(60);
 
@@ -178,16 +178,22 @@ int main(int argc, char* argv[])
 			// FIN QUAD
 
 			// DISK
-			ReferenceFrame ref_disk = ReferenceFrame({ 6,2,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 3));
-			Disk disk = { ref_disk, 5.0f };
-			MyDrawDisk(disk, 20);
+			//ReferenceFrame ref_disk = ReferenceFrame({ 6,-7,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 3));
+			//Disk disk = { ref_disk, 5.0f };
+			//MyDrawDisk(disk, 20);
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -6,3,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			ReferenceFrame ref_box = ReferenceFrame({ -6,7,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
 			Box box = { ref_box, {4, 2, 3} };
 			MyDrawBox(box);
 			//FIN BOX
+
+			// SPHERE
+			ReferenceFrame ref_sphere = ReferenceFrame({ 6,7,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			Sphere sphere = { ref_sphere, 5.0f };
+			MyDrawSphere(sphere, 20, 20);
+			//FIN SPHERE
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid
