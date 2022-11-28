@@ -240,7 +240,7 @@ void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor
 *							SPHERE 								  *
 *******************************************************************/
 void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
-	int numVertex = nMeridians * nParallels;
+	int numVertex = nMeridians * nParallels * 4;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);

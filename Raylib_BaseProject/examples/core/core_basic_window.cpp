@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
 			// SPHERE
 			ReferenceFrame ref_sphere = ReferenceFrame({ 6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
 			Sphere sphere = { ref_sphere, 5.0f };
-			MyDrawSphere(sphere, 20, 20);
+			MyDrawSphere(sphere, 40, 40); //TODO: NE PAS DÉPASSER 50 SINON BUG (A REGLER)
 			//FIN SPHERE
 
 			//3D REFERENTIAL
