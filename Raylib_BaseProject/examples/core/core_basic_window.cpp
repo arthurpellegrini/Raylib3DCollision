@@ -178,9 +178,9 @@ int main(int argc, char* argv[])
 			// FIN QUAD
 
 			// DISK
-			//ReferenceFrame ref_disk = ReferenceFrame({ 6,-7,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 3));
-			//Disk disk = { ref_disk, 5.0f };
-			//MyDrawDisk(disk, 20);
+			ReferenceFrame ref_disk = ReferenceFrame({ 5, 2, 8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/3));
+			Disk disk = { ref_disk, 5.0f };
+			MyDrawDisk(disk, 20);
 			//FIN DISK
 
 			//BOX
@@ -194,6 +194,12 @@ int main(int argc, char* argv[])
 			Sphere sphere = { ref_sphere, 5.0f };
 			MyDrawSphere(sphere, 40, 40); //TODO: NE PAS DÉPASSER 50 SINON BUG (A REGLER)
 			//FIN SPHERE
+
+
+			//CYLINER
+			//MyDrawCylinder(1, 2, 8, RED);
+			//MyDrawWireframeCylinder(1, 2, 8);
+			// FIN CYLINDER
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid

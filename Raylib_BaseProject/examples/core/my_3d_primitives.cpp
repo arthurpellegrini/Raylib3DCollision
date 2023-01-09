@@ -80,7 +80,7 @@ void MyDrawPlane(Plane plane, Color color)
 *							DISK								  *
 *******************************************************************/
 void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
-	int numVertex = nSectors;
+	int numVertex = nSectors * 3;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
@@ -90,14 +90,13 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(disk.radius, 1, disk.radius);
 
-	Vector3 pt1, pt2;
-	float theta = 0;
+	Cylindrical v1, v2;
 
-	while (theta < 2 * PI){
-		pt1 = { cosf(theta), 0, sinf(theta) };
-		theta += (2 * PI / nSectors);
-		pt2 = { cosf(theta), 0, sinf(theta) };
-		DrawTriangle3D(pt1,  { 0 }, pt2, color);
+	for (int i = 0; i < nSectors; i++) {
+		// On calcule les coordonnées cylindriques des sommets du triangle
+		v1 = { 1, 2 * PI / nSectors * i, 0 };
+		v2 = { 1, 2 * PI / nSectors * (i+1), 0 };
+		DrawTriangle3D(CylindricToCartesien(v2), { 0 }, CylindricToCartesien(v1), color);
 	}
 	rlPopMatrix();
 }
@@ -113,15 +112,14 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(disk.radius, 1, disk.radius);
 
-	Vector3 pt1, pt2;
-	float theta = 0;
+	Cylindrical v1, v2;
 
-	while (theta < 2 * PI) {
-		pt1 = { cosf(theta), 0, sinf(theta) };
-		theta += (2 * PI / nSectors);
-		pt2 = { cosf(theta), 0, sinf(theta) };
-		DrawLine3D(pt1, pt2, color);
-		DrawLine3D({ 0 }, pt2, color);
+	for (int i = 0; i < nSectors; i++) {
+		// On calcule les coordonnées cylindriques des points des segments
+		v1 = { 1, 2 * PI / nSectors * i, 0 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 0 };
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
+		DrawLine3D({ 0 }, CylindricToCartesien(v2), color);
 	}
 	
 	rlPopMatrix();
@@ -332,3 +330,4 @@ void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygo
 	if (drawPolygon) MyDrawPolygonSphere(sphere, nMeridians, nParallels, polygonColor);
 	if (drawWireframe) MyDrawWireframeSphere(sphere, nMeridians, nParallels, wireframeColor);
 }
+
