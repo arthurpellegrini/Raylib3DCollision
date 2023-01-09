@@ -201,6 +201,12 @@ int main(int argc, char* argv[])
 			MyDrawCylinder(cylinder, 50, true, true, true, DARKGREEN);
 			// FIN CYLINDER
 
+			//CYLINER
+			ReferenceFrame ref_cylinder_portion = ReferenceFrame({ 5, 5, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			Cylinder cylinder_portion = { ref_cylinder_portion, 3.0f, 1.0f };
+			MyDrawCylinderPortion(cylinder_portion, 10, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, PURPLE);
+			// FIN CYLINDER
+
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid
 			DrawLine3D({ 0 }, { 0,15,0 }, DARKGRAY);

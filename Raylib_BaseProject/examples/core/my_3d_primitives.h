@@ -90,7 +90,7 @@ void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon = true, bool drawWiref
 
 
 /******************************************************************
-*							BOX 								  *
+*							Box 								  *
 *******************************************************************/
 void MyDrawPolygonBox(Box box, Color color = LIGHTGRAY);
 void MyDrawWireframeBox(Box box, Color color = DARKGRAY);
@@ -103,6 +103,12 @@ void MyDrawBox(Box box, bool drawPolygon = true, bool drawWireframe = true, Colo
 void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color = LIGHTGRAY);
 void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color = DARKGRAY);
 void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+/******************************************************************
+*					Sphere Optimization Methods					  *
+*******************************************************************/
+void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color = LIGHTGRAY);
+void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color = LIGHTGRAY);
+void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
 
 /******************************************************************
@@ -111,6 +117,12 @@ void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygo
 void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+/******************************************************************
+*					Cylinder Optimization Methods				  *
+*******************************************************************/
+void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color = LIGHTGRAY);
+void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color = LIGHTGRAY);
+void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
 
 /******************************************************************

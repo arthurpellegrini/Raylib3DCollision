@@ -75,11 +75,15 @@ void MyDrawPlane(Plane plane, Color color)
 	DrawPlane(origin, size, color);
 }
 
+// TODO: PLANE à refaire avec 2 DrawTriangles3D()
+// TODO: Ajouter méthode MyDrawInfinitePlane()
+
 
 /******************************************************************
 *							DISK								  *
 *******************************************************************/
-void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
+void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) 
+{
 	int numVertex = nSectors * 3;
 	rlPushMatrix();
 	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
@@ -103,8 +107,9 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 	rlPopMatrix();
 }
 
-void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
-	int numVertex = nSectors;
+void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) 
+{
+	int numVertex = nSectors * 3;
 	rlPushMatrix();
 	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
 	Vector3 vect;
@@ -128,7 +133,8 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 	rlPopMatrix();
 }
 
-void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
+void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
 	if (drawPolygon) MyDrawPolygonDisk(disk, nSectors, polygonColor);
 	if (drawWireframe) MyDrawWireframeDisk(disk, nSectors, wireframeColor);
 }
@@ -137,7 +143,8 @@ void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, C
 /******************************************************************
 *							BOX 								  *
 *******************************************************************/
-void MyDrawPolygonBox(Box box, Color color) {
+void MyDrawPolygonBox(Box box, Color color) 
+{
 	int numVertex = 36;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
@@ -183,7 +190,8 @@ void MyDrawPolygonBox(Box box, Color color) {
 	rlPopMatrix();
 }
 
-void MyDrawWireframeBox(Box box, Color color) {
+void MyDrawWireframeBox(Box box, Color color) 
+{
 	int numVertex = 36;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
@@ -232,15 +240,18 @@ void MyDrawWireframeBox(Box box, Color color) {
 	rlPopMatrix();
 }
 
-void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
+void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
 	if (drawPolygon) MyDrawPolygonBox(box, polygonColor);
 	if (drawWireframe) MyDrawWireframeBox(box, wireframeColor);
 }
 
+
 /******************************************************************
 *							SPHERE 								  *
 *******************************************************************/
-void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
+void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color) 
+{
 	int numVertex = nMeridians * nParallels * 4;
 	rlPushMatrix();
 	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
@@ -282,7 +293,8 @@ void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color co
 	rlPopMatrix();
 }
 
-void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
+void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color) 
+{
 	int numVertex = nMeridians * nParallels * 4;
 	rlPushMatrix();
 	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
@@ -325,17 +337,77 @@ void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color 
 	rlPopMatrix();
 }
 
-void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
+void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
 	if (drawPolygon) MyDrawPolygonSphere(sphere, nMeridians, nParallels, polygonColor);
 	if (drawWireframe) MyDrawWireframeSphere(sphere, nMeridians, nParallels, wireframeColor);
 }
+/******************************************************************
+*					Sphere Optimization Methods					  *
+*******************************************************************/
+void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
+{
+	int numVertex = nMeridians * nParallels * 4;
+	rlPushMatrix();
+	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(sphere.radius, sphere.radius, sphere.radius);
+
+	// Points position for one quad in the sphere
+	// 1-----2
+	// | \   |
+	// |  \  |
+	// |   \ |
+	// 3-----4
+	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
+
+	//	MERIDIAN -> phi € [0°, 180°]
+	//		|
+	//		|
+	// -----|----- PARALLEL -> theta € [0°, 360°]
+	//		|
+	//		|
+
+	for (int m = 0; m < nMeridians; m++)
+	{
+		for (int p = 0; p < nParallels; p++)
+		{
+			pt1 = { 1, 2 * PI / nMeridians * m, PI / nParallels * p };
+			pt2 = { 1, 2 * PI / nMeridians * (m + 1), PI / nParallels * p };
+			pt3 = { 1, 2 * PI / nMeridians * m, PI / nParallels * (p + 1) };
+			pt4 = { 1, 2 * PI / nMeridians * (m + 1), PI / nParallels * (p + 1) };
+
+			if (rlCheckBufferLimit(numVertex)) rlglDraw();
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), color);
+		}
+	}
+	rlPopMatrix();
+}
+
+void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
+{
+
+}
+
+void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
+	if (drawPolygon) MyDrawPolygonSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, polygonColor);
+	if (drawWireframe) MyDrawWireframeSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, wireframeColor);
+}
+
 
 /******************************************************************
 *							CYLINDER							  *
 *******************************************************************/
 void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
 {
-	int numVertex = nSectors * 3 * 2;
+	int numVertex = nSectors * 3;
+	if (drawCaps) numVertex *= 2;
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
 	Vector3 vect;
@@ -367,7 +439,8 @@ void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color
 
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
 {
-	int numVertex = nSectors * 3 * 2;
+	int numVertex = nSectors * 3;
+	if (drawCaps) numVertex *= 2;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
@@ -389,21 +462,109 @@ void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Col
 
 		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
 			DrawLine3D(CylindricToCartesien(v1), { 0, 1, 0 }, color);
-			DrawLine3D(CylindricToCartesien(v2), { 0, 1, 0 }, color);
 			DrawLine3D(CylindricToCartesien(v3), { 0, -1, 0 }, color);
-			DrawLine3D(CylindricToCartesien(v4), { 0, -1, 0 }, color);
 		}
 
 		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
 		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
 		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
-		DrawLine3D(CylindricToCartesien(v2), CylindricToCartesien(v4), color);
 		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
 	}
 	rlPopMatrix();
 }
 
-void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
+void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
 	if (drawPolygon) MyDrawPolygonCylinder(cylinder, nSectors, drawCaps, polygonColor);
 	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
+}
+
+// TODO: Ajouter méthode MyDrawInfiniteCylinder()
+
+/******************************************************************
+*					Cylinder Optimization Methods				  *
+*******************************************************************/
+void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
+{
+	int numVertex = nSectors * 4;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+	rlPushMatrix();
+	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
+
+	Cylindrical v1, v2, v3, v4;
+
+	for (int i = 0; i < nSectors; i++) {
+		v1 = { 1, startTheta + (endTheta - startTheta) / nSectors * i, 1 };
+		v2 = { 1, startTheta + (endTheta - startTheta) / nSectors * (i + 1), 1 };
+		v3 = { 1, startTheta + (endTheta - startTheta) / nSectors * i, -1 };
+		v4 = { 1, startTheta + (endTheta - startTheta) / nSectors * (i + 1), -1 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v4), CylindricToCartesien(v2), color);
+		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
+{
+	int numVertex = nSectors * 4;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+	rlPushMatrix();
+	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
+
+	Cylindrical v1, v2, v3, v4;
+
+	for (int i = 0; i < nSectors; i++) {
+		v1 = { 1, startTheta + (endTheta - startTheta) / nSectors * i, 1 };
+		v2 = { 1, startTheta + (endTheta - startTheta) / nSectors * (i + 1), 1 };
+		v3 = { 1, startTheta + (endTheta - startTheta) / nSectors * i, -1 };
+		v4 = { 1, startTheta + (endTheta - startTheta) / nSectors * (i + 1), -1 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
+		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricToCartesien(v2), CylindricToCartesien(v4), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+{
+	if (drawPolygon) MyDrawPolygonCylinderPortion(cylinder, nSectors, startTheta, endTheta, polygonColor);
+	if (drawWireframe) MyDrawWireframeCylinderPortion(cylinder, nSectors, startTheta, endTheta, wireframeColor);
+}
+
+
+/******************************************************************
+*							CAPSULE 							  *
+*******************************************************************/
+void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
+{
+
+}
+
+void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
+{
+
+}
+
+void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
+	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
+	if (drawWireframe) MyDrawWireframeCapsule(capsule, nSectors, nParallels, wireframeColor);
 }
