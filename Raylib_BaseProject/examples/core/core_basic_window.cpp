@@ -174,32 +174,31 @@ int main(int argc, char* argv[])
 			//ReferenceFrame ref = ReferenceFrame({ 0,2,0 },QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 2));
 			//Quad quad = { ref,{3,1,5} };
 			//MyDrawQuad(quad);
-
 			// FIN QUAD
 
 			// DISK
-			ReferenceFrame ref_disk = ReferenceFrame({ 5, 2, 8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/3));
+			ReferenceFrame ref_disk = ReferenceFrame({ -7, 2, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
 			Disk disk = { ref_disk, 5.0f };
-			MyDrawDisk(disk, 100);
+			MyDrawDisk(disk, 50, true, true, DARKBLUE);
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/4));
+			ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
 			Box box = { ref_box, {4, 2, 3} };
-			MyDrawBox(box);
+			MyDrawBox(box, true, true, RED);
 			//FIN BOX
 
 			// SPHERE
-			ReferenceFrame ref_sphere = ReferenceFrame({ 6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
+			ReferenceFrame ref_sphere = ReferenceFrame({ 7, 6, -7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
 			Sphere sphere = { ref_sphere, 5.0f };
-			MyDrawSphere(sphere, 100, 100);
+			MyDrawSphere(sphere, 50, 50, true, true, SKYBLUE);
 			//FIN SPHERE
 
 
 			//CYLINER
-			ReferenceFrame ref_cylinder = ReferenceFrame({ -5,7,6 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
+			ReferenceFrame ref_cylinder = ReferenceFrame({ -7, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
 			Cylinder cylinder = { ref_cylinder, 5.0f, 2.0f };
-			MyDrawCylinder(cylinder, 100, false);
+			MyDrawCylinder(cylinder, 50, true, true, true, DARKGREEN);
 			// FIN CYLINDER
 
 			//3D REFERENTIAL

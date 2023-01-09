@@ -256,36 +256,34 @@ void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color co
 	// |  \  |
 	// |   \ |
 	// 3-----4
-	Vector3 pt1, pt2, pt3, pt4;
-	float delta_parallel = 2 * PI / nParallels;
-	float meridian_delta = PI / nMeridians;
-	float theta = 0, phi = 0; // parallel -> theta && meridian -> phi
+	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
 
-	for (int m = 0; m <= nMeridians; ++m)
+	//	MERIDIAN -> phi € [0°, 180°]
+	//		|
+	//		|
+	// -----|----- PARALLEL -> theta € [0°, 360°]
+	//		|
+	//		|
+
+	for (int m = 0; m < nMeridians; m++)
 	{
-		phi = PI / 2 - m * meridian_delta;
-
-		for (int p = 0; p <= nParallels; ++p)
+		for (int p = 0; p < nParallels; p++)
 		{
-
-			pt1 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
-			phi += meridian_delta;
-			pt2 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
-			theta = p * delta_parallel;
-			pt4 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
-			phi -= meridian_delta;
-			pt3 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
+			pt1 = { 1, 2 * PI / nMeridians * m, PI / nParallels * p};
+			pt2 = { 1, 2 * PI / nMeridians * (m+1), PI / nParallels * p };
+			pt3 = { 1, 2 * PI / nMeridians * m, PI / nParallels * (p+1) };
+			pt4 = { 1, 2 * PI / nMeridians * (m+1), PI / nParallels * (p+1) };
 
 			if (rlCheckBufferLimit(numVertex)) rlglDraw();
-			DrawTriangle3D(pt1, pt4, pt3, color);
-			DrawTriangle3D(pt1, pt2, pt4, color);
+			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), SphericalToCartesian(pt2), color);
+			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), SphericalToCartesian(pt4), color);
 		}
 	}
 	rlPopMatrix();
 }
 
 void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
-	int numVertex = nMeridians * nParallels;
+	int numVertex = nMeridians * nParallels * 4;
 	rlPushMatrix();
 	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
 	Vector3 vect;
@@ -300,30 +298,28 @@ void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color 
 	// |  \  |
 	// |   \ |
 	// 3-----4
-	Vector3 pt1, pt2, pt3, pt4;
-	float delta_parallel = 2 * PI / nParallels;
-	float meridian_delta = PI / nMeridians;
-	float theta = 0, phi = 0; // parallel -> theta && meridian -> phi
+	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
 
-	for (int m = 0; m <= nMeridians; ++m)
+	//	MERIDIAN -> phi € [0°, 180°]
+	//		|
+	//		|
+	// -----|----- PARALLEL -> theta € [0°, 360°]
+	//		|
+	//		|
+
+	for (int m = 0; m < nMeridians; m++)
 	{
-		phi = PI / 2 - m * meridian_delta;
-
-		for (int p = 0; p <= nParallels; ++p)
+		for (int p = 0; p < nParallels; p++)
 		{
-			pt1 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
-			phi += meridian_delta;
-			pt2 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
-			theta = p * delta_parallel;
-			pt4 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
-			phi -= meridian_delta;
-			pt3 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
+			pt1 = { 1, 2 * PI / nMeridians * m, PI / nParallels * p };
+			pt2 = { 1, 2 * PI / nMeridians * (m + 1), PI / nParallels * p };
+			pt3 = { 1, 2 * PI / nMeridians * m, PI / nParallels * (p + 1) };
+			pt4 = { 1, 2 * PI / nMeridians * (m + 1), PI / nParallels * (p + 1) };
 
 			if (rlCheckBufferLimit(numVertex)) rlglDraw();
-			DrawLine3D(pt1, pt2, color);
-			DrawLine3D(pt1, pt3, color);
-			DrawLine3D(pt3, pt4, color);
-			DrawLine3D(pt1, pt4, color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), color);
 		}
 	}
 	rlPopMatrix();
