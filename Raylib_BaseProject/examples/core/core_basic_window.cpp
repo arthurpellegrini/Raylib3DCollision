@@ -194,18 +194,23 @@ int main(int argc, char* argv[])
 			MyDrawSphere(sphere, 50, 50, true, true, SKYBLUE);
 			//FIN SPHERE
 
+			//SPHERE PORTION
+			ReferenceFrame ref_sphere_portion = ReferenceFrame({ 5, 7, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			Sphere sphere_portion = { ref_sphere_portion, 1.0f };
+			MyDrawSpherePortion(sphere_portion, 10, 10, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, DARKGREEN);
+			// FIN SPHERE PORTION
 
 			//CYLINER
 			ReferenceFrame ref_cylinder = ReferenceFrame({ -7, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
 			Cylinder cylinder = { ref_cylinder, 5.0f, 2.0f };
-			MyDrawCylinder(cylinder, 50, true, true, true, DARKGREEN);
+			MyDrawCylinder(cylinder, 50, true, true, true, BLUE);
 			// FIN CYLINDER
 
-			//CYLINER
+			//CYLINER PORTION
 			ReferenceFrame ref_cylinder_portion = ReferenceFrame({ 5, 5, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
-			Cylinder cylinder_portion = { ref_cylinder_portion, 3.0f, 1.0f };
-			MyDrawCylinderPortion(cylinder_portion, 10, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, PURPLE);
-			// FIN CYLINDER
+			Cylinder cylinder_portion = { ref_cylinder_portion, 2.0f, 1.0f };
+			MyDrawCylinderPortion(cylinder_portion, 10, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, GREEN);
+			// FIN CYLINDER PORTION
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid

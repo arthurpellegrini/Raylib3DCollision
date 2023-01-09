@@ -375,15 +375,14 @@ void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, f
 	{
 		for (int p = 0; p < nParallels; p++)
 		{
-			pt1 = { 1, 2 * PI / nMeridians * m, PI / nParallels * p };
-			pt2 = { 1, 2 * PI / nMeridians * (m + 1), PI / nParallels * p };
-			pt3 = { 1, 2 * PI / nMeridians * m, PI / nParallels * (p + 1) };
-			pt4 = { 1, 2 * PI / nMeridians * (m + 1), PI / nParallels * (p + 1) };
+			pt1 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * p };
+			pt2 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * p };
+			pt3 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
+			pt4 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
 
 			if (rlCheckBufferLimit(numVertex)) rlglDraw();
-			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), color);
-			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), color);
-			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), color);
+			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), SphericalToCartesian(pt2), color);
+			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), SphericalToCartesian(pt4), color);
 		}
 	}
 	rlPopMatrix();
@@ -391,7 +390,48 @@ void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, f
 
 void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
 {
+	int numVertex = nMeridians * nParallels * 4;
+	rlPushMatrix();
+	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(sphere.radius, sphere.radius, sphere.radius);
 
+	// Points position for one quad in the sphere
+	// 1-----2
+	// | \   |
+	// |  \  |
+	// |   \ |
+	// 3-----4
+	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
+
+	//	MERIDIAN -> phi € [0°, 180°]
+	//		|
+	//		|
+	// -----|----- PARALLEL -> theta € [0°, 360°]
+	//		|
+	//		|
+
+	for (int m = 0; m < nMeridians; m++)
+	{
+		for (int p = 0; p < nParallels; p++)
+		{
+			pt1 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * p };
+			pt2 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * p };
+			pt3 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
+			pt4 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
+
+			if (rlCheckBufferLimit(numVertex)) rlglDraw();
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), color);
+			DrawLine3D(SphericalToCartesian(pt2), SphericalToCartesian(pt4), color);
+			DrawLine3D(SphericalToCartesian(pt3), SphericalToCartesian(pt4), color);
+		}
+	}
+	rlPopMatrix();
 }
 
 void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
