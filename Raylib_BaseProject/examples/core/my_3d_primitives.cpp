@@ -595,12 +595,31 @@ void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, fl
 *******************************************************************/
 void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
 {
+	Cylinder capsule_cylinder = { capsule.ref, capsule.halfHeight, capsule.radius };
+	MyDrawPolygonCylinder(capsule_cylinder, nSectors, false, color);
 
+	Sphere capsule_sphere_top = { capsule.ref, capsule.radius };
+	Sphere capsule_sphere_bottom = { capsule.ref, capsule.radius };
+	capsule_sphere_top.ref.origin.y += capsule.halfHeight;
+	capsule_sphere_bottom.ref.origin.y -= capsule.halfHeight;
+
+	MyDrawPolygonSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
 }
 
 void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
 {
+	Cylinder capsule_cylinder = { capsule.ref, capsule.halfHeight, capsule.radius };
+	MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
 
+	Sphere capsule_sphere_top = { capsule.ref, capsule.radius };
+	Sphere capsule_sphere_bottom = { capsule.ref, capsule.radius };
+	capsule_sphere_top.ref.origin.y += capsule.halfHeight;
+
+	capsule_sphere_bottom.ref.origin.y -= capsule.halfHeight;	
+
+	MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
 }
 
 void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 

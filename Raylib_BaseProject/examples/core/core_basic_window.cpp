@@ -211,6 +211,12 @@ int main(int argc, char* argv[])
 			Cylinder cylinder_portion = { ref_cylinder_portion, 2.0f, 1.0f };
 			MyDrawCylinderPortion(cylinder_portion, 10, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, GREEN);
 			// FIN CYLINDER PORTION
+			
+			//CAPSULE
+			ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			Capsule capsule = { ref_capsule, 3.0f, 2.0f };
+			MyDrawCapsule(capsule, 10, 10, true, true, ORANGE);
+			// FIN CAPSULE
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid
