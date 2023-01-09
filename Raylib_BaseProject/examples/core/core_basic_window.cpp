@@ -180,11 +180,11 @@ int main(int argc, char* argv[])
 			// DISK
 			ReferenceFrame ref_disk = ReferenceFrame({ 5, 2, 8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/3));
 			Disk disk = { ref_disk, 5.0f };
-			MyDrawDisk(disk, 20);
+			MyDrawDisk(disk, 100);
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 4));
+			ReferenceFrame ref_box = ReferenceFrame({ -6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/4));
 			Box box = { ref_box, {4, 2, 3} };
 			MyDrawBox(box);
 			//FIN BOX
@@ -192,13 +192,14 @@ int main(int argc, char* argv[])
 			// SPHERE
 			ReferenceFrame ref_sphere = ReferenceFrame({ 6,7,-5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
 			Sphere sphere = { ref_sphere, 5.0f };
-			MyDrawSphere(sphere, 40, 40); //TODO: NE PAS DÉPASSER 50 SINON BUG (A REGLER)
+			MyDrawSphere(sphere, 100, 100);
 			//FIN SPHERE
 
 
 			//CYLINER
-			//MyDrawCylinder(1, 2, 8, RED);
-			//MyDrawWireframeCylinder(1, 2, 8);
+			ReferenceFrame ref_cylinder = ReferenceFrame({ -5,7,6 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
+			Cylinder cylinder = { ref_cylinder, 5.0f, 2.0f };
+			MyDrawCylinder(cylinder, 100, false);
 			// FIN CYLINDER
 
 			//3D REFERENTIAL

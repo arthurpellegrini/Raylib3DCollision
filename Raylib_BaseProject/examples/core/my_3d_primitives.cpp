@@ -81,7 +81,6 @@ void MyDrawPlane(Plane plane, Color color)
 *******************************************************************/
 void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 	int numVertex = nSectors * 3;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
 	Vector3 vect;
@@ -96,6 +95,9 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 		// On calcule les coordonnées cylindriques des sommets du triangle
 		v1 = { 1, 2 * PI / nSectors * i, 0 };
 		v2 = { 1, 2 * PI / nSectors * (i+1), 0 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
 		DrawTriangle3D(CylindricToCartesien(v2), { 0 }, CylindricToCartesien(v1), color);
 	}
 	rlPopMatrix();
@@ -103,7 +105,6 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) {
 
 void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 	int numVertex = nSectors;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
 	Vector3 vect;
@@ -118,10 +119,12 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) {
 		// On calcule les coordonnées cylindriques des points des segments
 		v1 = { 1, 2 * PI / nSectors * i, 0 };
 		v2 = { 1, 2 * PI / nSectors * (i + 1), 0 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
 		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
 		DrawLine3D({ 0 }, CylindricToCartesien(v2), color);
 	}
-	
 	rlPopMatrix();
 }
 
@@ -239,7 +242,6 @@ void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor
 *******************************************************************/
 void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
 	int numVertex = nMeridians * nParallels * 4;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
 	Vector3 vect;
@@ -274,16 +276,16 @@ void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color co
 			phi -= meridian_delta;
 			pt3 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
 
+			if (rlCheckBufferLimit(numVertex)) rlglDraw();
 			DrawTriangle3D(pt1, pt4, pt3, color);
 			DrawTriangle3D(pt1, pt2, pt4, color);
 		}
 	}
 	rlPopMatrix();
-
 }
+
 void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color) {
 	int numVertex = nMeridians * nParallels;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
 	Vector3 vect;
@@ -309,7 +311,6 @@ void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color 
 
 		for (int p = 0; p <= nParallels; ++p)
 		{
-			
 			pt1 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
 			phi += meridian_delta;
 			pt2 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
@@ -318,6 +319,7 @@ void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color 
 			phi -= meridian_delta;
 			pt3 = { cosf(theta) * cosf(phi), sinf(phi) , sinf(theta) * cosf(phi) };
 
+			if (rlCheckBufferLimit(numVertex)) rlglDraw();
 			DrawLine3D(pt1, pt2, color);
 			DrawLine3D(pt1, pt3, color);
 			DrawLine3D(pt3, pt4, color);
@@ -326,8 +328,86 @@ void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color 
 	}
 	rlPopMatrix();
 }
+
 void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
 	if (drawPolygon) MyDrawPolygonSphere(sphere, nMeridians, nParallels, polygonColor);
 	if (drawWireframe) MyDrawWireframeSphere(sphere, nMeridians, nParallels, wireframeColor);
 }
 
+/******************************************************************
+*							CYLINDER							  *
+*******************************************************************/
+void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
+{
+	int numVertex = nSectors * 3 * 2;
+	rlPushMatrix();
+	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
+
+	Cylindrical v1, v2, v3, v4;
+
+	for (int i = 0; i < nSectors; i++) {
+		v1 = { 1, 2 * PI / nSectors * i, 1 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 1 };
+		v3 = { 1, 2 * PI / nSectors * i, -1 };
+		v4 = { 1, 2 * PI / nSectors * (i + 1), -1 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
+			DrawTriangle3D(CylindricToCartesien(v2), { 0, 1, 0 }, CylindricToCartesien(v1), color);
+			DrawTriangle3D({ 0, -1, 0 }, CylindricToCartesien(v4), CylindricToCartesien(v3), color);
+		}
+
+		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v4), CylindricToCartesien(v2), color);
+		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
+{
+	int numVertex = nSectors * 3 * 2;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+	rlPushMatrix();
+	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
+
+	Cylindrical v1, v2, v3, v4;
+
+	for (int i = 0; i < nSectors; i++) {
+		v1 = { 1, 2 * PI / nSectors * i, 1 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 1 };
+		v3 = { 1, 2 * PI / nSectors * i, -1 };
+		v4 = { 1, 2 * PI / nSectors * (i + 1), -1 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
+			DrawLine3D(CylindricToCartesien(v1), { 0, 1, 0 }, color);
+			DrawLine3D(CylindricToCartesien(v2), { 0, 1, 0 }, color);
+			DrawLine3D(CylindricToCartesien(v3), { 0, -1, 0 }, color);
+			DrawLine3D(CylindricToCartesien(v4), { 0, -1, 0 }, color);
+		}
+
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
+		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
+		DrawLine3D(CylindricToCartesien(v2), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
+	if (drawPolygon) MyDrawPolygonCylinder(cylinder, nSectors, drawCaps, polygonColor);
+	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
+}
