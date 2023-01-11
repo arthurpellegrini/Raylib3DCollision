@@ -80,67 +80,6 @@ void MyDrawPlane(Plane plane, Color color)
 
 
 /******************************************************************
-*							DISK								  *
-*******************************************************************/
-void MyDrawPolygonDisk(Disk disk, int nSectors, Color color) 
-{
-	int numVertex = nSectors * 3;
-	rlPushMatrix();
-	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	rlScalef(disk.radius, 1, disk.radius);
-
-	Cylindrical v1, v2;
-
-	for (int i = 0; i < nSectors; i++) {
-		// On calcule les coordonnées cylindriques des sommets du triangle
-		v1 = { 1, 2 * PI / nSectors * i, 0 };
-		v2 = { 1, 2 * PI / nSectors * (i+1), 0 };
-
-		if (rlCheckBufferLimit(numVertex)) rlglDraw();
-
-		DrawTriangle3D(CylindricToCartesien(v2), { 0 }, CylindricToCartesien(v1), color);
-	}
-	rlPopMatrix();
-}
-
-void MyDrawWireframeDisk(Disk disk, int nSectors, Color color) 
-{
-	int numVertex = nSectors * 3;
-	rlPushMatrix();
-	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	rlScalef(disk.radius, 1, disk.radius);
-
-	Cylindrical v1, v2;
-
-	for (int i = 0; i < nSectors; i++) {
-		// On calcule les coordonnées cylindriques des points des segments
-		v1 = { 1, 2 * PI / nSectors * i, 0 };
-		v2 = { 1, 2 * PI / nSectors * (i + 1), 0 };
-
-		if (rlCheckBufferLimit(numVertex)) rlglDraw();
-
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
-		DrawLine3D({ 0 }, CylindricToCartesien(v2), color);
-	}
-	rlPopMatrix();
-}
-
-void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
-{
-	if (drawPolygon) MyDrawPolygonDisk(disk, nSectors, polygonColor);
-	if (drawWireframe) MyDrawWireframeDisk(disk, nSectors, wireframeColor);
-}
-
-
-/******************************************************************
 *							BOX 								  *
 *******************************************************************/
 void MyDrawPolygonBox(Box box, Color color) 
@@ -155,17 +94,7 @@ void MyDrawPolygonBox(Box box, Color color)
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(box.extents.x, box.extents.y, box.extents.z);
 
-	////{ X -> horizontal; Y -> vertical; Z -> far }
-	//Vector3 front_top_left		= { -1,  1,  1 };
-	//Vector3 front_top_right		= {  1,  1,  1 };
-	//Vector3 front_bottom_left	= { -1, -1,  1 };
-	//Vector3 front_bottom_right	= {  1, -1,  1 };
-	//Vector3 back_top_left		= { -1,  1, -1 };
-	//Vector3 back_top_right		= {  1,  1, -1 };
-	//Vector3 back_bottom_left	= { -1, -1, -1 };
-	//Vector3 back_bottom_right	= {  1, -1, -1 };
-
-	Quaternion q = QuaternionFromAxisAngle({ 0,0,0 }, 0);
+	Quaternion q = QuaternionIdentity();
 	Quad top = { ReferenceFrame({ 0,1,0 }, q), {1,0,1} };
 	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI);
 	Quad bottom = { ReferenceFrame({ 0,-1,0 }, q), {1,0,1} };
@@ -186,33 +115,13 @@ void MyDrawPolygonBox(Box box, Color color)
 	MyDrawPolygonQuad(back, color);
 	MyDrawPolygonQuad(left, color);
 	MyDrawPolygonQuad(right, color);
-	////It is necessary to follow the trigonometric direction to have a good orientation of the triangle.
-	//// 
-	////FRONT  
-	//DrawTriangle3D(front_bottom_right, front_top_left, front_bottom_left, color);
-	//DrawTriangle3D(front_bottom_right, front_top_right, front_top_left, color);
-	////BACK
-	//DrawTriangle3D(back_bottom_left, back_top_left, back_top_right, color);
-	//DrawTriangle3D(back_top_right, back_bottom_right, back_bottom_left, color);
-	////TOP 
-	//DrawTriangle3D(back_top_left, front_top_left, front_top_right, color);
-	//DrawTriangle3D(front_top_right, back_top_right, back_top_left, color);
-	////BOTTOM
-	//DrawTriangle3D(back_bottom_right, front_bottom_left, back_bottom_left, color);
-	//DrawTriangle3D(back_bottom_right, front_bottom_right, front_bottom_left, color);
-	////LEFT
-	//DrawTriangle3D(front_bottom_left, back_top_left, back_bottom_left, color);
-	//DrawTriangle3D(front_bottom_left, front_top_left, back_top_left, color);
-	////RIGHT
-	//DrawTriangle3D(front_top_right, front_bottom_right, back_bottom_right, color);
-	//DrawTriangle3D(front_top_right, back_bottom_right, back_top_right, color);
 	
 	rlPopMatrix();
 }
 
 void MyDrawWireframeBox(Box box, Color color) 
 {
-	int numVertex = 36;
+	int numVertex = 60;
 	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(box.ref.origin.x, box.ref.origin.y, box.ref.origin.z);
@@ -221,43 +130,8 @@ void MyDrawWireframeBox(Box box, Color color)
 	QuaternionToAxisAngle(box.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(box.extents.x, box.extents.y, box.extents.z);
-	//
-	////{ X -> horizontal; Y -> vertical; Z -> far }
-	//Vector3 front_top_left		= { -1,  1,  1 };
-	//Vector3 front_top_right		= {  1,  1,  1 };
-	//Vector3 front_bottom_left	= { -1, -1,  1 };
-	//Vector3 front_bottom_right	= {  1, -1,  1 };
-	//Vector3 back_top_left		= { -1,  1, -1 };
-	//Vector3 back_top_right		= {  1,  1, -1 };
-	//Vector3 back_bottom_left	= { -1, -1, -1 };
-	//Vector3 back_bottom_right	= {  1, -1, -1 };
 
-	////FRONT
-	//DrawLine3D(front_top_left, front_top_right, color);
-	//DrawLine3D(front_bottom_left, front_bottom_right, color);
-	//DrawLine3D(front_top_left, front_bottom_left, color);
-	//DrawLine3D(front_top_right, front_bottom_right, color);
-	//DrawLine3D(front_bottom_right, front_top_left, color);
-	////BACK
-	//DrawLine3D(back_top_left, back_top_right, color);
-	//DrawLine3D(back_bottom_left, back_bottom_right, color);
-	//DrawLine3D(back_top_left, back_bottom_left, color);
-	//DrawLine3D(back_top_right, back_bottom_right, color);
-	//DrawLine3D(back_bottom_left, back_top_right, color);
-	////TOP 
-	//DrawLine3D(front_top_left, back_top_left, color);
-	//DrawLine3D(front_top_right, back_top_right, color);
-	//DrawLine3D(front_top_right, back_top_left, color);
-	////BOTTOM
-	//DrawLine3D(front_bottom_left, back_bottom_left, color);
-	//DrawLine3D(front_bottom_right, back_bottom_right, color);
-	//DrawLine3D(front_bottom_left, back_bottom_right, color);
-	////LEFT
-	//DrawLine3D(front_bottom_left, back_top_left, color);
-	////RIGHT
-	//DrawLine3D(back_bottom_right, front_top_right, color);
-
-	Quaternion q = QuaternionFromAxisAngle({ 0,0,0 }, 0);
+	Quaternion q = QuaternionIdentity();
 	Quad top = { ReferenceFrame({ 0,1,0 }, q), {1,0,1} };
 	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI);
 	Quad bottom = { ReferenceFrame({ 0,-1,0 }, q), {1,0,1} };
@@ -286,6 +160,67 @@ void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor
 {
 	if (drawPolygon) MyDrawPolygonBox(box, polygonColor);
 	if (drawWireframe) MyDrawWireframeBox(box, wireframeColor);
+}
+
+
+/******************************************************************
+*							DISK								  *
+*******************************************************************/
+void MyDrawPolygonDisk(Disk disk, int nSectors, Color color)
+{
+	int numVertex = nSectors * 3;
+	rlPushMatrix();
+	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(disk.radius, 1, disk.radius);
+
+	Cylindrical v1, v2;
+
+	for (int i = 0; i < nSectors; i++) {
+		// On calcule les coordonnées cylindriques des sommets du triangle
+		v1 = { 1, 2 * PI / nSectors * i, 0 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 0 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		DrawTriangle3D(CylindricToCartesien(v2), { 0 }, CylindricToCartesien(v1), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawWireframeDisk(Disk disk, int nSectors, Color color)
+{
+	int numVertex = nSectors * 3;
+	rlPushMatrix();
+	rlTranslatef(disk.ref.origin.x, disk.ref.origin.y, disk.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(disk.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(disk.radius, 1, disk.radius);
+
+	Cylindrical v1, v2;
+
+	for (int i = 0; i < nSectors; i++) {
+		// On calcule les coordonnées cylindriques des points des segments
+		v1 = { 1, 2 * PI / nSectors * i, 0 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 0 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
+		DrawLine3D({ 0 }, CylindricToCartesien(v2), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+{
+	if (drawPolygon) MyDrawPolygonDisk(disk, nSectors, polygonColor);
+	if (drawWireframe) MyDrawWireframeDisk(disk, nSectors, wireframeColor);
 }
 
 
@@ -384,6 +319,138 @@ void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygo
 	if (drawPolygon) MyDrawPolygonSphere(sphere, nMeridians, nParallels, polygonColor);
 	if (drawWireframe) MyDrawWireframeSphere(sphere, nMeridians, nParallels, wireframeColor);
 }
+
+
+
+/******************************************************************
+*							CYLINDER							  *
+*******************************************************************/
+void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
+{
+	int numVertex = nSectors * 3;
+	if (drawCaps) numVertex *= 2;
+	rlPushMatrix();
+	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
+
+	Cylindrical v1, v2, v3, v4;
+
+	for (int i = 0; i < nSectors; i++) {
+		v1 = { 1, 2 * PI / nSectors * i, 1 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 1 };
+		v3 = { 1, 2 * PI / nSectors * i, -1 };
+		v4 = { 1, 2 * PI / nSectors * (i + 1), -1 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
+			DrawTriangle3D(CylindricToCartesien(v2), { 0, 1, 0 }, CylindricToCartesien(v1), color);
+			DrawTriangle3D({ 0, -1, 0 }, CylindricToCartesien(v4), CylindricToCartesien(v3), color);
+		}
+
+		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v4), CylindricToCartesien(v2), color);
+		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
+{
+	int numVertex = nSectors * 3;
+	if (drawCaps) numVertex *= 2;
+	rlPushMatrix();
+	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
+
+	Cylindrical v1, v2, v3, v4;
+
+	for (int i = 0; i < nSectors; i++) {
+		v1 = { 1, 2 * PI / nSectors * i, 1 };
+		v2 = { 1, 2 * PI / nSectors * (i + 1), 1 };
+		v3 = { 1, 2 * PI / nSectors * i, -1 };
+		v4 = { 1, 2 * PI / nSectors * (i + 1), -1 };
+
+		if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
+			DrawLine3D(CylindricToCartesien(v1), { 0, 1, 0 }, color);
+			DrawLine3D(CylindricToCartesien(v3), { 0, -1, 0 }, color);
+		}
+
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
+		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
+		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
+	}
+	rlPopMatrix();
+}
+
+void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
+	if (drawPolygon) MyDrawPolygonCylinder(cylinder, nSectors, drawCaps, polygonColor);
+	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
+}
+
+// TODO: Ajouter méthode MyDrawInfiniteCylinder()
+
+
+/******************************************************************
+*							CAPSULE 							  *
+*******************************************************************/
+void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
+{
+	rlPushMatrix();
+	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+
+	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionIdentity()), capsule.halfHeight, capsule.radius };
+	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
+	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
+
+	MyDrawPolygonSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawPolygonCylinder(capsule_cylinder, nSectors, false, color);
+	MyDrawPolygonSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	rlPopMatrix();
+}
+
+void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
+{
+	rlPushMatrix();
+	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+
+	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionIdentity()), capsule.halfHeight, capsule.radius };
+	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius};
+	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
+
+	MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
+	MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	
+	rlPopMatrix();
+}
+
+void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
+	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
+	if (drawWireframe) MyDrawWireframeCapsule(capsule, nSectors, nParallels, wireframeColor);
+}
+
+
 /******************************************************************
 *					Sphere Optimization Methods					  *
 *******************************************************************/
@@ -476,91 +543,11 @@ void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels,
 	rlPopMatrix();
 }
 
-void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, polygonColor);
 	if (drawWireframe) MyDrawWireframeSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, wireframeColor);
 }
-
-
-/******************************************************************
-*							CYLINDER							  *
-*******************************************************************/
-void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
-{
-	int numVertex = nSectors * 3;
-	if (drawCaps) numVertex *= 2;
-	rlPushMatrix();
-	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
-
-	Cylindrical v1, v2, v3, v4;
-
-	for (int i = 0; i < nSectors; i++) {
-		v1 = { 1, 2 * PI / nSectors * i, 1 };
-		v2 = { 1, 2 * PI / nSectors * (i + 1), 1 };
-		v3 = { 1, 2 * PI / nSectors * i, -1 };
-		v4 = { 1, 2 * PI / nSectors * (i + 1), -1 };
-
-		if (rlCheckBufferLimit(numVertex)) rlglDraw();
-
-		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
-			DrawTriangle3D(CylindricToCartesien(v2), { 0, 1, 0 }, CylindricToCartesien(v1), color);
-			DrawTriangle3D({ 0, -1, 0 }, CylindricToCartesien(v4), CylindricToCartesien(v3), color);
-		}
-
-		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v4), CylindricToCartesien(v2), color);
-		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v3), CylindricToCartesien(v4), color);
-	}
-	rlPopMatrix();
-}
-
-void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
-{
-	int numVertex = nSectors * 3;
-	if (drawCaps) numVertex *= 2;
-	rlPushMatrix();
-	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
-
-	Cylindrical v1, v2, v3, v4;
-
-	for (int i = 0; i < nSectors; i++) {
-		v1 = { 1, 2 * PI / nSectors * i, 1 };
-		v2 = { 1, 2 * PI / nSectors * (i + 1), 1 };
-		v3 = { 1, 2 * PI / nSectors * i, -1 };
-		v4 = { 1, 2 * PI / nSectors * (i + 1), -1 };
-
-		if (rlCheckBufferLimit(numVertex)) rlglDraw();
-
-		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
-			DrawLine3D(CylindricToCartesien(v1), { 0, 1, 0 }, color);
-			DrawLine3D(CylindricToCartesien(v3), { 0, -1, 0 }, color);
-		}
-
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
-		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
-	}
-	rlPopMatrix();
-}
-
-void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
-{
-	if (drawPolygon) MyDrawPolygonCylinder(cylinder, nSectors, drawCaps, polygonColor);
-	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
-}
-
-// TODO: Ajouter méthode MyDrawInfiniteCylinder()
 
 /******************************************************************
 *					Cylinder Optimization Methods				  *
@@ -628,81 +615,36 @@ void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, fl
 	if (drawWireframe) MyDrawWireframeCylinderPortion(cylinder, nSectors, startTheta, endTheta, wireframeColor);
 }
 
-
-/******************************************************************
-*							CAPSULE 							  *
-*******************************************************************/
-void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
-{
-	rlPushMatrix();
-	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-
-	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.halfHeight, capsule.radius };
-	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
-	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
-
-	MyDrawPolygonSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	MyDrawPolygonCylinder(capsule_cylinder, nSectors, false, color);
-	MyDrawPolygonSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	rlPopMatrix();
-}
-
-void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
-{
-	rlPushMatrix();
-	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-
-	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.halfHeight, capsule.radius };
-	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius};
-	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
-
-	MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
-	MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	
-	rlPopMatrix();
-}
-
-void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
-{
-	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
-	if (drawWireframe) MyDrawWireframeCapsule(capsule, nSectors, nParallels, wireframeColor);
-}
-
 /******************************************************************
 *						ROUNDED BOX 							  *
 *******************************************************************/
 void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 {
+	rlPushMatrix();
+	rlTranslatef(roundedBox.ref.origin.x, roundedBox.ref.origin.y, roundedBox.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(roundedBox.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+
+
+
+	rlPopMatrix();
 
 }
 
 void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 {
-	//rlPushMatrix();
-	//rlTranslatef(roundedBox.ref.origin.x, roundedBox.ref.origin.y, roundedBox.ref.origin.z);
-	//Vector3 vect;
-	//float angle;
-	//QuaternionToAxisAngle(roundedBox.ref.q, &vect, &angle);
-	//rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlPushMatrix();
+	rlTranslatef(roundedBox.ref.origin.x, roundedBox.ref.origin.y, roundedBox.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(roundedBox.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 
-	//Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.halfHeight, capsule.radius };
-	//Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
-	//Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
+	
 
-	//MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	//MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
-	//MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-
-	//rlPopMatrix();
+	rlPopMatrix();
 }
 
 void MyDrawRoundedBox(RoundedBox roundedBox, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)

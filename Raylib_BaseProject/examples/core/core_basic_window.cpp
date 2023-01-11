@@ -56,7 +56,7 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	Vector2 mousePos;
 	static Vector2 prevMousePos = { 0, 0 };
 	Vector2 mouseVect;
-	Spherical sphDelta;
+	//Spherical sphDelta;
 
 	mousePos = GetMousePosition(); // on récupère la position de la souris
 	mouseVect = Vector2Subtract(mousePos, prevMousePos); // on récupère le vecteur de déplacement de la souris
@@ -166,9 +166,9 @@ int main(int argc, char* argv[])
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
-			Box box = { ref_box, {4, 2, 3} };
-			MyDrawBox(box, true, true, RED);
+			//ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			//Box box = { ref_box, {4, 2, 3} };
+			//MyDrawBox(box, true, true, RED);
 			//FIN BOX
 
 			//SPHERE
@@ -196,9 +196,9 @@ int main(int argc, char* argv[])
 			//FIN CYLINDER PORTION
 			
 			//CAPSULE
-			/*ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
+			ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
 			Capsule capsule = { ref_capsule, 3.0f, 2.0f };
-			MyDrawCapsule(capsule, 20, 10, true, true, ORANGE);*/
+			MyDrawCapsule(capsule, 20, 10, true, true, ORANGE);
 			//FIN CAPSULE
 
 			//Quaternion qRot1 = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4);
@@ -213,9 +213,9 @@ int main(int argc, char* argv[])
 
 			//qOrient = QuaternionMultiply(qRot, qInitOrient); 		
 
-			//ReferenceFrame refRndBox = { { 0,0,0}, QuaternionIdentity() };
-			//RoundedBox rndBox = { refRndBox, {2,4, 6}, 1};
-			//MyDrawRoundedBox(rndBox, 8);
+			ReferenceFrame refRndBox = { { 0,0,0}, QuaternionIdentity() };
+			RoundedBox rndBox = { refRndBox, {2,4, 6}, 1};
+			MyDrawRoundedBox(rndBox, 8);
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid

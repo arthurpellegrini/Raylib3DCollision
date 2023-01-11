@@ -78,8 +78,10 @@ void MyDrawQuad(Quad quad, bool drawPolygon = true, bool drawWireframe = true, C
 /******************************************************************
 *							Plane 								  *
 *******************************************************************/
-void MyDrawPlane(Plane plane, Color color = DARKGRAY);
-
+void MyDrawPolygonPlane(Plane plane, Color color = LIGHTGRAY);
+void MyDrawWireframePlane(Plane plane, Color color = DARKGRAY);
+void MyDrawPlane(Plane plane, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+void MyDrawInfinitePlane(ReferenceFrame ref, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
 /******************************************************************
 *							Disk 								  *
@@ -117,6 +119,7 @@ void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float st
 void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+void MyDrawInfiniteCylinder(ReferenceFrame ref, int nSectors, bool drawCaps = false, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 /******************************************************************
 *					Cylinder Optimization Methods				  *
 *******************************************************************/
