@@ -155,37 +155,57 @@ void MyDrawPolygonBox(Box box, Color color)
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(box.extents.x, box.extents.y, box.extents.z);
 
-	//{ X -> horizontal; Y -> vertical; Z -> far }
-	Vector3 front_top_left		= { -1,  1,  1 };
-	Vector3 front_top_right		= {  1,  1,  1 };
-	Vector3 front_bottom_left	= { -1, -1,  1 };
-	Vector3 front_bottom_right	= {  1, -1,  1 };
-	Vector3 back_top_left		= { -1,  1, -1 };
-	Vector3 back_top_right		= {  1,  1, -1 };
-	Vector3 back_bottom_left	= { -1, -1, -1 };
-	Vector3 back_bottom_right	= {  1, -1, -1 };
+	////{ X -> horizontal; Y -> vertical; Z -> far }
+	//Vector3 front_top_left		= { -1,  1,  1 };
+	//Vector3 front_top_right		= {  1,  1,  1 };
+	//Vector3 front_bottom_left	= { -1, -1,  1 };
+	//Vector3 front_bottom_right	= {  1, -1,  1 };
+	//Vector3 back_top_left		= { -1,  1, -1 };
+	//Vector3 back_top_right		= {  1,  1, -1 };
+	//Vector3 back_bottom_left	= { -1, -1, -1 };
+	//Vector3 back_bottom_right	= {  1, -1, -1 };
 
+	Quaternion q = QuaternionFromAxisAngle({ 0,0,0 }, 0);
+	Quad top = { ReferenceFrame({ 0,1,0 }, q), {1,0,1} };
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI);
+	Quad bottom = { ReferenceFrame({ 0,-1,0 }, q), {1,0,1} };
 
-	//It is necessary to follow the trigonometric direction to have a good orientation of the triangle.
-	// 
-	//FRONT  
-	DrawTriangle3D(front_bottom_right, front_top_left, front_bottom_left, color);
-	DrawTriangle3D(front_bottom_right, front_top_right, front_top_left, color);
-	//BACK
-	DrawTriangle3D(back_bottom_left, back_top_left, back_top_right, color);
-	DrawTriangle3D(back_top_right, back_bottom_right, back_bottom_left, color);
-	//TOP 
-	DrawTriangle3D(back_top_left, front_top_left, front_top_right, color);
-	DrawTriangle3D(front_top_right, back_top_right, back_top_left, color);
-	//BOTTOM
-	DrawTriangle3D(back_bottom_right, front_bottom_left, back_bottom_left, color);
-	DrawTriangle3D(back_bottom_right, front_bottom_right, front_bottom_left, color);
-	//LEFT
-	DrawTriangle3D(front_bottom_left, back_top_left, back_bottom_left, color);
-	DrawTriangle3D(front_bottom_left, front_top_left, back_top_left, color);
-	//RIGHT
-	DrawTriangle3D(front_top_right, front_bottom_right, back_bottom_right, color);
-	DrawTriangle3D(front_top_right, back_bottom_right, back_top_right, color);
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -PI / 2);
+	Quad front = { ReferenceFrame({ 1,0,0 }, q), {1,0,1} };
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2);
+	Quad back = { ReferenceFrame({ -1,0,0 }, q), {1,0,1} };
+
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2);
+	Quad left = { ReferenceFrame({ 0,0,1 }, q), {1,0,1} };
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), -PI / 2);
+	Quad right = { ReferenceFrame({ 0,0,-1 }, q), {1,0,1} };
+
+	MyDrawPolygonQuad(top, color);
+	MyDrawPolygonQuad(bottom, color);
+	MyDrawPolygonQuad(front, color);
+	MyDrawPolygonQuad(back, color);
+	MyDrawPolygonQuad(left, color);
+	MyDrawPolygonQuad(right, color);
+	////It is necessary to follow the trigonometric direction to have a good orientation of the triangle.
+	//// 
+	////FRONT  
+	//DrawTriangle3D(front_bottom_right, front_top_left, front_bottom_left, color);
+	//DrawTriangle3D(front_bottom_right, front_top_right, front_top_left, color);
+	////BACK
+	//DrawTriangle3D(back_bottom_left, back_top_left, back_top_right, color);
+	//DrawTriangle3D(back_top_right, back_bottom_right, back_bottom_left, color);
+	////TOP 
+	//DrawTriangle3D(back_top_left, front_top_left, front_top_right, color);
+	//DrawTriangle3D(front_top_right, back_top_right, back_top_left, color);
+	////BOTTOM
+	//DrawTriangle3D(back_bottom_right, front_bottom_left, back_bottom_left, color);
+	//DrawTriangle3D(back_bottom_right, front_bottom_right, front_bottom_left, color);
+	////LEFT
+	//DrawTriangle3D(front_bottom_left, back_top_left, back_bottom_left, color);
+	//DrawTriangle3D(front_bottom_left, front_top_left, back_top_left, color);
+	////RIGHT
+	//DrawTriangle3D(front_top_right, front_bottom_right, back_bottom_right, color);
+	//DrawTriangle3D(front_top_right, back_bottom_right, back_top_right, color);
 	
 	rlPopMatrix();
 }
@@ -201,41 +221,63 @@ void MyDrawWireframeBox(Box box, Color color)
 	QuaternionToAxisAngle(box.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(box.extents.x, box.extents.y, box.extents.z);
-	
-	//{ X -> horizontal; Y -> vertical; Z -> far }
-	Vector3 front_top_left		= { -1,  1,  1 };
-	Vector3 front_top_right		= {  1,  1,  1 };
-	Vector3 front_bottom_left	= { -1, -1,  1 };
-	Vector3 front_bottom_right	= {  1, -1,  1 };
-	Vector3 back_top_left		= { -1,  1, -1 };
-	Vector3 back_top_right		= {  1,  1, -1 };
-	Vector3 back_bottom_left	= { -1, -1, -1 };
-	Vector3 back_bottom_right	= {  1, -1, -1 };
+	//
+	////{ X -> horizontal; Y -> vertical; Z -> far }
+	//Vector3 front_top_left		= { -1,  1,  1 };
+	//Vector3 front_top_right		= {  1,  1,  1 };
+	//Vector3 front_bottom_left	= { -1, -1,  1 };
+	//Vector3 front_bottom_right	= {  1, -1,  1 };
+	//Vector3 back_top_left		= { -1,  1, -1 };
+	//Vector3 back_top_right		= {  1,  1, -1 };
+	//Vector3 back_bottom_left	= { -1, -1, -1 };
+	//Vector3 back_bottom_right	= {  1, -1, -1 };
 
-	//FRONT
-	DrawLine3D(front_top_left, front_top_right, color);
-	DrawLine3D(front_bottom_left, front_bottom_right, color);
-	DrawLine3D(front_top_left, front_bottom_left, color);
-	DrawLine3D(front_top_right, front_bottom_right, color);
-	DrawLine3D(front_bottom_right, front_top_left, color);
-	//BACK
-	DrawLine3D(back_top_left, back_top_right, color);
-	DrawLine3D(back_bottom_left, back_bottom_right, color);
-	DrawLine3D(back_top_left, back_bottom_left, color);
-	DrawLine3D(back_top_right, back_bottom_right, color);
-	DrawLine3D(back_bottom_left, back_top_right, color);
-	//TOP 
-	DrawLine3D(front_top_left, back_top_left, color);
-	DrawLine3D(front_top_right, back_top_right, color);
-	DrawLine3D(front_top_right, back_top_left, color);
-	//BOTTOM
-	DrawLine3D(front_bottom_left, back_bottom_left, color);
-	DrawLine3D(front_bottom_right, back_bottom_right, color);
-	DrawLine3D(front_bottom_left, back_bottom_right, color);
-	//LEFT
-	DrawLine3D(front_bottom_left, back_top_left, color);
-	//RIGHT
-	DrawLine3D(back_bottom_right, front_top_right, color);
+	////FRONT
+	//DrawLine3D(front_top_left, front_top_right, color);
+	//DrawLine3D(front_bottom_left, front_bottom_right, color);
+	//DrawLine3D(front_top_left, front_bottom_left, color);
+	//DrawLine3D(front_top_right, front_bottom_right, color);
+	//DrawLine3D(front_bottom_right, front_top_left, color);
+	////BACK
+	//DrawLine3D(back_top_left, back_top_right, color);
+	//DrawLine3D(back_bottom_left, back_bottom_right, color);
+	//DrawLine3D(back_top_left, back_bottom_left, color);
+	//DrawLine3D(back_top_right, back_bottom_right, color);
+	//DrawLine3D(back_bottom_left, back_top_right, color);
+	////TOP 
+	//DrawLine3D(front_top_left, back_top_left, color);
+	//DrawLine3D(front_top_right, back_top_right, color);
+	//DrawLine3D(front_top_right, back_top_left, color);
+	////BOTTOM
+	//DrawLine3D(front_bottom_left, back_bottom_left, color);
+	//DrawLine3D(front_bottom_right, back_bottom_right, color);
+	//DrawLine3D(front_bottom_left, back_bottom_right, color);
+	////LEFT
+	//DrawLine3D(front_bottom_left, back_top_left, color);
+	////RIGHT
+	//DrawLine3D(back_bottom_right, front_top_right, color);
+
+	Quaternion q = QuaternionFromAxisAngle({ 0,0,0 }, 0);
+	Quad top = { ReferenceFrame({ 0,1,0 }, q), {1,0,1} };
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI);
+	Quad bottom = { ReferenceFrame({ 0,-1,0 }, q), {1,0,1} };
+
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -PI / 2);
+	Quad front = { ReferenceFrame({ 1,0,0 }, q), {1,0,1} };
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2);
+	Quad back = { ReferenceFrame({ -1,0,0 }, q), {1,0,1} };
+
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2);
+	Quad left = { ReferenceFrame({ 0,0,1 }, q), {1,0,1} };
+	q = QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), -PI / 2);
+	Quad right = { ReferenceFrame({ 0,0,-1 }, q), {1,0,1} };
+
+	MyDrawWireframeQuad(top, color);
+	MyDrawWireframeQuad(bottom, color);
+	MyDrawWireframeQuad(front, color);
+	MyDrawWireframeQuad(back, color);
+	MyDrawWireframeQuad(left, color);
+	MyDrawWireframeQuad(right, color);
 
 	rlPopMatrix();
 }
@@ -633,4 +675,38 @@ void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolyg
 {
 	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
 	if (drawWireframe) MyDrawWireframeCapsule(capsule, nSectors, nParallels, wireframeColor);
+}
+
+/******************************************************************
+*						ROUNDED BOX 							  *
+*******************************************************************/
+void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
+{
+
+}
+
+void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
+{
+	//rlPushMatrix();
+	//rlTranslatef(roundedBox.ref.origin.x, roundedBox.ref.origin.y, roundedBox.ref.origin.z);
+	//Vector3 vect;
+	//float angle;
+	//QuaternionToAxisAngle(roundedBox.ref.q, &vect, &angle);
+	//rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+
+	//Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.halfHeight, capsule.radius };
+	//Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
+	//Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
+
+	//MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	//MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
+	//MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+
+	//rlPopMatrix();
+}
+
+void MyDrawRoundedBox(RoundedBox roundedBox, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+{
+	if (drawPolygon) MyDrawPolygonRoundedBox(roundedBox, nSectors, polygonColor);
+	if (drawWireframe) MyDrawWireframeRoundedBox(roundedBox, nSectors, wireframeColor);
 }

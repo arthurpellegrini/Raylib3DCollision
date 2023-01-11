@@ -166,15 +166,15 @@ int main(int argc, char* argv[])
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/16));
+			ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
 			Box box = { ref_box, {4, 2, 3} };
 			MyDrawBox(box, true, true, RED);
 			//FIN BOX
 
 			//SPHERE
-			ReferenceFrame ref_sphere = ReferenceFrame({ 7, 6, -7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
-			Sphere sphere = { ref_sphere, 5.0f };
-			MyDrawSphere(sphere, 50, 50, true, true, SKYBLUE);
+			//ReferenceFrame ref_sphere = ReferenceFrame({ 7, 6, -7 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
+			//Sphere sphere = { ref_sphere, 5.0f };
+			//MyDrawSphere(sphere, 50, 50, true, true, SKYBLUE);
 			//FIN SPHERE
 
 			//SPHERE PORTION
@@ -184,9 +184,9 @@ int main(int argc, char* argv[])
 			//FIN SPHERE PORTION
 
 			//CYLINER
-			ReferenceFrame ref_cylinder = ReferenceFrame({ -10, 7, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI));
-			Cylinder cylinder = { ref_cylinder, 5.0f, 2.0f };
-			MyDrawCylinder(cylinder, 50, true, true, true, BLUE);
+			//ReferenceFrame ref_cylinder = ReferenceFrame({ -10, 7, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), time));
+			//Cylinder cylinder = { ref_cylinder, 5.0f, 2.0f };
+			//MyDrawCylinder(cylinder, 50, true, true, true, BLUE);
 			//FIN CYLINDER
 
 			//CYLINER PORTION
@@ -196,10 +196,26 @@ int main(int argc, char* argv[])
 			//FIN CYLINDER PORTION
 			
 			//CAPSULE
-			ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/4));
+			/*ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
 			Capsule capsule = { ref_capsule, 3.0f, 2.0f };
-			MyDrawCapsule(capsule, 100, 10, true, true, ORANGE);
+			MyDrawCapsule(capsule, 20, 10, true, true, ORANGE);*/
 			//FIN CAPSULE
+
+			//Quaternion qRot1 = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4);
+			//Quaternion qRot2 = QuaternionFromAxisAngle({ 0,1,0 }, PI / 2);
+
+			//Quaternion qOrient = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4); // permet de changer l'orientation de l'objet
+			//qOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
+			//
+			//Quaternion qRot = QuaternionFromAxisAngle(Vector3Normalize({ 1, 6, -3 }), time); // Obligé de normaliser le Vecteur car il n'est pas unitaire
+
+			//Quaternion qInitOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
+
+			//qOrient = QuaternionMultiply(qRot, qInitOrient); 		
+
+			//ReferenceFrame refRndBox = { { 0,0,0}, QuaternionIdentity() };
+			//RoundedBox rndBox = { refRndBox, {2,4, 6}, 1};
+			//MyDrawRoundedBox(rndBox, 8);
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid
