@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 {
 	// Initialization
 	//--------------------------------------------------------------------------------------
-	float screenSizeCoef = .9f;
+	float screenSizeCoef = 0.8f;
 	const int screenWidth = 1920 * screenSizeCoef;
 	const int screenHeight = 1080 * screenSizeCoef;
 
@@ -132,91 +132,74 @@ int main(int argc, char* argv[])
 
 		BeginMode3D(camera);
 		{
-			//Quaternion qRot1 = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4);
-			//Quaternion qRot2 = QuaternionFromAxisAngle({ 0,1,0 }, PI / 2);
-
-			//Quaternion qOrient = QuaternionFromAxisAngle({ 1,0,0 }, PI / 4); // permet de changer l'orientation de l'objet
-			//Quaternion qOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
-			//
-			//Quaternion qRot = QuaternionFromAxisAngle(Vector3Normalize({ 1, 6, -3 }), time); // Obligé de normaliser le Vecteur car il n'est pas unitaire
-
-			//Quaternion qInitOrient = QuaternionMultiply(qRot1, qRot2); // permet définir la rotation de l'objet en fontionde la multiplication
-		
-			//Quaternion qOrient = QuaternionMultiply(qRot, qInitOrient); 		
-
-			//ReferenceFrame refRndBox = { { 0,0,0}, QuaternionIdentity() };
-			//RoundedBox rndBox = { refRndBox, {2,4, 6}, 1};
-			//MyDrawRoundedBox(rndBox, 8);
-
-			// LINE (SEGMENT)
+			//LINE (SEGMENT)
 			//Vector3 pt1 = {8,4,8};
 			//Vector3 pt2 = {1,9,0};
 			//DrawSphere(pt1, .1f, PURPLE); // pour afficher un point (optionnel)
 			//DrawSphere(pt2, .1f, DARKBLUE);
 			// 
 			//DrawLine3D(pt1, pt2, DARKGRAY);
-			// FIN LINE
+			//FIN LINE
 
-
-			// TRIANGLE
+			//TRIANGLE
 			//Vector3 pts[3] = { {8, 4, 8}, { 1,9,0 }, { 4,6,8 } }; // utlisation d'un tableau ou de pts  
 			//Vector3 pt1 = {8,4,8};
 			//Vector3 pt2 = {1,9,0};
 			//Vector3 pt3 = {4,6,8};
 			//DrawTriangle3D(pt1, pt2, pt3, DARKBLUE);
-			// FIN TRIANGLE
+			//FIN TRIANGLE
 
-			// PLANE
+			//PLANE
 			// MyDrawPlane(Plane({ 0, 2, 7 }, { 2, 7 }));
-			// FIN PLANE
+			//FIN PLANE
 			
-			// QUAD DISPLAY TEST
+			//QUAD
 			//ReferenceFrame ref = ReferenceFrame({ 0,2,0 },QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI / 2));
 			//Quad quad = { ref,{3,1,5} };
 			//MyDrawQuad(quad);
-			// FIN QUAD
+			//FIN QUAD
 
-			// DISK
-			ReferenceFrame ref_disk = ReferenceFrame({ -7, 2, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
-			Disk disk = { ref_disk, 5.0f };
-			MyDrawDisk(disk, 50, true, true, DARKBLUE);
+			//DISK
+			//ReferenceFrame ref_disk = ReferenceFrame({ -7, 2, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
+			//Disk disk = { ref_disk, 5.0f };
+			//MyDrawDisk(disk, 50, true, true, DARKBLUE);
 			//FIN DISK
 
 			//BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			ReferenceFrame ref_box = ReferenceFrame({ -7, 4, -5 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/16));
 			Box box = { ref_box, {4, 2, 3} };
 			MyDrawBox(box, true, true, RED);
 			//FIN BOX
 
-			// SPHERE
-			ReferenceFrame ref_sphere = ReferenceFrame({ 7, 6, -7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			//SPHERE
+			ReferenceFrame ref_sphere = ReferenceFrame({ 7, 6, -7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/2));
 			Sphere sphere = { ref_sphere, 5.0f };
 			MyDrawSphere(sphere, 50, 50, true, true, SKYBLUE);
 			//FIN SPHERE
 
 			//SPHERE PORTION
-			ReferenceFrame ref_sphere_portion = ReferenceFrame({ 5, 7, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
-			Sphere sphere_portion = { ref_sphere_portion, 1.0f };
-			MyDrawSpherePortion(sphere_portion, 10, 10, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, DARKGREEN);
-			// FIN SPHERE PORTION
+			//ReferenceFrame ref_sphere_portion = ReferenceFrame({ 5, 7, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			//Sphere sphere_portion = { ref_sphere_portion, 1.0f };
+			//MyDrawSpherePortion(sphere_portion, 10, 10, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, DARKGREEN);
+			//FIN SPHERE PORTION
 
 			//CYLINER
-			ReferenceFrame ref_cylinder = ReferenceFrame({ -7, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			ReferenceFrame ref_cylinder = ReferenceFrame({ -10, 7, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI));
 			Cylinder cylinder = { ref_cylinder, 5.0f, 2.0f };
 			MyDrawCylinder(cylinder, 50, true, true, true, BLUE);
-			// FIN CYLINDER
+			//FIN CYLINDER
 
 			//CYLINER PORTION
-			ReferenceFrame ref_cylinder_portion = ReferenceFrame({ 5, 5, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
-			Cylinder cylinder_portion = { ref_cylinder_portion, 2.0f, 1.0f };
-			MyDrawCylinderPortion(cylinder_portion, 10, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, GREEN);
-			// FIN CYLINDER PORTION
+			//ReferenceFrame ref_cylinder_portion = ReferenceFrame({ 5, 5, 10 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			//Cylinder cylinder_portion = { ref_cylinder_portion, 2.0f, 1.0f };
+			//MyDrawCylinderPortion(cylinder_portion, 10, 0.0f * DEG2RAD, 180.0f * DEG2RAD, true, true, GREEN);
+			//FIN CYLINDER PORTION
 			
 			//CAPSULE
-			ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0));
+			ReferenceFrame ref_capsule = ReferenceFrame({ 10, 7, 7 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), PI/4));
 			Capsule capsule = { ref_capsule, 3.0f, 2.0f };
-			MyDrawCapsule(capsule, 10, 10, true, true, ORANGE);
-			// FIN CAPSULE
+			MyDrawCapsule(capsule, 100, 10, true, true, ORANGE);
+			//FIN CAPSULE
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid

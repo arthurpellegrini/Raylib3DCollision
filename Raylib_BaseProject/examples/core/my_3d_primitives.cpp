@@ -481,7 +481,6 @@ void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Col
 {
 	int numVertex = nSectors * 3;
 	if (drawCaps) numVertex *= 2;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
 	Vector3 vect;
@@ -527,7 +526,6 @@ void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPol
 void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
 {
 	int numVertex = nSectors * 4;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
 	Vector3 vect;
@@ -555,7 +553,6 @@ void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTh
 void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
 {
 	int numVertex = nSectors * 4;
-	if (rlCheckBufferLimit(numVertex)) rlglDraw();
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
 	Vector3 vect;
@@ -595,31 +592,41 @@ void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, fl
 *******************************************************************/
 void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
 {
-	Cylinder capsule_cylinder = { capsule.ref, capsule.halfHeight, capsule.radius };
-	MyDrawPolygonCylinder(capsule_cylinder, nSectors, false, color);
+	rlPushMatrix();
+	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 
-	Sphere capsule_sphere_top = { capsule.ref, capsule.radius };
-	Sphere capsule_sphere_bottom = { capsule.ref, capsule.radius };
-	capsule_sphere_top.ref.origin.y += capsule.halfHeight;
-	capsule_sphere_bottom.ref.origin.y -= capsule.halfHeight;
+	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.halfHeight, capsule.radius };
+	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
+	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
 
 	MyDrawPolygonSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawPolygonCylinder(capsule_cylinder, nSectors, false, color);
 	MyDrawPolygonSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	rlPopMatrix();
 }
 
 void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
 {
-	Cylinder capsule_cylinder = { capsule.ref, capsule.halfHeight, capsule.radius };
-	MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
+	rlPushMatrix();
+	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 
-	Sphere capsule_sphere_top = { capsule.ref, capsule.radius };
-	Sphere capsule_sphere_bottom = { capsule.ref, capsule.radius };
-	capsule_sphere_top.ref.origin.y += capsule.halfHeight;
-
-	capsule_sphere_bottom.ref.origin.y -= capsule.halfHeight;	
+	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.halfHeight, capsule.radius };
+	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius};
+	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), 0)), capsule.radius };
 
 	MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
 	MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	
+	rlPopMatrix();
 }
 
 void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
