@@ -321,6 +321,104 @@ void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygo
 }
 
 
+/******************************************************************
+*					Sphere Optimization Methods					  *
+*******************************************************************/
+void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
+{
+	int numVertex = nMeridians * nParallels * 4;
+	rlPushMatrix();
+	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(sphere.radius, sphere.radius, sphere.radius);
+
+	// Points position for one quad in the sphere
+	// 1-----2
+	// | \   |
+	// |  \  |
+	// |   \ |
+	// 3-----4
+	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
+
+	//	MERIDIAN -> phi € [0°, 180°]
+	//		|
+	//		|
+	// -----|----- PARALLEL -> theta € [0°, 360°]
+	//		|
+	//		|
+
+	for (int m = 0; m < nMeridians; m++)
+	{
+		for (int p = 0; p < nParallels; p++)
+		{
+			pt1 = { 1, startTheta + (endTheta - startTheta) / nParallels * p, startPhi + (endPhi - startPhi) / nMeridians * m };
+			pt2 = { 1, startTheta + (endTheta - startTheta) / nParallels * p, startPhi + (endPhi - startPhi) / nMeridians * (m + 1) };
+			pt3 = { 1, startTheta + (endTheta - startTheta) / nParallels * (p + 1), startPhi + (endPhi - startPhi) / nMeridians * m };
+			pt4 = { 1, startTheta + (endTheta - startTheta) / nParallels * (p + 1), startPhi + (endPhi - startPhi) / nMeridians * (m + 1) };
+
+			if (rlCheckBufferLimit(numVertex)) rlglDraw();
+			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), SphericalToCartesian(pt4), color);
+			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), SphericalToCartesian(pt3), color);
+		}
+	}
+	rlPopMatrix();
+}
+
+void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
+{
+	int numVertex = nMeridians * nParallels * 4;
+	rlPushMatrix();
+	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(sphere.radius, sphere.radius, sphere.radius);
+
+	// Points position for one quad in the sphere
+	// 1-----2
+	// | \   |
+	// |  \  |
+	// |   \ |
+	// 3-----4
+	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
+
+	//	MERIDIAN -> phi € [0°, 180°]
+	//		|
+	//		|
+	// -----|----- PARALLEL -> theta € [0°, 360°]
+	//		|
+	//		|
+
+	for (int m = 0; m < nMeridians; m++)
+	{
+		for (int p = 0; p < nParallels; p++)
+		{
+			pt1 = { 1, startTheta + (endTheta - startTheta) / nParallels * p, startPhi + (endPhi - startPhi) / nMeridians * m };
+			pt2 = { 1, startTheta + (endTheta - startTheta) / nParallels * p, startPhi + (endPhi - startPhi) / nMeridians * (m + 1) };
+			pt3 = { 1, startTheta + (endTheta - startTheta) / nParallels * (p + 1), startPhi + (endPhi - startPhi) / nMeridians * m };
+			pt4 = { 1, startTheta + (endTheta - startTheta) / nParallels * (p + 1), startPhi + (endPhi - startPhi) / nMeridians * (m + 1) };
+
+			if (rlCheckBufferLimit(numVertex)) rlglDraw();
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), color);
+			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), color);
+			DrawLine3D(SphericalToCartesian(pt2), SphericalToCartesian(pt4), color);
+			DrawLine3D(SphericalToCartesian(pt3), SphericalToCartesian(pt4), color);
+		}
+	}
+	rlPopMatrix();
+}
+
+void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+{
+	if (drawPolygon) MyDrawPolygonSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, polygonColor);
+	if (drawWireframe) MyDrawWireframeSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, wireframeColor);
+}
+
 
 /******************************************************************
 *							CYLINDER							  *
@@ -403,155 +501,10 @@ void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPol
 
 
 /******************************************************************
-*							CAPSULE 							  *
-*******************************************************************/
-void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
-{
-	rlPushMatrix();
-	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-
-	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionIdentity()), capsule.halfHeight, capsule.radius };
-	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
-	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
-
-	MyDrawPolygonSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	MyDrawPolygonCylinder(capsule_cylinder, nSectors, false, color);
-	MyDrawPolygonSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	rlPopMatrix();
-}
-
-void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
-{
-	rlPushMatrix();
-	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-
-	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionIdentity()), capsule.halfHeight, capsule.radius };
-	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius};
-	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
-
-	MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	MyDrawWireframeCylinder(capsule_cylinder, nSectors, false, color);
-	MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 360.0f * DEG2RAD, color);
-	
-	rlPopMatrix();
-}
-
-void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
-{
-	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
-	if (drawWireframe) MyDrawWireframeCapsule(capsule, nSectors, nParallels, wireframeColor);
-}
-
-
-/******************************************************************
-*					Sphere Optimization Methods					  *
-*******************************************************************/
-void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
-{
-	int numVertex = nMeridians * nParallels * 4;
-	rlPushMatrix();
-	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	rlScalef(sphere.radius, sphere.radius, sphere.radius);
-
-	// Points position for one quad in the sphere
-	// 1-----2
-	// | \   |
-	// |  \  |
-	// |   \ |
-	// 3-----4
-	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
-
-	//	MERIDIAN -> phi € [0°, 180°]
-	//		|
-	//		|
-	// -----|----- PARALLEL -> theta € [0°, 360°]
-	//		|
-	//		|
-
-	for (int m = 0; m < nMeridians; m++)
-	{
-		for (int p = 0; p < nParallels; p++)
-		{
-			pt1 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * p };
-			pt2 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * p };
-			pt3 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
-			pt4 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
-
-			if (rlCheckBufferLimit(numVertex)) rlglDraw();
-			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), SphericalToCartesian(pt2), color);
-			DrawTriangle3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), SphericalToCartesian(pt4), color);
-		}
-	}
-	rlPopMatrix();
-}
-
-void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
-{
-	int numVertex = nMeridians * nParallels * 4;
-	rlPushMatrix();
-	rlTranslatef(sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
-	Vector3 vect;
-	float angle;
-	QuaternionToAxisAngle(sphere.ref.q, &vect, &angle);
-	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	rlScalef(sphere.radius, sphere.radius, sphere.radius);
-
-	// Points position for one quad in the sphere
-	// 1-----2
-	// | \   |
-	// |  \  |
-	// |   \ |
-	// 3-----4
-	Spherical pt1, pt2, pt3, pt4; // = {rho, theta, phi}
-
-	//	MERIDIAN -> phi € [0°, 180°]
-	//		|
-	//		|
-	// -----|----- PARALLEL -> theta € [0°, 360°]
-	//		|
-	//		|
-
-	for (int m = 0; m < nMeridians; m++)
-	{
-		for (int p = 0; p < nParallels; p++)
-		{
-			pt1 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * p };
-			pt2 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * p };
-			pt3 = { 1, startPhi + (endPhi - startPhi) / nMeridians * m, startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
-			pt4 = { 1, startPhi + (endPhi - startPhi) / nMeridians * (m + 1), startTheta + (endTheta - startTheta) / nParallels * (p + 1) };
-
-			if (rlCheckBufferLimit(numVertex)) rlglDraw();
-			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt4), color);
-			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt2), color);
-			DrawLine3D(SphericalToCartesian(pt1), SphericalToCartesian(pt3), color);
-			DrawLine3D(SphericalToCartesian(pt2), SphericalToCartesian(pt4), color);
-			DrawLine3D(SphericalToCartesian(pt3), SphericalToCartesian(pt4), color);
-		}
-	}
-	rlPopMatrix();
-}
-
-void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
-{
-	if (drawPolygon) MyDrawPolygonSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, polygonColor);
-	if (drawWireframe) MyDrawWireframeSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, wireframeColor);
-}
-
-/******************************************************************
 *					Cylinder Optimization Methods				  *
 *******************************************************************/
+
+// TODO: ADD SUPPORT FOR NEGATIVE THETA
 void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
 {
 	int numVertex = nSectors * 4;
@@ -615,6 +568,56 @@ void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, fl
 	if (drawWireframe) MyDrawWireframeCylinderPortion(cylinder, nSectors, startTheta, endTheta, wireframeColor);
 }
 
+
+/******************************************************************
+*							CAPSULE 							  *
+*******************************************************************/
+void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
+{
+	rlPushMatrix();
+	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+
+	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionIdentity()), capsule.halfHeight, capsule.radius };
+	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
+	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
+
+	MyDrawPolygonSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 360.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonCylinder(capsule_cylinder, nParallels, false, color);
+	MyDrawPolygonSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 0.0f * DEG2RAD, 360.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	rlPopMatrix();
+}
+
+void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
+{
+	rlPushMatrix();
+	rlTranslatef(capsule.ref.origin.x, capsule.ref.origin.y, capsule.ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(capsule.ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+
+	Cylinder capsule_cylinder = { ReferenceFrame({0, 0, 0}, QuaternionIdentity()), capsule.halfHeight, capsule.radius };
+	Sphere capsule_sphere_top = { ReferenceFrame({0, capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius};
+	Sphere capsule_sphere_bottom = { ReferenceFrame({0, -capsule.halfHeight, 0}, QuaternionIdentity()), capsule.radius };
+
+	MyDrawWireframeSpherePortion(capsule_sphere_top, nSectors, nParallels, 0.0f * DEG2RAD, 360.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeCylinder(capsule_cylinder, nParallels, false, color);
+	MyDrawWireframeSpherePortion(capsule_sphere_bottom, nSectors, nParallels, 0.0f * DEG2RAD, 360.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	
+	rlPopMatrix();
+}
+
+void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
+{
+	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
+	if (drawWireframe) MyDrawWireframeCapsule(capsule, nSectors, nParallels, wireframeColor);
+}
+
+
 /******************************************************************
 *						ROUNDED BOX 							  *
 *******************************************************************/
@@ -627,7 +630,74 @@ void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	QuaternionToAxisAngle(roundedBox.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 
+	Quaternion q = QuaternionIdentity();
 
+	//SPHERES PART
+	Sphere sph_top_front_left = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_top_front_right = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_top_back_right = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_top_back_left = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_front_left = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_front_right = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_back_right = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_back_left = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+
+	MyDrawPolygonSpherePortion(sph_top_front_left, nSectors, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_top_front_right, nSectors, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_top_back_right, nSectors, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_top_back_left, nSectors, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_bottom_front_left, nSectors, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_bottom_front_right, nSectors, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_bottom_back_right, nSectors, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawPolygonSpherePortion(sph_bottom_back_left, nSectors, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+
+	//QUADS PART
+	Quad quad_top = { ReferenceFrame({ 0,roundedBox.extents.y + roundedBox.radius,0 }, q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
+	Quaternion quad_q = QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI));
+	Quad quad_bottom = { ReferenceFrame({ 0,-(roundedBox.extents.y + roundedBox.radius),0 }, quad_q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2));
+	Quad quad_front = { ReferenceFrame({ roundedBox.extents.x + roundedBox.radius,0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	Quad quad_back = { ReferenceFrame({ -(roundedBox.extents.x + roundedBox.radius),0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2));
+	Quad quad_right = { ReferenceFrame({ 0,0,-(roundedBox.extents.z + roundedBox.radius) }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	Quad quad_left = { ReferenceFrame({ 0,0,roundedBox.extents.z + roundedBox.radius }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
+
+	MyDrawPolygonQuad(quad_top, color);
+	MyDrawPolygonQuad(quad_bottom, color);
+	MyDrawPolygonQuad(quad_front, color);
+	MyDrawPolygonQuad(quad_back, color);
+	MyDrawPolygonQuad(quad_right, color);
+	MyDrawPolygonQuad(quad_left, color);
+
+
+	//CYLINDICALS PART
+	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_left = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+
+	MyDrawPolygonCylinderPortion(cyl_bottom_front, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_top_front, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_top_back, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_bottom_back, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_front_right, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_back_right, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_back_left, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_front_left, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_top_left, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_top_right, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_bottom_right, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, color);
+	MyDrawPolygonCylinderPortion(cyl_bottom_left, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
 
 	rlPopMatrix();
 
@@ -642,7 +712,73 @@ void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	QuaternionToAxisAngle(roundedBox.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 
-	
+	Quaternion q = QuaternionIdentity();
+
+	//SPHERES PART
+	Sphere sph_top_front_left = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_top_front_right = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_top_back_right = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_top_back_left = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_front_left = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_front_right = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_back_right = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	Sphere sph_bottom_back_left = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+
+	MyDrawWireframeSpherePortion(sph_top_front_left, nSectors, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_top_front_right, nSectors, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_top_back_right, nSectors, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_top_back_left, nSectors, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_bottom_front_left, nSectors, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_bottom_front_right, nSectors, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_bottom_back_right, nSectors, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawWireframeSpherePortion(sph_bottom_back_left, nSectors, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+
+	//QUADS PART
+	Quad quad_top = { ReferenceFrame({ 0,roundedBox.extents.y + roundedBox.radius,0 }, q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
+	Quaternion quad_q = QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI));
+	Quad quad_bottom = { ReferenceFrame({ 0,-(roundedBox.extents.y + roundedBox.radius),0 }, quad_q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2));
+	Quad quad_front = { ReferenceFrame({ roundedBox.extents.x + roundedBox.radius,0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	Quad quad_back = { ReferenceFrame({ -(roundedBox.extents.x + roundedBox.radius),0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2));
+	Quad quad_right = { ReferenceFrame({ 0,0,-(roundedBox.extents.z + roundedBox.radius) }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	Quad quad_left = { ReferenceFrame({ 0,0,roundedBox.extents.z + roundedBox.radius }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
+
+	MyDrawWireframeQuad(quad_top, color);
+	MyDrawWireframeQuad(quad_bottom, color);
+	MyDrawWireframeQuad(quad_front, color);
+	MyDrawWireframeQuad(quad_back, color);
+	MyDrawWireframeQuad(quad_left, color);
+	MyDrawWireframeQuad(quad_right, color);
+
+	//CYLINDICALS PART
+	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_left = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+
+	MyDrawWireframeCylinderPortion(cyl_bottom_front, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_top_front, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_top_back, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_bottom_back, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_front_right, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_back_right, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_back_left, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_front_left, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_top_left, nSectors, 0.0f * DEG2RAD, 90.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_top_right, nSectors, 90.0f * DEG2RAD, 180.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_bottom_right, nSectors, 180.0f * DEG2RAD, 270.0f * DEG2RAD, color);
+	MyDrawWireframeCylinderPortion(cyl_bottom_left, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
 
 	rlPopMatrix();
 }
