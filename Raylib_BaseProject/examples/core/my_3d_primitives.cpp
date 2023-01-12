@@ -68,6 +68,9 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 /******************************************************************
 *							PLANE								  *
 *******************************************************************/
+
+// TODO: POLYGONPLAN ET WIREFRAMEPLAN
+
 void MyDrawPlane(Plane plane, Color color)
 {
 	Vector3 origin = plane.n;
@@ -458,7 +461,7 @@ void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color
 
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
 {
-	int numVertex = nSectors * 3;
+	int numVertex = nSectors * 4;
 	if (drawCaps) numVertex *= 2;
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
@@ -671,16 +674,17 @@ void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	MyDrawPolygonQuad(quad_right, color);
 	MyDrawPolygonQuad(quad_left, color);
 
-
 	//CYLINDICALS PART
 	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
 	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
 	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
 	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	
 	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
 	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
 	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
 	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	
 	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
 	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
 	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
@@ -700,7 +704,6 @@ void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	MyDrawPolygonCylinderPortion(cyl_bottom_left, nSectors, 270.0f * DEG2RAD, 360.0f * DEG2RAD, color);
 
 	rlPopMatrix();
-
 }
 
 void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
