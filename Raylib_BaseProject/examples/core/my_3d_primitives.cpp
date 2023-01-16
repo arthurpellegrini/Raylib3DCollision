@@ -68,18 +68,16 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 /******************************************************************
 *							PLANE								  *
 *******************************************************************/
-
-// TODO: POLYGONPLAN ET WIREFRAMEPLAN
-
-void MyDrawPlane(Plane plane, Color color)
+void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
-	Vector3 origin = plane.n;
-	Vector2 size = { plane.d, plane.d };
-	DrawPlane(origin, size, color);
+    Quad quad;
+	quad.ref.origin = Vector3Scale(plane.n, plane.d), plane.n;
+    quad.extents = Vector3{10, 0, 10};
+    quad.ref.q = QuaternionFromVector3ToVector3(Vector3{0, 1, 0}, plane.n);
+    
+	if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
+	if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);
 }
-
-// TODO: PLANE à refaire avec 2 DrawTriangles3D()
-// TODO: Ajouter méthode MyDrawInfinitePlane()
 
 
 /******************************************************************
@@ -500,7 +498,10 @@ void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPol
 	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
 }
 
-// TODO: Ajouter méthode MyDrawInfiniteCylinder()
+void MyDrawInfiniteCylinder(ReferenceFrame ref, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
+	if (drawPolygon) MyDrawPolygonCylinder(Cylinder{ ref,  480.0f, 2.0f }, nSectors, false, polygonColor);
+	if (drawWireframe) MyDrawWireframeCylinder(Cylinder{ ref, 480.0f, 2.0f }, nSectors, false, wireframeColor);
+}
 
 
 /******************************************************************
