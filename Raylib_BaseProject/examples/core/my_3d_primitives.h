@@ -58,6 +58,11 @@ struct Cylinder {
 	float radius;
 };
 
+struct InfiniteCylinder {
+	ReferenceFrame ref;
+	float radius;
+};
+
 struct Capsule {
 	ReferenceFrame ref;
 	float halfHeight;
@@ -120,7 +125,7 @@ void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float st
 void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
-void MyDrawInfiniteCylinder(ReferenceFrame ref, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+void MyDrawInfiniteCylinder(InfiniteCylinder infiniteCylinder, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 /******************************************************************
 *					Cylinder Optimization Methods				  *
 *******************************************************************/

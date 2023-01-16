@@ -141,9 +141,9 @@ int main(int argc, char* argv[])
 			// FIN TRIANGLE
 
 			// PLANE
-			MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
-			MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
-			MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
+			//MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
+			//MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
+			//MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
 			// FIN PLANE
 
 			// QUAD
@@ -174,7 +174,13 @@ int main(int argc, char* argv[])
 			//ReferenceFrame ref_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), time));
 			//Cylinder cylinder = { ref_cylinder, 3.0f, 2.0f };
 			//MyDrawCylinder(cylinder, 20, true, true, true, BLUE);
-			// FIN CYLINDER
+			// FIN CYLINDER			
+			 
+			// INFINITE CYLINDER
+			ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0,0,0}, 0));
+			InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
+			MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
+			// FIN INFINITE CYLINDER
 			
 			// CAPSULE
 			//ReferenceFrame ref_capsule = ReferenceFrame({ 7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,1 }), -time));

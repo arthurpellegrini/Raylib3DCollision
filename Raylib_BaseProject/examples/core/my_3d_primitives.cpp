@@ -498,9 +498,11 @@ void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPol
 	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
 }
 
-void MyDrawInfiniteCylinder(ReferenceFrame ref, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) {
-	if (drawPolygon) MyDrawPolygonCylinder(Cylinder{ ref,  480.0f, 2.0f }, nSectors, false, polygonColor);
-	if (drawWireframe) MyDrawWireframeCylinder(Cylinder{ ref, 480.0f, 2.0f }, nSectors, false, wireframeColor);
+void MyDrawInfiniteCylinder(InfiniteCylinder infiniteCylinder, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+{
+	Cylinder inf_cylinder = Cylinder{ infiniteCylinder.ref,  40.0f, infiniteCylinder.radius };
+	if (drawPolygon) MyDrawPolygonCylinder(inf_cylinder, nSectors, false, polygonColor);
+	if (drawWireframe) MyDrawWireframeCylinder(inf_cylinder, nSectors, false, wireframeColor);
 }
 
 
