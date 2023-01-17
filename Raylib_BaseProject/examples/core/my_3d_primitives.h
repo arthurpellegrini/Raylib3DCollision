@@ -17,11 +17,11 @@ struct Plane {
 	Vector3 n;
 	float d;
 	Plane(Vector3 n, float d) {
-		this->n = Vector3Normalize(n); // avec n unitaire
+		this->n = n; // avec n unitaire
 		this->d = d;
 	}
 	Plane(Vector3 n, Vector3 pt) {
-		this->n = Vector3Normalize(n); // avec n unitaire
+		this->n = n; // avec n unitaire
 		this->d = Vector3DotProduct(n, pt);
 	}
 	Plane(Vector3 pt1, Vector3 pt2, Vector3 pt3) {

@@ -68,15 +68,44 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 /******************************************************************
 *							PLANE								  *
 *******************************************************************/
+//void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+//{
+	//ReferenceFrame ref = ReferenceFrame();
+	//ref.Translate(Vector3Scale(plane.n, plane.d));
+
+	//rlPushMatrix();
+	//rlTranslatef(ref.origin.x, ref.origin.y, ref.origin.z);
+	//Vector3 vect;
+	//float angle;
+	//QuaternionToAxisAngle(ref.q, &vect, &angle);
+	//rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	//rlScalef(1, 0, 1);
+
+	//Quad quad = { ref, { 1,0,1 } };
+
+	//if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
+	//if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);
+	//rlPopMatrix();
+//}
 void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
-    Quad quad;
-	quad.ref.origin = Vector3Scale(plane.n, plane.d), plane.n;
-    quad.extents = Vector3{10, 0, 10};
-    quad.ref.q = QuaternionFromVector3ToVector3(Vector3{0, 1, 0}, plane.n);
-    
+	ReferenceFrame ref;
+	ref.origin = Vector3Scale(plane.n, plane.d);
+	ref.q = QuaternionFromVector3ToVector3({ 1,0,0 }, plane.n);
+
+	rlPushMatrix();
+	rlTranslatef(ref.origin.x, ref.origin.y, ref.origin.z);
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(ref.q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	rlScalef(1, 0, 1);
+
+	Quad quad = { ref, { 40,0,40 } };
+
 	if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
 	if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);
+	rlPopMatrix();
 }
 
 

@@ -141,9 +141,46 @@ int main(int argc, char* argv[])
 			// FIN TRIANGLE
 
 			// PLANE
-			//MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
-			//MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
-			//MyDrawPlane(Plane({ 1, 1, 1 }, 3 ));
+			// Création d'un plan avec un vecteur normal unitaire et un coefficient de distance
+			Vector3 normal = Vector3Normalize ( { 9, 1, 1 } );
+			float distance = 5;
+
+
+			DrawSphere(normal, .2f, YELLOW);
+			DrawLine3D(Vector3Zero(), Vector3Scale(normal, distance * 20), DARKGRAY);
+
+			Plane plane1 = Plane(normal, distance);
+
+			// Création d'un plan à partir d'un vecteur normal unitaire et d'un point sur le plan
+			Vector3 pointA = Vector3Normalize( { 10, 2, 6 } );
+			Vector3 pointB = { 5, 1, 3 };
+
+			DrawSphere(pointA, .2f, GREEN);
+			DrawSphere(pointB, .2f, BLUE);
+
+			DrawLine3D(Vector3Zero(), pointB, RED);
+			DrawLine3D(pointA, pointB, RED);
+
+			Plane plane2 = Plane(pointA, pointB);
+
+			// Création d'un plan à partir de trois points sur le plan
+			Vector3 point1 = Vector3Normalize( { 1, 2, 3 } );
+			Vector3 point2 = { 4, 8, 12 };
+			Vector3 point3 = { 2, 4, 6 };
+
+			DrawSphere(point1, .2f, DARKGREEN);
+			DrawSphere(point2, .2f, DARKBLUE);
+			DrawSphere(point3, .2f, DARKBROWN);
+
+			DrawLine3D(Vector3Zero(), point3, ORANGE);
+			DrawLine3D(point2, point3, ORANGE);
+			DrawLine3D(point1, point2, ORANGE);
+
+			Plane plane3 = Plane(point1, point2, point3);
+
+			MyDrawPlane(plane1, true, false, DARKGRAY);
+			MyDrawPlane(plane2, true, false, RED);
+			MyDrawPlane(plane3, true, false, ORANGE);
 			// FIN PLANE
 
 			// QUAD
@@ -177,9 +214,9 @@ int main(int argc, char* argv[])
 			// FIN CYLINDER			
 			 
 			// INFINITE CYLINDER
-			ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0,0,0}, 0));
-			InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
-			MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
+			//ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0,0,0}, 0));
+			//InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
+			//MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
 			// FIN INFINITE CYLINDER
 			
 			// CAPSULE
