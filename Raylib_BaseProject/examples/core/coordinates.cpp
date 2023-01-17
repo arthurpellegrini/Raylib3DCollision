@@ -16,7 +16,7 @@ Vector2 PolarToCartesian(Polar polar)
 	return Vector2Scale({ cosf(polar.theta),sinf(polar.theta) }, polar.rho);
 }
 
-Cylindrical CartesianToCylindric(Vector3 cart)
+Cylindrical CartesianToCylindrical(Vector3 cart)
 {
 	Cylindrical cyl;
 	cyl.y = cart.y;
@@ -30,7 +30,7 @@ Cylindrical CartesianToCylindric(Vector3 cart)
 	return cyl;
 }
 
-Vector3 CylindricToCartesien(Cylindrical cyl)
+Vector3 CylindricalToCartesien(Cylindrical cyl)
 {
 	return { cyl.rho * sinf(cyl.theta), cyl.y, cyl.rho * cosf(cyl.theta) };
 }

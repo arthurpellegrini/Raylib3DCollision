@@ -2,6 +2,30 @@
 #include <rlgl.h>
 #include <iostream>
 
+/******************************************************************
+*							LINE								  *
+*******************************************************************/
+void MyDrawLine(Line line, Color color)
+{
+	rlBegin(RL_LINES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	rlVertex3f(line.pt.x, line.pt.y, line.pt.z);
+	rlVertex3f(line.pt.x + line.dir.x, line.pt.y + line.dir.y, line.pt.z + line.dir.z);
+	rlEnd();
+}
+
+/******************************************************************
+*							SEGMENT								  *
+*******************************************************************/
+void MyDrawSegment(Segment segment, Color color)
+{
+	rlBegin(RL_LINES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	rlVertex3f(segment.pt1.x, segment.pt1.y, segment.pt1.z);
+	rlVertex3f(segment.pt2.x, segment.pt2.y, segment.pt2.z);
+	rlEnd();
+}
+
 
 /******************************************************************
 *							QUAD								  *
@@ -216,7 +240,7 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color)
 
 		if (rlCheckBufferLimit(numVertex)) rlglDraw();
 
-		DrawTriangle3D(CylindricToCartesien(v2), { 0 }, CylindricToCartesien(v1), color);
+		DrawTriangle3D(CylindricalToCartesien(v2), { 0 }, CylindricalToCartesien(v1), color);
 	}
 	rlPopMatrix();
 }
@@ -241,8 +265,8 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color)
 
 		if (rlCheckBufferLimit(numVertex)) rlglDraw();
 
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
-		DrawLine3D({ 0 }, CylindricToCartesien(v2), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v2), color);
+		DrawLine3D({ 0 }, CylindricalToCartesien(v2), color);
 	}
 	rlPopMatrix();
 }
@@ -476,12 +500,12 @@ void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color
 		if (rlCheckBufferLimit(numVertex)) rlglDraw();
 
 		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
-			DrawTriangle3D(CylindricToCartesien(v2), { 0, 1, 0 }, CylindricToCartesien(v1), color);
-			DrawTriangle3D({ 0, -1, 0 }, CylindricToCartesien(v4), CylindricToCartesien(v3), color);
+			DrawTriangle3D(CylindricalToCartesien(v2), { 0, 1, 0 }, CylindricalToCartesien(v1), color);
+			DrawTriangle3D({ 0, -1, 0 }, CylindricalToCartesien(v4), CylindricalToCartesien(v3), color);
 		}
 
-		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v4), CylindricToCartesien(v2), color);
-		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+		DrawTriangle3D(CylindricalToCartesien(v1), CylindricalToCartesien(v4), CylindricalToCartesien(v2), color);
+		DrawTriangle3D(CylindricalToCartesien(v1), CylindricalToCartesien(v3), CylindricalToCartesien(v4), color);
 	}
 	rlPopMatrix();
 }
@@ -509,14 +533,14 @@ void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Col
 		if (rlCheckBufferLimit(numVertex)) rlglDraw();
 
 		if (drawCaps) { // alors dessin des disques supérieurs et inférieurs (formes discoïdales)
-			DrawLine3D(CylindricToCartesien(v1), { 0, 1, 0 }, color);
-			DrawLine3D(CylindricToCartesien(v3), { 0, -1, 0 }, color);
+			DrawLine3D(CylindricalToCartesien(v1), { 0, 1, 0 }, color);
+			DrawLine3D(CylindricalToCartesien(v3), { 0, -1, 0 }, color);
 		}
 
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
-		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v2), color);
+		DrawLine3D(CylindricalToCartesien(v3), CylindricalToCartesien(v4), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v3), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v4), color);
 	}
 	rlPopMatrix();
 }
@@ -561,8 +585,8 @@ void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTh
 
 		if (rlCheckBufferLimit(numVertex)) rlglDraw();
 
-		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v4), CylindricToCartesien(v2), color);
-		DrawTriangle3D(CylindricToCartesien(v1), CylindricToCartesien(v3), CylindricToCartesien(v4), color);
+		DrawTriangle3D(CylindricalToCartesien(v1), CylindricalToCartesien(v4), CylindricalToCartesien(v2), color);
+		DrawTriangle3D(CylindricalToCartesien(v1), CylindricalToCartesien(v3), CylindricalToCartesien(v4), color);
 	}
 	rlPopMatrix();
 }
@@ -588,11 +612,11 @@ void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float start
 
 		if (rlCheckBufferLimit(numVertex)) rlglDraw();
 
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v2), color);
-		DrawLine3D(CylindricToCartesien(v3), CylindricToCartesien(v4), color);
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v3), color);
-		DrawLine3D(CylindricToCartesien(v1), CylindricToCartesien(v4), color);
-		DrawLine3D(CylindricToCartesien(v2), CylindricToCartesien(v4), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v2), color);
+		DrawLine3D(CylindricalToCartesien(v3), CylindricalToCartesien(v4), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v3), color);
+		DrawLine3D(CylindricalToCartesien(v1), CylindricalToCartesien(v4), color);
+		DrawLine3D(CylindricalToCartesien(v2), CylindricalToCartesien(v4), color);
 	}
 	rlPopMatrix();
 }

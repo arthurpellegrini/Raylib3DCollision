@@ -8,6 +8,16 @@
 #ifndef OBJETS_PRIMITIFS 
 #define OBJETS_PRIMITIFS
 
+struct Line {
+	Vector3 pt;
+	Vector3 dir;
+};
+
+struct Segment {
+	Vector3 pt1;
+	Vector3 pt2;
+};
+
 struct Quad {
 	ReferenceFrame ref;
 	Vector3 extents;
@@ -76,6 +86,18 @@ struct RoundedBox {
 };
 
 #endif
+
+/******************************************************************
+*							LINE								  *
+*******************************************************************/
+void MyDrawLine(Line line, Color color = DARKGRAY);
+
+
+/******************************************************************
+*							SEGMENT								  *
+*******************************************************************/
+void MyDrawSegment(Segment segment, Color color = DARKGRAY);
+
 
 /******************************************************************
 *							Quad 								  *

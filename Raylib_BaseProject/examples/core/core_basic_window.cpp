@@ -133,8 +133,14 @@ int main(int argc, char* argv[])
 		BeginMode3D(camera);
 		{
 			// LINE
-			//DrawLine3D({8,4,8}, {1,9,0}, DARKGRAY);
-			// FIN LINE
+			//Line line = Line( { 8,4,8 }, { 1,9,0 } );
+			//MyDrawLine(line, DARKGRAY);
+			//// FIN LINE			
+			//
+			//// SEGMENT
+			//Segment segment = Segment( { 8,4,8 }, { 1,9,0 } );
+			//MyDrawSegment(segment, DARKGRAY);
+			// FIN SEGMENT
 
 			// TRIANGLE
 			//DrawTriangle3D({8,4,8}, {1,9,0}, {4,6,8}, DARKBLUE);
@@ -142,75 +148,75 @@ int main(int argc, char* argv[])
 
 			// PLANE
 			// Création d'un plan avec un vecteur normal unitaire et un coefficient de distance
-			Vector3 normal = Vector3Normalize ( { 9, 1, 1 } );
-			float distance = 5;
+			//Vector3 normal = Vector3Normalize ( { 9, 1, 1 } );
+			//float distance = 5;
 
 
-			DrawSphere(normal, .2f, YELLOW);
-			DrawLine3D(Vector3Zero(), Vector3Scale(normal, distance * 20), DARKGRAY);
+			//DrawSphere(normal, .2f, YELLOW);
+			//DrawLine3D(Vector3Zero(), Vector3Scale(normal, distance * 20), DARKGRAY);
 
-			Plane plane1 = Plane(normal, distance);
+			//Plane plane1 = Plane(normal, distance);
 
 			// Création d'un plan à partir d'un vecteur normal unitaire et d'un point sur le plan
-			Vector3 pointA = Vector3Normalize( { 10, 2, 6 } );
-			Vector3 pointB = { 5, 1, 3 };
+			//Vector3 pointA = Vector3Normalize( { 10, 2, 6 } );
+			//Vector3 pointB = { 5, 1, 3 };
 
-			DrawSphere(pointA, .2f, GREEN);
-			DrawSphere(pointB, .2f, BLUE);
+			//DrawSphere(pointA, .2f, GREEN);
+			//DrawSphere(pointB, .2f, BLUE);
 
-			DrawLine3D(Vector3Zero(), pointB, RED);
-			DrawLine3D(pointA, pointB, RED);
+			//DrawLine3D(Vector3Zero(), pointB, RED);
+			//DrawLine3D(pointA, pointB, RED);
 
-			Plane plane2 = Plane(pointA, pointB);
+			//Plane plane2 = Plane(pointA, pointB);
 
 			// Création d'un plan à partir de trois points sur le plan
-			Vector3 point1 = Vector3Normalize( { 1, 2, 3 } );
-			Vector3 point2 = { 4, 8, 12 };
-			Vector3 point3 = { 2, 4, 6 };
+			//Vector3 point1 = Vector3Normalize( { 1, 2, 3 } );
+			//Vector3 point2 = { 4, 8, 12 };
+			//Vector3 point3 = { 2, 4, 6 };
 
-			DrawSphere(point1, .2f, DARKGREEN);
-			DrawSphere(point2, .2f, DARKBLUE);
-			DrawSphere(point3, .2f, DARKBROWN);
+			//DrawSphere(point1, .2f, DARKGREEN);
+			//DrawSphere(point2, .2f, DARKBLUE);
+			//DrawSphere(point3, .2f, DARKBROWN);
 
-			DrawLine3D(Vector3Zero(), point3, ORANGE);
-			DrawLine3D(point2, point3, ORANGE);
-			DrawLine3D(point1, point2, ORANGE);
+			//DrawLine3D(Vector3Zero(), point3, ORANGE);
+			//DrawLine3D(point2, point3, ORANGE);
+			//DrawLine3D(point1, point2, ORANGE);
 
-			Plane plane3 = Plane(point1, point2, point3);
+			//Plane plane3 = Plane(point1, point2, point3);
 
-			MyDrawPlane(plane1, true, false, DARKGRAY);
-			MyDrawPlane(plane2, true, false, RED);
-			MyDrawPlane(plane3, true, false, ORANGE);
+			//MyDrawPlane(plane1, true, false, DARKGRAY);
+			//MyDrawPlane(plane2, true, false, RED);
+			//MyDrawPlane(plane3, true, false, ORANGE);
 			// FIN PLANE
 
 			// QUAD
-			//ReferenceFrame ref_quad = ReferenceFrame({ -7,-5,-8 },QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
-			//Quad quad = { ref_quad, {3,1,5} };
-			//MyDrawQuad(quad, true, true, YELLOW);
+			ReferenceFrame ref_quad = ReferenceFrame({ -7,-5,-8 },QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
+			Quad quad = { ref_quad, {3,1,5} };
+			MyDrawQuad(quad, true, true, YELLOW);
 			// FIN QUAD
 
 			// DISK
-			//ReferenceFrame ref_disk = ReferenceFrame({ -7,-5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
-			//Disk disk = { ref_disk, 5.0f };
-			//MyDrawDisk(disk, 20, true, true, BROWN);
+			ReferenceFrame ref_disk = ReferenceFrame({ -7,-5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
+			Disk disk = { ref_disk, 5.0f };
+			MyDrawDisk(disk, 20, true, true, BROWN);
 			// FIN DISK
 
 			// BOX
-			//ReferenceFrame ref_box = ReferenceFrame({ -7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), time));
-			//Box box = { ref_box, { 1,2,3 } };
-			//MyDrawBox(box, true, true, DARKGREEN);
+			ReferenceFrame ref_box = ReferenceFrame({ -7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), time));
+			Box box = { ref_box, { 1,2,3 } };
+			MyDrawBox(box, true, true, DARKGREEN);
 			// FIN BOX
 
 			// SPHERE
-			//ReferenceFrame ref_sphere = ReferenceFrame({ -7,5,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -time));
-			//Sphere sphere = { ref_sphere, 3.0f };
-			//MyDrawSphere(sphere, 20, 20, true, true, RED);
+			ReferenceFrame ref_sphere = ReferenceFrame({ -7,5,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -time));
+			Sphere sphere = { ref_sphere, 3.0f };
+			MyDrawSphere(sphere, 20, 20, true, true, RED);
 			// FIN SPHERE
 
 			// CYLINDER
-			//ReferenceFrame ref_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), time));
-			//Cylinder cylinder = { ref_cylinder, 3.0f, 2.0f };
-			//MyDrawCylinder(cylinder, 20, true, true, true, BLUE);
+			ReferenceFrame ref_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), time));
+			Cylinder cylinder = { ref_cylinder, 3.0f, 2.0f };
+			MyDrawCylinder(cylinder, 20, true, true, true, BLUE);
 			// FIN CYLINDER			
 			 
 			// INFINITE CYLINDER
@@ -220,15 +226,15 @@ int main(int argc, char* argv[])
 			// FIN INFINITE CYLINDER
 			
 			// CAPSULE
-			//ReferenceFrame ref_capsule = ReferenceFrame({ 7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,1 }), -time));
-			//Capsule capsule = { ref_capsule, 3.0f, 2.0f };
-			//MyDrawCapsule(capsule, 10, 10, true, true, SKYBLUE);
+			ReferenceFrame ref_capsule = ReferenceFrame({ 7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,1 }), -time));
+			Capsule capsule = { ref_capsule, 3.0f, 2.0f };
+			MyDrawCapsule(capsule, 10, 10, true, true, SKYBLUE);
 			// FIN CAPSULE		
 
 			// ROUNDED BOX
-			//ReferenceFrame ref_rounded_box = { { 7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 5,1,0 }), time) };
-			//RoundedBox rounded_box = { ref_rounded_box, { 2,1,3 }, 1.0f };
-			//MyDrawRoundedBox(rounded_box, 8, true, true, GREEN);
+			ReferenceFrame ref_rounded_box = { { 7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 5,1,0 }), time) };
+			RoundedBox rounded_box = { ref_rounded_box, { 2,1,3 }, 1.0f };
+			MyDrawRoundedBox(rounded_box, 8, true, true, GREEN);
 			// FIN ROUNDED BOX
 
 			//3D REFERENTIAL
