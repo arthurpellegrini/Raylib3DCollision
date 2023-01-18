@@ -18,6 +18,12 @@ struct Segment {
 	Vector3 pt2;
 };
 
+struct Triangle {
+	Vector3 pt1;
+	Vector3 pt2;
+	Vector3 pt3;
+};
+
 struct Quad {
 	ReferenceFrame ref;
 	Vector3 extents;
@@ -88,15 +94,23 @@ struct RoundedBox {
 #endif
 
 /******************************************************************
-*							LINE								  *
+*							Line								  *
 *******************************************************************/
 void MyDrawLine(Line line, Color color = DARKGRAY);
 
 
 /******************************************************************
-*							SEGMENT								  *
+*							Segment								  *
 *******************************************************************/
 void MyDrawSegment(Segment segment, Color color = DARKGRAY);
+
+
+/******************************************************************
+*							Triangle							  *
+*******************************************************************/
+void MyDrawPolygonTriangle(Triangle triangle, Color color = LIGHTGRAY);
+void MyDrawWireframeTriangle(Triangle triangle, Color color = DARKGRAY);
+void MyDrawTriangle(Triangle triangle, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
 
 /******************************************************************
@@ -106,10 +120,12 @@ void MyDrawPolygonQuad(Quad quad, Color color = LIGHTGRAY);
 void MyDrawWireframeQuad(Quad quad, Color color = DARKGRAY);
 void MyDrawQuad(Quad quad, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
+
 /******************************************************************
 *							Plane 								  *
 *******************************************************************/
 void MyDrawPlane(Plane plane, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+
 
 /******************************************************************
 *							Disk 								  *
@@ -120,7 +136,7 @@ void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon = true, bool drawWiref
 
 
 /******************************************************************
-*							Box 								  *
+*							 Box 								  *
 *******************************************************************/
 void MyDrawPolygonBox(Box box, Color color = LIGHTGRAY);
 void MyDrawWireframeBox(Box box, Color color = DARKGRAY);

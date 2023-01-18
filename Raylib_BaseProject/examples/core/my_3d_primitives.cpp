@@ -26,6 +26,42 @@ void MyDrawSegment(Segment segment, Color color)
 	rlEnd();
 }
 
+/******************************************************************
+*							TRIANGLE							  *
+*******************************************************************/
+void MyDrawPolygonTriangle(Triangle triangle, Color color)
+{
+	int numVertex = 3;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+	rlBegin(RL_TRIANGLES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	rlVertex3f(triangle.pt1.x, triangle.pt1.y, triangle.pt1.z);
+	rlVertex3f(triangle.pt2.x, triangle.pt2.y, triangle.pt2.z);
+	rlVertex3f(triangle.pt3.x, triangle.pt3.y, triangle.pt3.z);
+	rlEnd();
+}
+
+
+void MyDrawWireframeTriangle(Triangle triangle, Color color)
+{
+	int numVertex = 3;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+	rlBegin(RL_LINES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	rlVertex3f(triangle.pt1.x, triangle.pt1.y, triangle.pt1.z);
+	rlVertex3f(triangle.pt2.x, triangle.pt2.y, triangle.pt2.z);
+	rlVertex3f(triangle.pt3.x, triangle.pt3.y, triangle.pt3.z);
+	rlEnd();
+}
+
+void MyDrawTriangle(Triangle triangle, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
+{
+	if (drawPolygon) MyDrawPolygonTriangle(triangle, polygonColor);
+	if (drawWireframe) MyDrawWireframeTriangle(triangle, wireframeColor);
+}
+
 
 /******************************************************************
 *							QUAD								  *
@@ -92,25 +128,6 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 /******************************************************************
 *							PLANE								  *
 *******************************************************************/
-//void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
-//{
-	//ReferenceFrame ref = ReferenceFrame();
-	//ref.Translate(Vector3Scale(plane.n, plane.d));
-
-	//rlPushMatrix();
-	//rlTranslatef(ref.origin.x, ref.origin.y, ref.origin.z);
-	//Vector3 vect;
-	//float angle;
-	//QuaternionToAxisAngle(ref.q, &vect, &angle);
-	//rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-	//rlScalef(1, 0, 1);
-
-	//Quad quad = { ref, { 1,0,1 } };
-
-	//if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
-	//if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);
-	//rlPopMatrix();
-//}
 void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	ReferenceFrame ref;

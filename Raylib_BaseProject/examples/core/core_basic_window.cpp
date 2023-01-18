@@ -133,60 +133,27 @@ int main(int argc, char* argv[])
 		BeginMode3D(camera);
 		{
 			// LINE
-			//Line line = Line( { 8,4,8 }, { 1,9,0 } );
+			//Line line = { { 8,4,8 }, { 1,9,0 } };
 			//MyDrawLine(line, DARKGRAY);
-			//// FIN LINE			
-			//
-			//// SEGMENT
-			//Segment segment = Segment( { 8,4,8 }, { 1,9,0 } );
+			// FIN LINE			
+			
+			// SEGMENT
+			//Segment segment = { { 8,4,8 }, { 1,9,0 } };
 			//MyDrawSegment(segment, DARKGRAY);
 			// FIN SEGMENT
 
 			// TRIANGLE
-			//DrawTriangle3D({8,4,8}, {1,9,0}, {4,6,8}, DARKBLUE);
+			//Triangle triangle = { { 8,4,8 }, {8,9,1}, { 7,3,2 } };
+			//MyDrawTriangle(triangle, true, true, DARKBLUE);
 			// FIN TRIANGLE
 
 			// PLANE
-			// Création d'un plan avec un vecteur normal unitaire et un coefficient de distance
-			//Vector3 normal = Vector3Normalize ( { 9, 1, 1 } );
-			//float distance = 5;
-
-
-			//DrawSphere(normal, .2f, YELLOW);
-			//DrawLine3D(Vector3Zero(), Vector3Scale(normal, distance * 20), DARKGRAY);
-
-			//Plane plane1 = Plane(normal, distance);
-
-			// Création d'un plan à partir d'un vecteur normal unitaire et d'un point sur le plan
-			//Vector3 pointA = Vector3Normalize( { 10, 2, 6 } );
-			//Vector3 pointB = { 5, 1, 3 };
-
-			//DrawSphere(pointA, .2f, GREEN);
-			//DrawSphere(pointB, .2f, BLUE);
-
-			//DrawLine3D(Vector3Zero(), pointB, RED);
-			//DrawLine3D(pointA, pointB, RED);
-
-			//Plane plane2 = Plane(pointA, pointB);
-
-			// Création d'un plan à partir de trois points sur le plan
-			//Vector3 point1 = Vector3Normalize( { 1, 2, 3 } );
-			//Vector3 point2 = { 4, 8, 12 };
-			//Vector3 point3 = { 2, 4, 6 };
-
-			//DrawSphere(point1, .2f, DARKGREEN);
-			//DrawSphere(point2, .2f, DARKBLUE);
-			//DrawSphere(point3, .2f, DARKBROWN);
-
-			//DrawLine3D(Vector3Zero(), point3, ORANGE);
-			//DrawLine3D(point2, point3, ORANGE);
-			//DrawLine3D(point1, point2, ORANGE);
-
-			//Plane plane3 = Plane(point1, point2, point3);
-
-			//MyDrawPlane(plane1, true, false, DARKGRAY);
-			//MyDrawPlane(plane2, true, false, RED);
-			//MyDrawPlane(plane3, true, false, ORANGE);
+			//Plane plane1 = Plane(Vector3Normalize( { 9, 1, 1 } ), 5.0f);
+			//Plane plane2 = Plane(Vector3Normalize( { 7, 2, 6 } ), { 5, 1, 3 });
+			//Plane plane3 = Plane(Vector3Normalize( { 5, 1, 3 } ), { 3, 2, 4 }, { 9, 3, 6 });
+			//MyDrawPlane(plane1, true, true, DARKGRAY);
+			//MyDrawPlane(plane2, true, true, RED);
+			//MyDrawPlane(plane3, true, true, ORANGE);
 			// FIN PLANE
 
 			// QUAD
