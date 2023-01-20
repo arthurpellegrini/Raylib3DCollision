@@ -5,6 +5,12 @@
 /******************************************************************
 *							LINE								  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner un segment à partir des coordonnées définnisant son point de départ et sa direction
+/// </summary>
+/// <param name="line">Contient les deux vecteurs permettant de positionner le point de la ligne et son vecteur de direction</param>
+/// <param name="color">Contient la couleur de la ligne</param>
 void MyDrawLine(Line line, Color color)
 {
 	rlBegin(RL_LINES);
@@ -17,6 +23,12 @@ void MyDrawLine(Line line, Color color)
 /******************************************************************
 *							SEGMENT								  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner un segment à partir de deux points donnés en paramètre
+/// </summary>
+/// <param name="segment">Contient les deux vecteurs permettant de positionner les points du segment</param>
+/// <param name="color">Contient la couleur du segment</param>
 void MyDrawSegment(Segment segment, Color color)
 {
 	rlBegin(RL_LINES);
@@ -29,6 +41,12 @@ void MyDrawSegment(Segment segment, Color color)
 /******************************************************************
 *							TRIANGLE							  *
 *******************************************************************/
+
+// <summary>
+/// Méthode permettant de dessiner un triangle d'une certaine couleur à partir de trois points donnés en paramètre
+/// </summary>
+/// <param name="triangle">Contient les trois vecteurs permettant de positionner les points du triangle</param>
+/// <param name="color">Contient la couleur du triangle</param>
 void MyDrawPolygonTriangle(Triangle triangle, Color color)
 {
 	int numVertex = 3;
@@ -42,7 +60,11 @@ void MyDrawPolygonTriangle(Triangle triangle, Color color)
 	rlEnd();
 }
 
-
+// <summary>
+/// Méthode permettant de dessiner un triangle en mode fil de fer à partir de trois points donnés en paramètre
+/// </summary>
+/// <param name="triangle">Contient les trois vecteurs permettant de positionner les points du triangle</param>
+/// <param name="color">Contient la couleur du maillage</param>
 void MyDrawWireframeTriangle(Triangle triangle, Color color)
 {
 	int numVertex = 3;
@@ -56,6 +78,14 @@ void MyDrawWireframeTriangle(Triangle triangle, Color color)
 	rlEnd();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un triangle en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="triangle">Contient les trois vecteurs permettant de positionner les points du triangle</param>
+/// <param name="drawPolygon">Indique si le triangle doit être dessiné en mode polygone</param>
+/// <param name="drawWireframe">Indique si le triangle doit être dessiné en mode fil de fer</param>
+/// <param name="polygonColor">Contient la couleur à utiliser pour dessiner le triangle en mode polygone</param>
+/// <param name="wireframeColor">Contient la couleur à utiliser pour dessiner le triangle en mode fil de fer</param>
 void MyDrawTriangle(Triangle triangle, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonTriangle(triangle, polygonColor);
@@ -66,6 +96,12 @@ void MyDrawTriangle(Triangle triangle, bool drawPolygon, bool drawWireframe, Col
 /******************************************************************
 *							QUAD								  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner un quad en mode polygone à partir de quatre points donnés en paramètre
+/// </summary>
+/// <param name="quad">Contient les informations pour positionner et orienter le quad</param>
+/// <param name="color">Contient la couleur de la surface</param>
 void MyDrawPolygonQuad(Quad quad, Color color)
 {
 	int numVertex = 6;
@@ -89,7 +125,11 @@ void MyDrawPolygonQuad(Quad quad, Color color)
 	rlPopMatrix();
 }
 
-
+/// <summary>
+/// Méthode permettant de dessiner un quad en mode fil de fer à partir de quatre points donnés en paramètre
+/// </summary>
+/// <param name="quad">Contient les informations pour positionner et orienter le quad</param>
+/// <param name="color">Contient la couleur du fil de fer</param>
 void MyDrawWireframeQuad(Quad quad, Color color)
 {
 	int numVertex = 10;
@@ -117,7 +157,14 @@ void MyDrawWireframeQuad(Quad quad, Color color)
 	rlPopMatrix();
 }
 
-
+/// <summary>
+/// Méthode permettant de dessiner un quad en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="quad">Contient les informations pour positionner et orienter le quad</param>
+/// <param name="drawPolygon">Indique si le quad doit être dessiné en mode polygone</param>
+/// <param name="drawWireframe">Indique si le quad doit être dessiné en mode fil de fer</param>
+/// <param name="polygonColor">Contient la couleur à utiliser pour dessiner le quad en mode polygone</param>
+/// <param name="wireframeColor">Contient la couleur à utiliser pour dessiner le quad en mode fil de fer</param>
 void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
@@ -128,6 +175,15 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 /******************************************************************
 *							PLANE								  *
 *******************************************************************/
+
+// <summary>
+/// Méthode permettant de dessiner un plane en mode polygone et/ou fil de fer (imagination requise pour étendre à l'infini)
+/// </summary>
+/// <param name="plane">Contient les informations pour positionner et orienter le plane</param>
+/// <param name="drawPolygon">Indique si le plane doit être dessiné en mode polygone</param>
+/// <param name="drawWireframe">Indique si le plane doit être dessiné en mode fil de fer</param>
+/// <param name="polygonColor">Contient la couleur à utiliser pour dessiner le plane en mode polygone</param>
+/// <param name="wireframeColor">Contient la couleur à utiliser pour dessiner le plane en mode fil de fer</param>
 void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	ReferenceFrame ref;
@@ -153,6 +209,12 @@ void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygo
 /******************************************************************
 *							BOX 								  *
 *******************************************************************/
+
+// <summary>
+/// Méthode permettant de dessiner une box en mode polygone
+/// </summary>
+/// <param name="box">Contient les informations pour positionner et orienter la box</param>
+/// <param name="color">Contient la couleur à utiliser pour dessiner la box</param>
 void MyDrawPolygonBox(Box box, Color color) 
 {
 	int numVertex = 36;
@@ -190,6 +252,11 @@ void MyDrawPolygonBox(Box box, Color color)
 	rlPopMatrix();
 }
 
+// <summary>
+/// Méthode permettant de dessiner une box en mode fil de fer
+/// </summary>
+/// <param name="box">Contient les informations pour positionner et orienter la box</param>
+/// <param name="color">Contient la couleur à utiliser pour dessiner le fil de fer</param>
 void MyDrawWireframeBox(Box box, Color color) 
 {
 	int numVertex = 60;
@@ -227,6 +294,14 @@ void MyDrawWireframeBox(Box box, Color color)
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une box en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="box">Contient les informations pour positionner et orienter la box</param>
+/// <param name="drawPolygon">Indique si la box doit être dessinée en mode polygone</param>
+/// <param name="drawWireframe">Indique si la box doit être dessinée en mode fil de fer</param>
+/// <param name="polygonColor">Contient la couleur à utiliser pour dessiner la box en mode polygone</param>
+/// <param name="wireframeColor">Contient la couleur à utiliser pour dessiner la box en mode fil de fer</param>
 void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
 {
 	if (drawPolygon) MyDrawPolygonBox(box, polygonColor);
@@ -237,6 +312,13 @@ void MyDrawBox(Box box, bool drawPolygon, bool drawWireframe, Color polygonColor
 /******************************************************************
 *							DISK								  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner un disk d'une certaine couleur en utilisant des triangles
+/// </summary>
+/// <param name="disk">Contient les informations sur le disk (position, rayon, orientation)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le disk</param>
+/// <param name="color">Contient la couleur du disk</param>
 void MyDrawPolygonDisk(Disk disk, int nSectors, Color color)
 {
 	int numVertex = nSectors * 3;
@@ -262,6 +344,12 @@ void MyDrawPolygonDisk(Disk disk, int nSectors, Color color)
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un disk en mode fil de fer
+/// </summary>
+/// <param name="disk">Contient les informations sur le disk (position, rayon, orientation)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le disk</param>
+/// <param name="color">Contient la couleur du fil de fer</param>
 void MyDrawWireframeDisk(Disk disk, int nSectors, Color color)
 {
 	int numVertex = nSectors * 3;
@@ -288,6 +376,15 @@ void MyDrawWireframeDisk(Disk disk, int nSectors, Color color)
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un disk en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="disk">Contient les informations relatives au disk (origine, rayon, orientation)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le disk</param>
+/// <param name="drawPolygon">Définit si on dessine le disk en mode polygone</param>
+/// <param name="drawWireframe">Définit si on dessine le disk en mode fil de fer</param>
+/// <param name="polygonColor">Couleur utilisée pour dessiner le disk en mode polygone</param>
+/// <param name="wireframeColor">Couleur utilisée pour dessiner le disk en mode fil de fer</param>
 void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonDisk(disk, nSectors, polygonColor);
@@ -298,6 +395,14 @@ void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon, bool drawWireframe, C
 /******************************************************************
 *							SPHERE 								  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner une sphère à partir des paramètres donnés
+/// </summary>
+/// <param name="sphere">Contient les informations sur la sphère (position, rotation, rayon)</param>
+/// <param name="nMeridians">Nombre de méridiens utilisés pour dessiner la sphère</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner la sphère</param>
+/// <param name="color">Couleur de la sphère</param>
 void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color) 
 {
 	int numVertex = nMeridians * nParallels * 4;
@@ -341,6 +446,13 @@ void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color co
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une sphère en fil de fer à partir des paramètres donnés
+/// </summary>
+/// <param name="sphere">Contient les informations sur la sphère (position, rotation, rayon)</param>
+/// <param name="nMeridians">Nombre de méridiens utilisés pour dessiner la sphère</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner la sphère</param>
+/// <param name="color">Couleur du fil de fer</param>
 void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color) 
 {
 	int numVertex = nMeridians * nParallels * 4;
@@ -385,6 +497,16 @@ void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color 
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une sphère en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="sphere">Contient les informations sur la sphère tels que sa référence => orientation et position et son rayon</param>
+/// <param name="nMeridians">Le nombre de méridiens de la sphère</param>
+/// <param name="nParallels">Le nombre de parallèles de la sphère</param>
+/// <param name="drawPolygon">Indique si on dessine la sphère en mode polygones</param>
+/// <param name="drawWireframe">Indique si on dessine la sphère en mode fil de fer</param>
+/// <param name="polygonColor">La couleur des polygones</param>
+/// <param name="wireframeColor">La couleur du fil de fer</param>
 void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
 {
 	if (drawPolygon) MyDrawPolygonSphere(sphere, nMeridians, nParallels, polygonColor);
@@ -395,6 +517,19 @@ void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygo
 /******************************************************************
 *					Sphere Optimization Methods					  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner la portion de sphère à partir d'un certain nombre de méridiens et de parallèles,
+///  ainsi que de la plage de début et de fin pour theta et phi
+/// </summary>
+/// <param name="sphere">Contient les informations de la sphère (centre, rayon, orientation)</param>
+/// <param name="nMeridians">Nombre de meridiens utilisés pour dessiner la portion de sphère</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner la portion de sphère</param>
+/// <param name="startTheta">Angle de départ (en radians) pour le dessin des parallèles</param>
+/// <param name="endTheta">Angle final (en radians) pour le dessin des parallèles</param>
+/// <param name="startPhi">Angle de départ (en radians) pour le dessin des meridiens</param>
+/// <param name="endPhi">Angle final (en radians) pour le dessin des meridiens</param>
+/// <param name="color">Couleur de la portion de sphère</param>
 void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
 {
 	int numVertex = nMeridians * nParallels * 4;
@@ -438,6 +573,18 @@ void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, f
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner la portion de sphère en fil de fer à partir d'un certain nombre de méridiens et de parallèles,
+///  ainsi que de la plage de début et de fin pour theta et phi
+/// </summary>
+/// <param name="sphere">Contient les informations de la sphère (centre, rayon, orientation)</param>
+/// <param name="nMeridians">Nombre de meridiens utilisés pour dessiner la portion de sphère</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner la portion de sphère</param>
+/// <param name="startTheta">Angle de départ (en radians) pour le dessin des parallèles</param>
+/// <param name="endTheta">Angle final (en radians) pour le dessin des parallèles</param>
+/// <param name="startPhi">Angle de départ (en radians) pour le dessin des meridiens</param>
+/// <param name="endPhi">Angle final (en radians) pour le dessin des meridiens</param>
+/// <param name="color">Couleur de la ligne</param>
 void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
 {
 	int numVertex = nMeridians * nParallels * 4;
@@ -484,6 +631,20 @@ void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels,
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner la portion de sphère en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="sphere">Contient les informations de la sphère à dessiner, tels que sa position, sa rotation et son rayon</param>
+/// <param name="nMeridians">Nombre de méridiens à utiliser pour dessiner la sphère</param>
+/// <param name="nParallels">Nombre de parallèles à utiliser pour dessiner la sphère</param>
+/// <param name="startTheta">Limite de début pour theta</param>
+/// <param name="endTheta">Limite de fin pour theta</param>
+/// <param name="startPhi">Limite de début pour phi</param>
+/// <param name="endPhi">Limite de fin pour phi</param>
+/// <param name="drawPolygon">Indicateur pour dessiner ou non la portion sphérique en mode polygone</param>
+/// <param name="drawWireframe">Indicateur pour dessiner ou non la portion sphérique en mode fil de fer</param>
+/// <param name="polygonColor">Couleur à utiliser pour dessiner la portion sphérique en mode polygone</param>
+/// <param name="wireframeColor">Couleur à utiliser pour dessiner la portion sphérique en mode fil de fer</param>
 void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonSpherePortion(sphere, nMeridians, nParallels, startTheta, endTheta, startPhi, endPhi, polygonColor);
@@ -494,6 +655,15 @@ void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float st
 /******************************************************************
 *							CYLINDER							  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner un cylindre en mode polygone d'une certaine couleur
+///  et de spécifier s'il faut dessiner les disques supérieur et inférieur à partir de paramètres donnés
+/// </summary>
+/// <param name="cylinder">Contient les informations sur la position, la taille et l'orientation du cylindre</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le cylindre</param>
+/// <param name="drawCaps">Indique s'il faut dessiner les disques supérieur et inférieur</param>
+/// <param name="color">Contient la couleur du cylindre</param>
 void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
 {
 	int numVertex = nSectors * 3;
@@ -527,6 +697,14 @@ void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un cylindre en mode fil de fer d'une certaine couleur
+///  et de spécifier s'il faut dessiner les disques supérieur et inférieur à partir de paramètres donnés
+/// </summary>
+/// <param name="cylinder">Contient les informations sur la position, la taille et l'orientation du cylindre</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le cylindre</param>
+/// <param name="drawCaps">Indique s'il faut dessiner les disques supérieur et inférieur</param>
+/// <param name="color">Contient la couleur de la ligne</param>
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Color color)
 {
 	int numVertex = nSectors * 4;
@@ -562,12 +740,31 @@ void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps, Col
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un cylindre en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="cylinder">Contient les informations relatives à la forme du cylindre (rayon, hauteur ...)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le cylindre</param>
+/// <param name="drawCaps">Indique si les disques supérieur et inférieur du cylindre doivent être dessinés</param>
+/// <param name="drawPolygon">Indique si le cylindre doit être dessiné en mode polygones</param>
+/// <param name="drawWireframe">Indique si le cylindre doit être dessiné en mode fil de fer</param>
+/// <param name="polygonColor">Couleur utilisée pour dessiner le cylindre en mode polygones</param>
+/// <param name="wireframeColor">Couleur utilisée pour dessiner le cylindre en mode fil de fer</param>
 void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
 {
 	if (drawPolygon) MyDrawPolygonCylinder(cylinder, nSectors, drawCaps, polygonColor);
 	if (drawWireframe) MyDrawWireframeCylinder(cylinder, nSectors, drawCaps, wireframeColor);
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un cylindre infini avec une certaine couleur
+/// </summary>
+/// <param name="infiniteCylinder">Contient les informations nécessaires pour positionner le cylindre</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner le cylindre</param>
+/// <param name="drawPolygon">Indique si le cylindre doit être dessiné en mode polygones</param>
+/// <param name="drawWireframe">Indique si le cylindre doit être dessiné en mode fil de fer</param>
+/// <param name="polygonColor">Couleur utilisée pour dessiner le cylindre en mode polygones</param>
+/// <param name="wireframeColor">Couleur utilisée pour dessiner le cylindre en mode fil de fer</param>
 void MyDrawInfiniteCylinder(InfiniteCylinder infiniteCylinder, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	Cylinder inf_cylinder = Cylinder{ infiniteCylinder.ref,  40.0f, infiniteCylinder.radius };
@@ -580,7 +777,14 @@ void MyDrawInfiniteCylinder(InfiniteCylinder infiniteCylinder, int nSectors, boo
 *					Cylinder Optimization Methods				  *
 *******************************************************************/
 
-// TODO: ADD SUPPORT FOR NEGATIVE THETA
+/// <summary>
+/// Cette méthode permet de dessiner une portion de cylindre en utilisant un certain nombre de secteurs et une intervalle de début et de fin pour l'angle theta
+/// </summary>
+/// <param name="cylinder">Contient les informations nécessaires pour dessiner le cylindre, telles que la position, le rayon et la hauteur</param>
+/// <param name="nSectors">Le nombre de secteurs à utiliser pour dessiner la portion de cylindre</param>
+/// <param name="startTheta">L'angle de départ (en degrés) à utiliser pour dessiner la portion de cylindre</param>
+/// <param name="endTheta">L'angle de fin (en degrés) à utiliser pour dessiner la portion de cylindre</param>
+/// <param name="color">La couleur à utiliser pour dessiner le cylindre</param>
 void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
 {
 	int numVertex = nSectors * 4;
@@ -608,6 +812,14 @@ void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTh
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Cette méthode permet de dessiner une portion de cylindre en mode fil de fer en utilisant un certain nombre de secteurs et une intervalle de début et de fin pour l'angle theta
+/// </summary>
+/// <param name="cylinder">Contient les informations nécessaires pour dessiner le cylindre, telles que la position, le rayon et la hauteur</param>
+/// <param name="nSectors">Le nombre de secteurs à utiliser pour dessiner la portion de cylindre</param>
+/// <param name="startTheta">L'angle de départ (en degrés) à utiliser pour dessiner la portion de cylindre</param>
+/// <param name="endTheta">L'angle de fin (en degrés) à utiliser pour dessiner la portion de cylindre</param>
+/// <param name="color">La couleur à utiliser pour dessiner les lignes</param>
 void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
 {
 	int numVertex = nSectors * 4;
@@ -638,6 +850,17 @@ void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float start
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une portion de cylindre en mode polygone et/ou de fil de fer
+/// </summary>
+/// <param name="cylinder">Contient les informations de base sur le cylindre (position, taille ...)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner la portion de cylindre</param>
+/// <param name="startTheta">Angle de départ pour dessiner la portion de cylindre</param>
+/// <param name="endTheta">Angle final pour dessiner la portion de cylindre</param>
+/// <param name="drawPolygon">Détermine si la portion de cylindre doit être dessinée en utilisant des polygones</param>
+/// <param name="drawWireframe">Détermine si la portion de cylindre doit être dessinée en utilisant un fil de fer</param>
+/// <param name="polygonColor">Couleur à utiliser pour dessiner les polygones</param>
+/// <param name="wireframeColor">Couleur à utiliser pour dessiner le fil de fer</param>
 void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonCylinderPortion(cylinder, nSectors, startTheta, endTheta, polygonColor);
@@ -648,6 +871,14 @@ void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, fl
 /******************************************************************
 *							CAPSULE 							  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner une capsule en mode polygones
+/// </summary>
+/// <param name="capsule">Contient les informations de la capsule (référence => l'orientation et la position, hauteur, rayon)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner les sphères</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner les sphères et le cylindre</param>
+/// <param name="color">Contient la couleur des polygones</param>
 void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
 {
 	rlPushMatrix();
@@ -667,6 +898,13 @@ void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color c
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une capsule en mode fil de fer
+/// </summary>
+/// <param name="capsule">Contient les informations de la capsule (référence => l'orientation et la position, hauteur, rayon)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner les sphères</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner les sphères et le cylindre</param>
+/// <param name="color">Contient la couleur des lignes</param>
 void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color) 
 {
 	rlPushMatrix();
@@ -687,6 +925,16 @@ void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une capsule en mode polygone et/ou fil de fer
+/// </summary>
+/// <param name="capsule">Contient les informations de la capsule (référence => l'orientation et la position, hauteur, rayon)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés pour dessiner les sphères</param>
+/// <param name="nParallels">Nombre de parallèles utilisés pour dessiner les sphères et le cylindre</param>
+/// <param name="drawPolygon">Détermine si la capsule doit être dessinée en mode polygone</param>
+/// <param name="drawWireframe">Détermine si la capsule doit être dessinée en mode fil de fer</param>
+/// <param name="polygonColor">Contient la couleur des polygones</param>
+/// <param name="wireframeColor">Contient la couleur des lignes en mode fil de fer</param>
 void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor) 
 {
 	if (drawPolygon) MyDrawPolygonCapsule(capsule, nSectors, nParallels, polygonColor);
@@ -697,6 +945,13 @@ void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolyg
 /******************************************************************
 *						ROUNDED BOX 							  *
 *******************************************************************/
+
+/// <summary>
+/// Méthode permettant de dessiner un boîte arrondie en mode polygones
+/// </summary>
+/// <param name="roundedBox">Contient les informations de la boîte arrondie (référence => l'orientation et la position, dimensions, rayon des Sphères)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés</param>
+/// <param name="color">Contient la couleur des polygones</param>
 void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 {
 	rlPushMatrix();
@@ -779,6 +1034,12 @@ void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner un boîte arrondie en mode fil de fer
+/// </summary>
+/// <param name="roundedBox">Contient les informations de la boîte arrondie (référence => l'orientation et la position, dimensions, rayon des Sphères)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés</param>
+/// <param name="color">Contient la couleur des lignes</param>
 void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 {
 	rlPushMatrix();
@@ -859,6 +1120,15 @@ void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	rlPopMatrix();
 }
 
+/// <summary>
+/// Méthode permettant de dessiner une boîte arrondie en mode polygones et/ou fil de fer
+/// </summary>
+/// <param name="roundedBox">Contient les informations de la boîte arrondie (référence => l'orientation et la position, dimensions, rayon des Sphères)</param>
+/// <param name="nSectors">Nombre de secteurs utilisés</param>
+/// <param name="drawPolygon">Indique s'il faut dessiner les polygones</param>
+/// <param name="drawWireframe">Indique s'il faut dessiner le fil de fer</param>
+/// <param name="polygonColor">Contient la couleur des polygones</param>
+/// <param name="wireframeColor">Contient la couleur du fil de fer</param>
 void MyDrawRoundedBox(RoundedBox roundedBox, int nSectors, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
 	if (drawPolygon) MyDrawPolygonRoundedBox(roundedBox, nSectors, polygonColor);
