@@ -25,9 +25,8 @@
 #include <float.h>
 #include <vector>
 
-#include "coordinates.h"
-#include "reference_frame.h"
-#include "my_3d_primitives.h"
+#include "Coordinates.hpp"
+#include "My3DPrimitives.hpp"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330

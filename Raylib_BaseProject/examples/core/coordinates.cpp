@@ -1,13 +1,13 @@
+#include "Coordinates.hpp"
+
 /*******************************************************************************************
-* Fonctions de conversion des diff�rents types de coordonn�es				
+* Fonctions de conversion des différents types de coordonn�es				
 * ******************************************************************************************/
-
-#include "coordinates.h"
-
 Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive = true)
 {
-	Polar polar = { Vector2Length(cart),atan2f(cart.y,cart.x) };
-	if (keepThetaPositive && polar.theta < 0)polar.theta += 2 * PI;
+	Polar polar = { Vector2Length(cart), atan2f(cart.y, cart.x) };
+	// Si l'utilisateur souhaite avoir un angle positif et que l'angle actuel est négatif, on l'ajoute à 2*PI pour l'avoir en positif
+	if (keepThetaPositive && polar.theta < 0) polar.theta += 2 * PI;
 	return polar;
 }
 
@@ -22,6 +22,7 @@ Cylindrical CartesianToCylindrical(Vector3 cart)
 	cyl.y = cart.y;
 	cyl.rho = sqrtf(powf(cart.x, 2) + powf(cart.z, 2));
 
+
 	if (cyl.rho < EPSILON) cyl.theta = 0;
 	else {
 		cyl.theta = asinf(cart.x / cyl.rho);
@@ -35,6 +36,7 @@ Vector3 CylindricalToCartesien(Cylindrical cyl)
 	return { cyl.rho * sinf(cyl.theta), cyl.y, cyl.rho * cosf(cyl.theta) };
 }
 
+// Fonction de conversion de coordonnées cartésiennes en coordonnées sphériques
 Spherical CartesianToSpherical(Vector3 cart)
 {
 	Spherical sph;
@@ -56,6 +58,7 @@ Spherical CartesianToSpherical(Vector3 cart)
 	return sph;
 }
 
+// Fonction de conversion de coordonnées sphériques en coordonnées cartésiennes
 Vector3 SphericalToCartesian(Spherical sph)
 {
 	return { sph.rho * sinf(sph.phi) * sinf(sph.theta), sph.rho * cosf(sph.phi), sph.rho * sinf(sph.phi) * cosf(sph.theta) };
