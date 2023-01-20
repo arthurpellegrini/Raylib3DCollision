@@ -1,6 +1,6 @@
-#include "my_3D_primitives.h"
 #include <rlgl.h>
 #include <iostream>
+#include "My3DPrimitives.hpp"
 
 /******************************************************************
 *							LINE								  *

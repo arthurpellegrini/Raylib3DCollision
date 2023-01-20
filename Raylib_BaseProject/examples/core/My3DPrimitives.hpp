@@ -1,12 +1,11 @@
-#include "reference_frame.h"
-#include "coordinates.h"
 #include <raymath.h>
 #include <math.h>
 #include <float.h>
 #include <vector>
+#include "Coordinates.hpp"
 
-#ifndef OBJETS_PRIMITIFS 
-#define OBJETS_PRIMITIFS
+#ifndef _3D_PRIMITIVES 
+#define _3D_PRIMITIVES
 
 struct Line {
 	Vector3 pt;
