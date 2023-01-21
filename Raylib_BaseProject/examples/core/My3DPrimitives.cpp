@@ -414,7 +414,7 @@ void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygo
 	if (drawWireframe) MyDrawWireframeSphere(sphere, nMeridians, nParallels, wireframeColor);
 }
 
-// Fonctions Potion Sphère
+/********************* Fonctions Portion de primitive Sphère *********************/
 void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color)
 {
 	int numVertex = nMeridians * nParallels * 4;
@@ -598,13 +598,14 @@ void MyDrawInfiniteCylinder(InfiniteCylinder infiniteCylinder, int nSectors, boo
 	if (drawWireframe) MyDrawWireframeCylinder(inf_cylinder, nSectors, false, wireframeColor);
 }
 
-// Fonctions Potion Cylindre
+/******************** Fonctions Portion de primitive Cylinder *********************/
 void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color)
 {
 	int numVertex = nSectors * 4;
 	rlPushMatrix();
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
 	Vector3 vect;
+	float angle;
 	float angle;
 	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);

@@ -133,6 +133,8 @@ void MyDrawPlane(Plane plane, bool drawPolygon = true, bool drawWireframe = true
 /************************************************
 * Disk											*
 *************************************************/
+// nSectors -> Nombre de sections dessinées qui vont permettre de former la primitive Disk
+// Plus on augmente ce paramètre et plus la primitive Disk sera ronde et précise 
 void MyDrawPolygonDisk(Disk disk, int nSectors, Color color = LIGHTGRAY);
 void MyDrawWireframeDisk(Disk disk, int nSectors, Color color = DARKGRAY);
 void MyDrawDisk(Disk disk, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor =	DARKGRAY);
@@ -147,11 +149,17 @@ void MyDrawBox(Box box, bool drawPolygon = true, bool drawWireframe = true, Colo
 /************************************************
 * Sphere										*
 *************************************************/
+// nMeridians -> nombre de lignes verticales qui composent la primitive Sphere 
+// nParralels -> nombre de lignes horizontales qui composent la primitive Sphere 
 void MyDrawPolygonSphere(Sphere sphere, int nMeridians, int nParallels, Color color = LIGHTGRAY);
 void MyDrawWireframeSphere(Sphere sphere, int nMeridians, int nParallels, Color color = DARKGRAY);
 void MyDrawSphere(Sphere sphere, int nMeridians, int nParallels, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
-// Fonctions Potion Sphère
+/********************* Fonctions Portion de primitive Sphère *********************/
+// startTheta -> Angle de départ (en radians) pour le dessin des parallèles
+// endTheta -> Angle final (en radians) pour le dessin des parallèles
+// startPhi -> Angle de départ (en radians) pour le dessin des méridians
+// endPhi -> Angle final (en radians) pour le dessin des méridians
 void MyDrawPolygonSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color = LIGHTGRAY);
 void MyDrawWireframeSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, Color color = LIGHTGRAY);
 void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float startTheta, float endTheta, float startPhi, float endPhi, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
@@ -159,13 +167,17 @@ void MyDrawSpherePortion(Sphere sphere, int nMeridians, int nParallels, float st
 /************************************************
 * Cylinder										*
 *************************************************/
+// nSectors -> Nombre de sections dessinées qui vont permettre de former la primitive Cylinder
 void MyDrawInfiniteCylinder(InfiniteCylinder infiniteCylinder, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
+// drawCaps -> Indique s'il faut dessiner les disques supérieur et inférieur de la primitive Cylinder
 void MyDrawPolygonCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawWireframeCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, Color color = LIGHTGRAY);
 void MyDrawCylinder(Cylinder cylinder, int nSectors, bool drawCaps = false, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
 
-// Fonctions Potion Cylindre
+/******************** Fonctions Portion de primitive Cylinder *********************/
+// startTheta -> Angle de départ (en radians) pour le dessin de la primitive Cylinder
+// endTheta -> Angle final (en radians) pour le dessin de la primitive Cylinder
 void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color = LIGHTGRAY);
 void MyDrawWireframeCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, Color color = LIGHTGRAY);
 void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, float endTheta, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
@@ -173,6 +185,9 @@ void MyDrawCylinderPortion(Cylinder cylinder, int nSectors, float startTheta, fl
 /************************************************
 * Capsule										*
 *************************************************/
+// nSectors -> Nombre de sections dessinées qui vont permettre de former la primitive Cylinder qui compose la Capsule
+// Permet aussi de déterminer le nombre de méridians qui vont former les portions de Sphere
+// nParallels -> Nombre de parallèles qui vont former les portions de Sphere
 void MyDrawPolygonCapsule(Capsule capsule, int nSectors, int nParallels, Color color = LIGHTGRAY);
 void MyDrawWireframeCapsule(Capsule capsule, int nSectors, int nParallels, Color color = LIGHTGRAY);
 void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
@@ -180,6 +195,8 @@ void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolyg
 /************************************************
 * RoundedBox									*
 *************************************************/
+// nSectors -> Nombre de sections dessinées qui vont permettre de former les portions de Cylinder qui composent la RoundedBox
+// Pour les portions de Sphere : nSectors <==> nMeridians <==> nParrallels 
 void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color = LIGHTGRAY);
 void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color = LIGHTGRAY);
 void MyDrawRoundedBox(RoundedBox roundedBox, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
