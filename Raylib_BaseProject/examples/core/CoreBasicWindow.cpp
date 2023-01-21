@@ -19,8 +19,8 @@
 *
 ********************************************************************************************/
 #include "raylib.h"
-#include <raymath.h>
 #include "rlgl.h"
+#include <raymath.h>
 #include <math.h>
 #include <float.h>
 #include <vector>
@@ -55,7 +55,7 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	Vector2 mousePos;
 	static Vector2 prevMousePos = { 0, 0 };
 	Vector2 mouseVect;
-	//Spherical sphDelta;
+	Spherical sphDelta;
 
 	mousePos = GetMousePosition(); // on récupère la position de la souris
 	mouseVect = Vector2Subtract(mousePos, prevMousePos); // on récupère le vecteur de déplacement de la souris
@@ -63,25 +63,22 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	
 	float mouseWheelRotation = -GetMouseWheelMove(); // le mouvement de la molette de la souris
 
-	sphPos.rho += mouseWheelRotation * sphSpeed.rho;
-	if (sphPos.rho < rhoMin) sphPos.rho = rhoMin;
-	if (sphPos.rho > rhoMax) sphPos.rho = rhoMax;
-
+	sphDelta.rho = mouseWheelRotation * sphSpeed.rho;
+	sphDelta.theta = mouseVect.x * DEG2RAD * sphSpeed.theta;
+	sphDelta.phi = Clamp(mouseVect.y, -179.0f, 179.0f) * DEG2RAD * sphSpeed.phi;
+	
 	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 	{
-		sphPos.theta += mouseVect.x  * DEG2RAD * sphSpeed.theta;
-		sphPos.phi += Clamp(mouseVect.y, -179.0f, 179.0f) * DEG2RAD * sphSpeed.phi;
+		sphPos.theta += sphDelta.theta;
+		sphPos.phi += sphDelta.phi;
 		if (sphPos.phi < phiMin) sphPos.phi = phiMin;
 		if (sphPos.phi > phiMax) sphPos.phi = phiMax;
 	}
 	
+	sphPos.rho = Clamp(sphPos.rho + sphDelta.rho, rhoMin, rhoMax);
+	
 	// Mise à jour de la caméra
 	camera->position = SphericalToCartesian(sphPos);
-
-	// Monitoring
-	//printf("Position de la souris -> x:%f & y:%f \n", mousePos.x, mousePos.y);
-	//printf("Delta déplacement souris -> x:%f & y:%f \n", mouseVect.x, mouseVect.y);
-	//printf("rho -> %f;theta -> %f; phi -> %f \n", sphPos.rho, sphPos.theta, sphPos.phi);
 }
 
 
@@ -176,7 +173,7 @@ int main(int argc, char* argv[])
 			// SPHERE
 			ReferenceFrame ref_sphere = ReferenceFrame({ -7,5,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -time));
 			Sphere sphere = { ref_sphere, 3.0f };
-			MyDrawSphere(sphere, 20, 20, true, true, RED);
+			MyDrawSphere(sphere, 90, 90, true, true, RED);
 			// FIN SPHERE
 
 			// CYLINDER
@@ -211,8 +208,9 @@ int main(int argc, char* argv[])
 			DrawSphere({ 0,0,15 }, .2f, BLUE);
 		}
 		EndMode3D();
-
+		DrawFPS(1800 * screenSizeCoef, 20 * screenSizeCoef);
 		EndDrawing();
+
 		//----------------------------------------------------------------------------------
 	}
 

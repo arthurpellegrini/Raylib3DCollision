@@ -1,8 +1,8 @@
 #include "Coordinates.hpp"
 
-/*******************************************************************************************
-* Fonctions de conversion des différents types de coordonn�es				
-* ******************************************************************************************/
+/*************************************************************************************************************************************
+*					Fonctions de conversion de coordonnées cartésiennes en coordonnées polaires (et inversement)					 *
+**************************************************************************************************************************************/
 Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive = true)
 {
 	Polar polar = { Vector2Length(cart), atan2f(cart.y, cart.x) };
@@ -16,11 +16,14 @@ Vector2 PolarToCartesian(Polar polar)
 	return Vector2Scale({ cosf(polar.theta),sinf(polar.theta) }, polar.rho);
 }
 
+/*************************************************************************************************************************************
+*					Fonctions de conversion de coordonnées cartésiennes en coordonnées cylindriques (et inversement)				 *
+**************************************************************************************************************************************/
 Cylindrical CartesianToCylindrical(Vector3 cart)
 {
 	Cylindrical cyl;
 	cyl.y = cart.y;
-	cyl.rho = sqrtf(powf(cart.x, 2) + powf(cart.z, 2));
+	cyl.rho = sqrtf(powf(cart.x, 2) + powf(cart.z, 2)); // RHO² = X² + Z²
 
 
 	if (cyl.rho < EPSILON) cyl.theta = 0;
@@ -36,29 +39,33 @@ Vector3 CylindricalToCartesien(Cylindrical cyl)
 	return { cyl.rho * sinf(cyl.theta), cyl.y, cyl.rho * cosf(cyl.theta) };
 }
 
-// Fonction de conversion de coordonnées cartésiennes en coordonnées sphériques
+/*************************************************************************************************************************************
+*					Fonctions de conversion de coordonnées cartésiennes en coordonnées sphériques (et inversement)					 *
+**************************************************************************************************************************************/
 Spherical CartesianToSpherical(Vector3 cart)
 {
 	Spherical sph;
-	sph.rho = sqrtf(powf(cart.x, 2) + powf(cart.y, 2) + powf(cart.z, 2));
+	sph.rho = sqrtf(powf(cart.x, 2) + powf(cart.y, 2) + powf(cart.z, 2)); // RHO² = X² + Y² + Z²
 
-	if (sph.rho < EPSILON) {
+	if (sph.rho < EPSILON) // Si la distance RHO est trop petite, les points se confondent peu importe la valeur des angles THETA ou PHI
+	{
 		sph.theta = 0.0f;
 		sph.phi = 0.0f;
 	}
-	else {
+	else 
+	{
 		sph.phi = acosf(cart.y / sph.rho);
-		if ((sph.phi < EPSILON) || (sph.phi > PI - EPSILON)) sph.theta = 0.0f;
-		else {
-			sph.theta = asinf(cart.x / (sph.rho * sinf(sph.phi)));
 
+		if ((sph.phi < EPSILON) || (sph.phi > PI - EPSILON)) sph.theta = 0.0f;
+		else 
+		{
+			sph.theta = asinf(cart.x / (sph.rho * sinf(sph.phi)));
 			if (cart.z < 0.0f) sph.theta = PI - sph.theta;
 		}
 	}
 	return sph;
 }
 
-// Fonction de conversion de coordonnées sphériques en coordonnées cartésiennes
 Vector3 SphericalToCartesian(Spherical sph)
 {
 	return { sph.rho * sinf(sph.phi) * sinf(sph.theta), sph.rho * cosf(sph.phi), sph.rho * sinf(sph.phi) * cosf(sph.theta) };

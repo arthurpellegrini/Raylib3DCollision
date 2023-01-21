@@ -11,6 +11,7 @@
 #ifndef COORDINATES_STRUCTS
 #define COORDINATES_STRUCTS
 
+// Stocke les informations relatives à un référentiel dans l'espace 3D
 struct ReferenceFrame {
     Vector3 origin;
     Vector3 i, j, k;
@@ -44,34 +45,36 @@ struct ReferenceFrame {
     }
 };
 
+// Représente un point dans un système de coordonnées polaires(2D)
 struct Polar {
 	float rho;
 	float theta;
 };
 
+// Représente un point dans un système de coordonnées cylindriques(3D)
 struct Cylindrical {
 	float rho;
 	float theta;
 	float y;
 };
 
+// Représente un point dans un système de coordonnées sphériques(3D)
 struct Spherical {
 	float rho;
 	float theta;
-
 	float phi;
 };
 
 #endif
 
-// Fonction de conversion de coordonnées cartésiennes en coordonnées polaires (et inversement)
+// Fonctions de conversion de coordonnées cartésiennes en coordonnées polaires (et inversement)
 Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive);
 Vector2 PolarToCartesian(Polar polar);
 
-// Fonction de conversion de coordonnées cartésiennes en coordonnées cylindriques (et inversement)
+// Fonctions de conversion de coordonnées cartésiennes en coordonnées cylindriques (et inversement)
 Cylindrical CartesianToCylindrical(Vector3 cart);
 Vector3 CylindricalToCartesien(Cylindrical cyl);
 
-// Fonction de conversion de coordonnées cartésiennes en coordonnées sphériques (et inversement)
+// Fonctions de conversion de coordonnées cartésiennes en coordonnées sphériques (et inversement)
 Spherical CartesianToSpherical(Vector3 cart);
 Vector3 SphericalToCartesian(Spherical sph);
