@@ -144,61 +144,61 @@ int main(int argc, char* argv[])
 			// FIN TRIANGLE
 
 			// PLANE
-			//Plane plane1 = Plane(Vector3Normalize( { 9, 1, 1 } ), 5.0f);
+			Plane plane1 = Plane(Vector3Normalize( { 1, 1,0 } ), 5.0f);
 			//Plane plane2 = Plane(Vector3Normalize( { 7, 2, 6 } ), { 5, 1, 3 });
 			//Plane plane3 = Plane(Vector3Normalize( { 5, 1, 3 } ), { 3, 2, 4 }, { 9, 3, 6 });
-			//MyDrawPlane(plane1, true, true, DARKGRAY);
+			MyDrawPlane(plane1, true, true, DARKGRAY);
 			//MyDrawPlane(plane2, true, true, RED);
 			//MyDrawPlane(plane3, true, true, ORANGE);
 			// FIN PLANE
 
-			// QUAD
-			ReferenceFrame ref_quad = ReferenceFrame({ -7,-5,-8 },QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
-			Quad quad = { ref_quad, {3,1,5} };
-			MyDrawQuad(quad, true, true, YELLOW);
-			// FIN QUAD
+			//// QUAD
+			//ReferenceFrame ref_quad = ReferenceFrame({ -7,-5,-8 },QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
+			//Quad quad = { ref_quad, {3,1,5} };
+			//MyDrawQuad(quad, true, true, YELLOW);
+			//// FIN QUAD
 
-			// DISK
-			ReferenceFrame ref_disk = ReferenceFrame({ -7,-5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
-			Disk disk = { ref_disk, 5.0f };
-			MyDrawDisk(disk, 20, true, true, BROWN);
-			// FIN DISK
+			//// DISK
+			//ReferenceFrame ref_disk = ReferenceFrame({ -7,-5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), time));
+			//Disk disk = { ref_disk, 5.0f };
+			//MyDrawDisk(disk, 20, true, true, BROWN);
+			//// FIN DISK
 
-			// BOX
-			ReferenceFrame ref_box = ReferenceFrame({ -7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), time));
-			Box box = { ref_box, { 1,2,3 } };
-			MyDrawBox(box, true, true, DARKGREEN);
-			// FIN BOX
+			//// BOX
+			//ReferenceFrame ref_box = ReferenceFrame({ -7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,1,1 }), time));
+			//Box box = { ref_box, { 1,2,3 } };
+			//MyDrawBox(box, true, true, DARKGREEN);
+			//// FIN BOX
 
-			// SPHERE
-			ReferenceFrame ref_sphere = ReferenceFrame({ -7,5,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -time));
-			Sphere sphere = { ref_sphere, 3.0f };
-			MyDrawSphere(sphere, 90, 90, true, true, RED);
-			// FIN SPHERE
+			//// SPHERE
+			//ReferenceFrame ref_sphere = ReferenceFrame({ -7,5,0 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), -time));
+			//Sphere sphere = { ref_sphere, 3.0f };
+			//MyDrawSphere(sphere, 90, 90, true, true, RED);
+			//// FIN SPHERE
 
-			// CYLINDER
-			ReferenceFrame ref_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), time));
-			Cylinder cylinder = { ref_cylinder, 3.0f, 2.0f };
-			MyDrawCylinder(cylinder, 20, true, true, true, BLUE);
-			// FIN CYLINDER			
-			 
-			// INFINITE CYLINDER
-			//ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0,0,0}, 0));
-			//InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
-			//MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
-			// FIN INFINITE CYLINDER
-			
-			// CAPSULE
-			ReferenceFrame ref_capsule = ReferenceFrame({ 7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,1 }), -time));
-			Capsule capsule = { ref_capsule, 3.0f, 2.0f };
-			MyDrawCapsule(capsule, 10, 10, true, true, SKYBLUE);
-			// FIN CAPSULE		
+			//// CYLINDER
+			//ReferenceFrame ref_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), time));
+			//Cylinder cylinder = { ref_cylinder, 3.0f, 2.0f };
+			//MyDrawCylinder(cylinder, 20, true, true, true, BLUE);
+			//// FIN CYLINDER			
+			// 
+			//// INFINITE CYLINDER
+			////ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0,0,0}, 0));
+			////InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
+			////MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
+			//// FIN INFINITE CYLINDER
+			//
+			//// CAPSULE
+			//ReferenceFrame ref_capsule = ReferenceFrame({ 7,5,8 }, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,1 }), -time));
+			//Capsule capsule = { ref_capsule, 3.0f, 2.0f };
+			//MyDrawCapsule(capsule, 10, 10, true, true, SKYBLUE);
+			//// FIN CAPSULE		
 
-			// ROUNDED BOX
-			ReferenceFrame ref_rounded_box = { { 7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 5,1,0 }), time) };
-			RoundedBox rounded_box = { ref_rounded_box, { 2,1,3 }, 1.0f };
-			MyDrawRoundedBox(rounded_box, 8, true, true, GREEN);
-			// FIN ROUNDED BOX
+			//// ROUNDED BOX
+			//ReferenceFrame ref_rounded_box = { { 7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 5,1,0 }), time) };
+			//RoundedBox rounded_box = { ref_rounded_box, { 2,1,3 }, 1.0f };
+			//MyDrawRoundedBox(rounded_box, 8, true, true, GREEN);
+			//// FIN ROUNDED BOX
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid
