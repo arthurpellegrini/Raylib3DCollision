@@ -606,7 +606,6 @@ void MyDrawPolygonCylinderPortion(Cylinder cylinder, int nSectors, float startTh
 	rlTranslatef(cylinder.ref.origin.x, cylinder.ref.origin.y, cylinder.ref.origin.z);
 	Vector3 vect;
 	float angle;
-	float angle;
 	QuaternionToAxisAngle(cylinder.ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 	rlScalef(cylinder.radius, cylinder.halfHeight, cylinder.radius);
