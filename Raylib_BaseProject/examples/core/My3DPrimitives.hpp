@@ -1,7 +1,3 @@
-#include <raymath.h>
-#include <math.h>
-#include <float.h>
-#include <vector>
 #include "Coordinates.hpp"
 
 #ifndef _3D_PRIMITIVES 

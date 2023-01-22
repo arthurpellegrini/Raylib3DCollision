@@ -9,8 +9,8 @@ void MyDrawLine(Line line, Color color)
 {
 	rlBegin(RL_LINES);
 	rlColor4ub(color.r, color.g, color.b, color.a);
-	rlVertex3f(line.pt.x, line.pt.y, line.pt.z); // Position du premier point de la ligne
-	rlVertex3f(line.pt.x + line.dir.x, line.pt.y + line.dir.y, line.pt.z + line.dir.z); // Position du second point de la ligne (calculé en partant du premier point et en ajoutant la direction de la ligne)
+	rlVertex3f(line.pt.x + line.dir.x * -50, line.pt.y + line.dir.y * -50, line.pt.z + line.dir.z * -50); // Position du premier point de la ligne
+	rlVertex3f(line.pt.x + line.dir.x * 50, line.pt.y + line.dir.y * 50, line.pt.z + line.dir.z * 50); // Position du second point de la ligne (calculé en partant du premier point et en ajoutant la direction de la ligne)
 	rlEnd();
 }
 
@@ -123,45 +123,11 @@ void MyDrawQuad(Quad quad, bool drawPolygon, bool drawWireframe, Color polygonCo
 /************************************************
 * Plane											*
 *************************************************/
-//void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
-//{
-//	static int time = 0;
-//	ReferenceFrame ref = ReferenceFrame();
-//	ref.Translate(Vector3Scale(plane.n, plane.d));
-//	ref.RotateByQuaternion(QuaternionFromVector3ToVector3({ 1,0,0 }, plane.n));
-//	ref.RotateByQuaternion(QuaternionFromVector3ToVector3({ 0,1,0 }, plane.n));
-//	ref.RotateByQuaternion(QuaternionFromAxisAngle({ 0,0,1 }, -PI/2));
-//	//ref.RotateByQuaternion(QuaternionFromAxisAngle({ 0,0,1 }, time++/60));
-//
-//	DrawSphere(ref.origin, 0.1f, RED);
-//	MyDrawLine({ ref.origin, plane.n }, GREEN);
-//	MyDrawLine({ ref.origin, { 0, 0, 1 } }, BLUE);
-//
-//	rlPushMatrix();
-//	rlTranslatef(ref.origin.x, ref.origin.y, ref.origin.z);
-//	Vector3 vect;
-//	float angle;
-//	QuaternionToAxisAngle(ref.q, &vect, &angle);
-//	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
-//
-//	Quad quad = { ReferenceFrame(), {40,0,40}}; //Impression d'infini avec des extensions de 40m
-//
-//	if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
-//	if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);
-//
-//	rlPopMatrix();
-//}
-
 void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygonColor, Color wireframeColor)
 {
-	ReferenceFrame ref;
-	ref.origin = Vector3Scale(plane.n, plane.d);
-	Vector3 right = Vector3CrossProduct({ 0, 0, 1 }, plane.n);
-	ref.q = QuaternionFromAxisAngle(right, 90 * DEG2RAD);
-
-	DrawSphere(ref.origin, 0.1f, RED);
-	MyDrawLine({ ref.origin, plane.n }, GREEN);
-	MyDrawLine({ ref.origin, { 0, 0, 1 } }, BLUE);
+	ReferenceFrame ref = ReferenceFrame();
+	ref.Translate(Vector3Scale(plane.n, plane.d));
+	ref.RotateByQuaternion(QuaternionFromVector3ToVector3({ 0,1,0 }, plane.n));
 
 	rlPushMatrix();
 	rlTranslatef(ref.origin.x, ref.origin.y, ref.origin.z);
