@@ -325,10 +325,12 @@
     <ClCompile Include="..\..\..\examples\core\Coordinates.cpp" />
     <ClCompile Include="..\..\..\examples\core\CoreBasicWindow.cpp" />
     <ClCompile Include="..\..\..\examples\core\My3DPrimitives.cpp" />
+    <ClCompile Include="..\..\..\examples\core\MyIntersections.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\examples\core\Coordinates.hpp" />
     <ClInclude Include="..\..\..\examples\core\My3DPrimitives.hpp" />
+    <ClInclude Include="..\..\..\examples\core\MyIntersections.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

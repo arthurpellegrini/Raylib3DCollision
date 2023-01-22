@@ -25,8 +25,7 @@
 #include <float.h>
 #include <vector>
 
-#include "Coordinates.hpp"
-#include "My3DPrimitives.hpp"
+#include "MyIntersections.hpp"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
@@ -90,7 +89,7 @@ int main(int argc, char* argv[])
 	const int screenWidth = 1920 * screenSizeCoef;
 	const int screenHeight = 1080 * screenSizeCoef;
 
-	InitWindow(screenWidth, screenHeight, "ESIEE - E3FI - 2022/2023 - Maths 3D - Arthur PELLEGRINI, Clement BRISSARD, Tristan MARTIN");
+	InitWindow(screenWidth, screenHeight, "ESIEE - E3FI - 2022/2023 - Maths3D - Arthur PELLEGRINI, Clement BRISSARD, Tristan MARTIN");
 
 	SetTargetFPS(60);
 
@@ -128,6 +127,9 @@ int main(int argc, char* argv[])
 
 		BeginMode3D(camera);
 		{
+	/************************************************
+	* TD1											*
+	*************************************************/
 			// LINE
 			//Line line = { { 8,4,8 }, { 1,9,0 } };
 			//MyDrawLine(line, DARKGRAY);
@@ -144,10 +146,10 @@ int main(int argc, char* argv[])
 			// FIN TRIANGLE
 
 			// PLANE
-			Plane plane1 = Plane(Vector3Normalize( { 1, 1,0 } ), 5.0f);
+			//Plane plane1 = Plane(Vector3Normalize( { 1, 1,0 } ), 5.0f);
 			//Plane plane2 = Plane(Vector3Normalize( { 7, 2, 6 } ), { 5, 1, 3 });
 			//Plane plane3 = Plane(Vector3Normalize( { 5, 1, 3 } ), { 3, 2, 4 }, { 9, 3, 6 });
-			MyDrawPlane(plane1, true, true, DARKGRAY);
+			//MyDrawPlane(plane1, true, true, DARKGRAY);
 			//MyDrawPlane(plane2, true, true, RED);
 			//MyDrawPlane(plane3, true, true, ORANGE);
 			// FIN PLANE
@@ -200,6 +202,36 @@ int main(int argc, char* argv[])
 			//MyDrawRoundedBox(rounded_box, 8, true, true, GREEN);
 			//// FIN ROUNDED BOX
 
+	/************************************************
+	* TD2											*
+	*************************************************/
+			//TESTS INTERSECTIONS
+			Vector3 interPt;
+			Vector3 interNormal;
+			float t;
+			
+			//THE SEGMENT
+			Segment segment = { {-5,8,0},{5,-8,3} };
+			Line line = { segment.pt1,Vector3Subtract(segment.pt2,segment.pt1) };
+			MyDrawLine(line, BLACK);
+			MyDrawPolygonSphere({ {segment.pt1,QuaternionIdentity()},.15f }, 16, 8, RED);
+			MyDrawPolygonSphere({ {segment.pt2,QuaternionIdentity()},.15f }, 16, 8, GREEN);
+			
+			// TEST LINE PLANE INTERSECTION
+			Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
+			//ReferenceFrame refQuad = { Vector3Scale(plane.n, plane.d), QuaternionFromVector3ToVector3({0,1,0},plane.n) };
+			//Quad quad = { refQuad,{20,0,20} };
+			//MyDrawQuad(quad);
+			MyDrawPlane(plane);
+			
+
+			if (IntersectLinePlane(line, plane, t, interPt, interNormal))
+			{
+				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 16, 8, RED);
+				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			}
+
+
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);        // Draw a grid
 			DrawLine3D({ 0 }, { 0,15,0 }, DARKGRAY);
@@ -213,11 +245,9 @@ int main(int argc, char* argv[])
 
 		//----------------------------------------------------------------------------------
 	}
-
 	// De-Initialization
 	//--------------------------------------------------------------------------------------   
 	CloseWindow();        // Close window and OpenGL context
 	//--------------------------------------------------------------------------------------
-
 	return 0;
 }
