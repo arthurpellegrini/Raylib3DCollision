@@ -40,9 +40,9 @@ Vector3 ProjectedPointOnLine(Vector3 linePt, Vector3 lineUnitDir, Vector3 pt)
 float SqDistPointSegment(Segment seg, Vector3 pt)
 {
 	// Formule : R² = [PM - (PM.PQ)PQ/PQ.PQ].[PM - (PM.PQ)PQ/PQ.PQ]
-	Vector3 PM = Vector3Subtract(pt, seg.pt1); 
-	Vector3 PQ = Vector3Subtract(seg.pt2, seg.pt1);
-	Vector3 res = Vector3Subtract(PM, Vector3Scale(Vector3Scale(PQ, Vector3DotProduct(PM, PQ)), 1.0f / (Vector3DotProduct(PQ, PQ))));
+	Vector3 pm = Vector3Subtract(pt, seg.pt1); 
+	Vector3 pq = Vector3Subtract(seg.pt2, seg.pt1);
+	Vector3 res = Vector3Subtract(pm, Vector3Scale(Vector3Scale(pq, Vector3DotProduct(pm, pq)), 1.0f / (Vector3DotProduct(pq, pq))));
 	return Vector3DotProduct(res, res);
 }
 
@@ -63,7 +63,9 @@ bool IntersectLinePlane(Line line, Plane plane, float& t, Vector3& interPt, Vect
 	// no intersection if line is parallel to the plane
 	float dotProd = Vector3DotProduct(plane.n, line.dir);
 	if (fabsf(dotProd) < EPSILON) return false;
-	t = (plane.d - Vector3DotProduct(plane.n, line.pt)) / dotProd; // intersection: t, interPt & interNormal
+
+	// intersection: t, interPt & interNormal
+	t = (plane.d - Vector3DotProduct(plane.n, line.pt)) / dotProd; 
 	interPt = Vector3Add(line.pt, Vector3Scale(line.dir, t)); // OM = OA+tAB
 	interNormal = Vector3Scale(plane.n, Vector3DotProduct(Vector3Subtract(line.pt, interPt), plane.n) < 0 ? -1.f : 1.f);
 	return true; 
@@ -71,7 +73,21 @@ bool IntersectLinePlane(Line line, Plane plane, float& t, Vector3& interPt, Vect
 
 bool IntersectSegmentPlane(Segment seg, Plane plane, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	// Formule :   t = d - (OA.n) / AB.n
+	Vector3 ab = Vector3Subtract(seg.pt2, seg.pt1);
+
+	// no intersection if line is parallel to the plane
+	float dotProd = Vector3DotProduct(plane.n, ab);
+	if (fabsf(dotProd) < EPSILON) return false;
+
+	t = (plane.d - Vector3DotProduct(seg.pt1, plane.n)) / dotProd;
+
+	// On vérifie si l'intersection se trouve bien sur le segment en utilisant la variable t
+	if (t < 0.f || t > 1.f) return false;
+
+	interPt = Vector3Add(seg.pt1, Vector3Scale(ab, t));
+	interNormal = dotProd < 0.f ? plane.n : Vector3Negate(plane.n);
+	return true;
 }
 
 bool IntersectSegmentQuad(Segment seg, Quad quad, float& t, Vector3& interPt, Vector3& interNormal)
