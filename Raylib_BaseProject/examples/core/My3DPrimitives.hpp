@@ -50,7 +50,8 @@ struct Plane {				// Plan "Infini" (effort d’imagination)
 	{
 		this->n = Vector3CrossProduct(Vector3Subtract(pt2, pt1), Vector3Subtract(pt3, pt2));
 
-		if (Vector3Length(n) < EPSILON) 
+		// pt1, pt2, pt3 alignés ? 
+		if (Vector3Length(n) < EPSILON)   // Pas de Plan 
 		{
 			this->n = { 0, 0, 0 };
 			this->d = 0;
