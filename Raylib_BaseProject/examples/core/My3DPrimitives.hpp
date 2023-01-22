@@ -6,6 +6,12 @@
 struct Line {
 	Vector3 pt;
 	Vector3 dir;			// dir != { 0, 0, 0 }
+
+	Line(Vector3 pt, Vector3 dir)
+	{
+		this->pt = pt;		
+		this->dir = Vector3Normalize(dir); // direction unitaire
+	}
 };
 
 struct Segment {			// pt1 != pt2
@@ -30,13 +36,13 @@ struct Plane {				// Plan "Infini" (effort d’imagination)
 
 	Plane(Vector3 n, float d) 
 	{
-		this->n = n;		// n unitaire
+		this->n = Vector3Normalize(n);		// n unitaire
 		this->d = d;
 	}
 
 	Plane(Vector3 n, Vector3 pt) 
 	{
-		this->n = n;		// n unitaire
+		this->n = Vector3Normalize(n);		// n unitaire
 		this->d = Vector3DotProduct(n, pt);
 	}
 
