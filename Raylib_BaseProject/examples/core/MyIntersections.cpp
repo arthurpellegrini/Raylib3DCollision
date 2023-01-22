@@ -33,32 +33,24 @@ Vector3 GlobalToLocalPos(Vector3 globalPos, ReferenceFrame localRef)
 *************************************************/
 Vector3 ProjectedPointOnLine(Vector3 linePt, Vector3 lineUnitDir, Vector3 pt)
 {
-	Vector3 line_to_point = Vector3Subtract(pt, linePt);
-	float dot_product = Vector3DotProduct(line_to_point, lineUnitDir);
-	return Vector3Add(Vector3Scale(lineUnitDir, dot_product), linePt);
+	// Formule : OH = OA + (AP.u)u
+	return Vector3Add(linePt, Vector3Scale(lineUnitDir, Vector3DotProduct( Vector3Subtract(pt, linePt), lineUnitDir ) ) );
 }
 
 float SqDistPointSegment(Segment seg, Vector3 pt)
 {
-	Vector3 ab = Vector3Subtract(seg.pt2, seg.pt1);
-	Vector3 a_to_point = Vector3Subtract(pt, seg.pt1);
-	float dot_product = Vector3DotProduct(ab, a_to_point);
-
-	if (dot_product <= 0.0f) {
-		return Vector3LengthSqr(a_to_point);
-	}
-
-	Vector3 b_to_point = Vector3Subtract(pt, seg.pt2);
-	dot_product = Vector3DotProduct(ab, b_to_point);
-
-	if (dot_product >= 0.0f) {
-		return Vector3LengthSqr(b_to_point);
-	}
-	return Vector3LengthSqr(Vector3Subtract(ProjectedPointOnLine(seg.pt1, Vector3Normalize(ab), pt), pt));
+	// Formule : R² = [PM - (PM.PQ)PQ/PQ.PQ].[PM - (PM.PQ)PQ/PQ.PQ]
+	Vector3 PM = Vector3Subtract(pt, seg.pt1); 
+	Vector3 PQ = Vector3Subtract(seg.pt2, seg.pt1);
+	Vector3 res = Vector3Subtract(PM, Vector3Scale(Vector3Scale(PQ, Vector3DotProduct(PM, PQ)), 1.0f / (Vector3DotProduct(PQ, PQ))));
+	return Vector3DotProduct(res, res);
 }
 
 bool IsPointInsideBox(Box box, Vector3 globalPt)
 {
+	// Formule :	|pt.x| <= exts.x 
+	//				|pt.y| <= exts.y 
+	//				|pt.z| <= exts.z
 	Vector3 local_pt_pos = GlobalToLocalPos(globalPt, box.ref);
 	return fabsf(local_pt_pos.x) <= box.extents.x && fabsf(local_pt_pos.y) <= box.extents.y && fabsf(local_pt_pos.z) <= box.extents.z;
 }
