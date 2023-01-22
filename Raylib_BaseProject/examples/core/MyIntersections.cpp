@@ -5,22 +5,27 @@
 *************************************************/
 Vector3 LocalToGlobalVect(Vector3 localVect, ReferenceFrame localRef)
 {
-	return Vector3RotateByQuaternion(localVect, localRef.q);
+	// Formule : Vw = Vlx*Iw + Vly*Jw + Vlz*Kw
+	return Vector3Add(Vector3Scale(localRef.i, localVect.x), Vector3Add(Vector3Scale(localRef.j, localVect.y), Vector3Scale(localRef.k, localVect.z)));
 }
 
 Vector3 GlobalToLocalVect(Vector3 globalVect, ReferenceFrame localRef)
 {
-	return Vector3RotateByQuaternion(globalVect, QuaternionInvert(localRef.q));
+	// Formule : Vl = Vw.Iw + Vy.Jw + Vz.Kw
+	return { Vector3DotProduct(globalVect, localRef.i), Vector3DotProduct(globalVect, localRef.j), Vector3DotProduct(globalVect, localRef.k) };
 }
 
 Vector3 LocalToGlobalPos(Vector3 localPos, ReferenceFrame localRef)
 {
-	return Vector3Add(localRef.origin, Vector3RotateByQuaternion(localPos, localRef.q));
+	// Formule : OPw = OO'w + Plx*Iw + Ply*Jw + Plz*Kw
+	return Vector3Add(localRef.origin, Vector3Add(Vector3Scale(localRef.i, localPos.x), Vector3Add(Vector3Scale(localRef.j, localPos.y), Vector3Scale(localRef.k, localPos.z))));
 }
 
 Vector3 GlobalToLocalPos(Vector3 globalPos, ReferenceFrame localRef)
 {
-	return Vector3RotateByQuaternion(Vector3Subtract(globalPos, localRef.origin), QuaternionInvert(localRef.q));
+	// Formule : O'Pl = O'Pw.Iw + O'Pw.Jw + O'Pw.Kw
+	Vector3 local_origin_to_global_pt = Vector3Subtract(globalPos, localRef.origin);
+	return { Vector3DotProduct(local_origin_to_global_pt, localRef.i), Vector3DotProduct(local_origin_to_global_pt, localRef.j), Vector3DotProduct(local_origin_to_global_pt, localRef.k) };
 }
 
 /************************************************
@@ -54,8 +59,8 @@ float SqDistPointSegment(Segment seg, Vector3 pt)
 
 bool IsPointInsideBox(Box box, Vector3 globalPt)
 {
-	Vector3 inside_pos = GlobalToLocalPos(globalPt, box.ref);
-	return fabsf(inside_pos.x) <= box.extents.x && fabsf(inside_pos.y) <= box.extents.y && fabsf(inside_pos.z) <= box.extents.z;
+	Vector3 local_pt_pos = GlobalToLocalPos(globalPt, box.ref);
+	return fabsf(local_pt_pos.x) <= box.extents.x && fabsf(local_pt_pos.y) <= box.extents.y && fabsf(local_pt_pos.z) <= box.extents.z;
 }
 
 /************************************************

@@ -13,6 +13,7 @@ Vector3 GlobalToLocalPos(Vector3 globalPos, ReferenceFrame localRef);
 /************************************************
 * Méthodes Géométriques Diverses				*
 *************************************************/
+
 //Méthode retournant le projeté orthogonal d’un point sur une droite
 Vector3 ProjectedPointOnLine(Vector3 linePt, Vector3 lineUnitDir, Vector3 pt);
 //Méthode retournant la distance au carré d’un point à un segment
