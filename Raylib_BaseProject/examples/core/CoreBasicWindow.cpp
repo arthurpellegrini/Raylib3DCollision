@@ -83,8 +83,6 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 
 int main(int argc, char* argv[])
 {
-	// Initialization
-	//--------------------------------------------------------------------------------------
 	float screenSizeCoef = 0.9f;
 	const int screenWidth = 1920 * screenSizeCoef;
 	const int screenHeight = 1080 * screenSizeCoef;
@@ -93,7 +91,7 @@ int main(int argc, char* argv[])
 
 	SetTargetFPS(60);
 
-	//CAMERA
+	//Set Camera
 	Vector3 cameraPos = { 8.0f, 15.0f, 14.0f };
 	Camera camera = { 0 };
 	camera.position = cameraPos;
@@ -103,15 +101,9 @@ int main(int argc, char* argv[])
 	camera.type = CAMERA_PERSPECTIVE;
 	SetCameraMode(camera, CAMERA_CUSTOM);  // Set an orbital camera mode
 
-
-	//--------------------------------------------------------------------------------------
-
-	// Main game loop
 	while (!WindowShouldClose())    // Detect window close button or ESC key
 	{
-		// Update
-		//----------------------------------------------------------------------------------
-		// TODO: Update your variables here
+		// Update variables
 		//----------------------------------------------------------------------------------
 
 		float deltaTime = GetFrameTime();
@@ -119,12 +111,9 @@ int main(int argc, char* argv[])
 
 		MyUpdateOrbitalCamera(&camera, deltaTime);
 
-		// Draw
 		//----------------------------------------------------------------------------------
 		BeginDrawing();
-
 		ClearBackground(RAYWHITE);
-
 		BeginMode3D(camera);
 		{
 	/************************************************
@@ -210,21 +199,18 @@ int main(int argc, char* argv[])
 			Vector3 interNormal;
 			float t;
 			
-			//THE SEGMENT
-			Segment segment = { {-5,8,0},{5,-8,3} };
-			Line line = { segment.pt1,Vector3Subtract(segment.pt2,segment.pt1) };
+			//Draw Line & Plane
+			Vector3 pt1 = { -5,8,0 };
+			Vector3 pt2 = { 5,-8,3 };
+			Line line = { pt1,Vector3Subtract(pt2,pt1) };
 			MyDrawLine(line, BLACK);
-			MyDrawPolygonSphere({ {segment.pt1,QuaternionIdentity()},.15f }, 16, 8, RED);
-			MyDrawPolygonSphere({ {segment.pt2,QuaternionIdentity()},.15f }, 16, 8, GREEN);
+			MyDrawPolygonSphere({ {pt1,QuaternionIdentity()},.10f }, 8, 8, RED);
+			MyDrawPolygonSphere({ {pt2,QuaternionIdentity()},.10f }, 8, 8, GREEN);
 			
-			// TEST LINE PLANE INTERSECTION
 			Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
-			//ReferenceFrame refQuad = { Vector3Scale(plane.n, plane.d), QuaternionFromVector3ToVector3({0,1,0},plane.n) };
-			//Quad quad = { refQuad,{20,0,20} };
-			//MyDrawQuad(quad);
 			MyDrawPlane(plane);
 			
-
+			// TEST LINE PLANE INTERSECTION
 			if (IntersectLinePlane(line, plane, t, interPt, interNormal))
 			{
 				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 16, 8, RED);
@@ -233,7 +219,7 @@ int main(int argc, char* argv[])
 
 
 			//3D REFERENTIAL
-			DrawGrid(30, 1.0f);        // Draw a grid
+			DrawGrid(30, 1.0f);
 			DrawLine3D({ 0 }, { 0,15,0 }, DARKGRAY);
 			DrawSphere({ 15,0,0 }, .2f, RED);
 			DrawSphere({ 0,15,0 }, .2f, GREEN);
@@ -242,12 +228,7 @@ int main(int argc, char* argv[])
 		EndMode3D();
 		DrawFPS(1800 * screenSizeCoef, 20 * screenSizeCoef);
 		EndDrawing();
-
-		//----------------------------------------------------------------------------------
 	}
-	// De-Initialization
-	//--------------------------------------------------------------------------------------   
 	CloseWindow();        // Close window and OpenGL context
-	//--------------------------------------------------------------------------------------
 	return 0;
 }
