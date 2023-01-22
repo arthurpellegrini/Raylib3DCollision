@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
 			Vector3 interNormal;
 			float t;
 			
-			//Draw Line & Plane
+			//Draw Line & Segment
 			Vector3 pt1 = { -5,8,0 };
 			Vector3 pt2 = { 5,-8,3 };
 			Segment segment = { pt1, pt2 };
@@ -207,23 +207,22 @@ int main(int argc, char* argv[])
 			MyDrawLine(line, BLACK);
 			MyDrawPolygonSphere({ {pt1,QuaternionIdentity()},.10f }, 8, 8, RED);
 			MyDrawPolygonSphere({ {pt2,QuaternionIdentity()},.10f }, 8, 8, GREEN);
-			
+		
+			// TEST PLANE INTERSECTION
 			Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
 			MyDrawPlane(plane);
-			
-			// TEST LINE PLANE INTERSECTION
+			// WITH LINE
 			//if (IntersectLinePlane(line, plane, t, interPt, interNormal))
 			//{
 			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 16, 8, RED);
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
-			// TEST SEGMENT PLANE INTERSECTION
+			// WITH SEGMENT
 			if (IntersectSegmentPlane(segment, plane, t, interPt, interNormal))
 			{
 				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 16, 8, RED);
 				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			}
-
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);

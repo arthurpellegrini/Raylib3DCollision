@@ -73,13 +73,13 @@ bool IntersectLinePlane(Line line, Plane plane, float& t, Vector3& interPt, Vect
 
 bool IntersectSegmentPlane(Segment seg, Plane plane, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	// Formule :   t = d - (OA.n) / AB.n
 	Vector3 ab = Vector3Subtract(seg.pt2, seg.pt1);
 
 	// no intersection if line is parallel to the plane
 	float dotProd = Vector3DotProduct(plane.n, ab);
 	if (fabsf(dotProd) < EPSILON) return false;
 
+	// Formule :   t = d - (OA.n) / AB.n
 	t = (plane.d - Vector3DotProduct(seg.pt1, plane.n)) / dotProd;
 
 	// On vérifie si l'intersection se trouve bien sur le segment en utilisant la variable t
