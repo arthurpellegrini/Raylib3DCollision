@@ -136,7 +136,7 @@ void MyDrawPlane(Plane plane, bool drawPolygon, bool drawWireframe, Color polygo
 	QuaternionToAxisAngle(ref.q, &vect, &angle);
 	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
 
-	Quad quad = { ReferenceFrame(), {40, 0, 40} }; //Impression d'infini avec des extensions de 40m
+	Quad quad = { ReferenceFrame(), {10, 0, 10} }; //Impression d'infini avec des extensions de 40m
 
 	if (drawPolygon) MyDrawPolygonQuad(quad, polygonColor);
 	if (drawWireframe) MyDrawWireframeQuad(quad, wireframeColor);

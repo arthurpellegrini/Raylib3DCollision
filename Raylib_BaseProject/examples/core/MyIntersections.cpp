@@ -92,12 +92,56 @@ bool IntersectSegmentPlane(Segment seg, Plane plane, float& t, Vector3& interPt,
 
 bool IntersectSegmentQuad(Segment seg, Quad quad, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	// On convertit les points du segment et le segment en coordonnées locales par rapport au Quad
+	Vector3 pt1 = GlobalToLocalPos(seg.pt1, quad.ref);
+	Vector3 pt2 = GlobalToLocalPos(seg.pt2, quad.ref);
+	Vector3 segment = Vector3Subtract(pt2, pt1);
+
+	// Si le segment est parallèle au plan du Quad ou ne le croise pas, il n'y a pas d'intersection
+	if ((segment.y <= 0.0f && pt1.y < 0.0f) || (segment.y >= 0.0f && pt1.y > 0.0f)) return false;
+
+	if (segment.y != 0.0f) t = fabsf(pt1.y / segment.y);
+	else t = 0.0f;
+
+	// Vérifier si l'intersection se trouve bien sur le segment en utilisant la variable t
+	if (t < 0.0f || t > 1.0f) return false;
+
+	Vector3 interPt_local = Vector3Add(pt1, Vector3Scale(segment, t));
+
+	// On vérifie si le point d'intersection est dans les limites du Quad
+	if (fabsf(interPt_local.x) > quad.extents.x || fabsf(interPt_local.z) > quad.extents.z) return false;
+
+	// Conversion des coordonées locales vers globales
+	interPt = LocalToGlobalPos(interPt_local, quad.ref);
+	interNormal = (pt1.y > 0.0f) ? quad.ref.j : Vector3Negate(quad.ref.j);
+	return true;
 }
 
-bool IntersectSegmentDisk(Segment segment, Disk disk, float& t, Vector3& interPt, Vector3& interNormal)
+bool IntersectSegmentDisk(Segment seg, Disk disk, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	// On convertit les points du segment et le segment en coordonnées locales par rapport au Disk
+	Vector3 pt1 = GlobalToLocalPos(seg.pt1, disk.ref);
+	Vector3 pt2 = GlobalToLocalPos(seg.pt2, disk.ref);
+	Vector3 segment = Vector3Subtract(pt2, pt1);
+
+	// Si le segment est parallèle au plan du Disk ou ne le croise pas, il n'y a pas d'intersection
+	if ((segment.y <= 0.0f && pt1.y < 0.0f) || (segment.y >= 0.0f && pt1.y > 0.0f)) return false;
+
+	if (segment.y != 0.0f) t = fabsf(pt1.y / segment.y);
+	else t = 0.0f;
+
+	// Vérifier si l'intersection se trouve bien sur le segment en utilisant la variable t
+	if (t < 0.0f || t > 1.0f) return false;
+
+	Vector3 interPt_local = Vector3Add(pt1, Vector3Scale(segment, t));
+
+	// On vérifie si le point d'intersection est dans les limites du Disk
+	if (Vector3Length(interPt_local) > disk.radius) return false;
+
+	// Conversion des coordonées locales vers globales
+	interPt = LocalToGlobalPos(interPt_local, disk.ref);
+	interNormal = (pt1.y > 0.0f) ? disk.ref.j : Vector3Negate(disk.ref.j);
+	return true;
 }
 
 bool IntersectSegmentSphere(Segment seg, Sphere s, float& t, Vector3& interPt, Vector3& interNormal)

@@ -209,20 +209,39 @@ int main(int argc, char* argv[])
 			MyDrawPolygonSphere({ {pt2,QuaternionIdentity()},.10f }, 8, 8, GREEN);
 		
 			// TEST PLANE INTERSECTION
-			Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
-			MyDrawPlane(plane);
+			//Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
+			//MyDrawPlane(plane);
 			// WITH LINE
 			//if (IntersectLinePlane(line, plane, t, interPt, interNormal))
 			//{
-			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 16, 8, RED);
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 			// WITH SEGMENT
-			if (IntersectSegmentPlane(segment, plane, t, interPt, interNormal))
+			//if (IntersectSegmentPlane(segment, plane, t, interPt, interNormal))
+			//{
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
+			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//}
+
+			// TEST QUAD INTERSECTION
+			//Quad quad = { { {0, 1, 2}, QuaternionFromAxisAngle({1,0,0},time * .5f) }, {2, 0, 2}};
+			//MyDrawQuad(quad);
+			//if (IntersectSegmentQuad(segment, quad, t, interPt, interNormal))
+			//{
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
+			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//}
+
+			// TEST DISK INTERSECTION
+			Disk disk = { { {0, 1, 2}, QuaternionFromAxisAngle({1,0,0},time * .5f) }, 1.0f};
+			MyDrawDisk(disk, 20);
+			if (IntersectSegmentDisk(segment, disk, t, interPt, interNormal))
 			{
-				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 16, 8, RED);
+				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
 				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			}
+
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);
