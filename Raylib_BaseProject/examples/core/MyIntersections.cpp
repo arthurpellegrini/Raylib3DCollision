@@ -161,14 +161,10 @@ bool IntersectSegmentSphere(Segment seg, Sphere s, float& t, Vector3& interPt, V
 
 	// On calcule les racines de l'équation
 	float sqrtDelta = sqrt(delta);
-	t = (-b - sqrtDelta) / (2 * a);
+	t = (-b - sqrtDelta) / (2 * a); // Il est inutile de calculer la 2e racine de cette forme quadratique car elle correspondrait au 2e point d'intersection qui ne nous intéresse pas dans notre cas
 
 	// On vérifie si les racines sont dans l'intervalle [0,1] pour valider l'intersection
-	if (t < 0.0f || t > 1.0f)
-	{
-		t = (-b + sqrtDelta) / (2 * a);
-		if (t < 0.0f || t > 1.0f) return false;
-	}
+	if (t < 0.0f || t > 1.0f) return false;
 
 	// On calcule les informations de sortie de la fonction (point d'intersection et normale)
 	interPt = Vector3Add(seg.pt1, Vector3Scale(Vector3Subtract(seg.pt2, seg.pt1), t));
