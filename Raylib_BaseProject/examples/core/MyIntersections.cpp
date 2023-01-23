@@ -31,10 +31,10 @@ Vector3 GlobalToLocalPos(Vector3 globalPos, ReferenceFrame localRef)
 /************************************************
 * Méthodes Géométriques Diverses				*
 *************************************************/
-Vector3 ProjectedPointOnLine(Vector3 linePt, Vector3 lineUnitDir, Vector3 pt)
+Vector3 ProjectedPointOnLine(Line line, Vector3 pt)
 {
 	// Formule : OH = OA + (AP.u)u
-	return Vector3Add(linePt, Vector3Scale(lineUnitDir, Vector3DotProduct( Vector3Subtract(pt, linePt), lineUnitDir ) ) );
+	return Vector3Add(line.pt, Vector3Scale(line.dir, Vector3DotProduct( Vector3Subtract(pt, line.pt), line.dir ) ) );
 }
 
 float SqDistPointSegment(Segment seg, Vector3 pt)
@@ -172,12 +172,39 @@ bool IntersectSegmentSphere(Segment seg, Sphere s, float& t, Vector3& interPt, V
 	return true;
 }
 
-bool IntersectSegmentInfiniteCylinder(Segment segment, InfiniteCylinder cyl, float& t, Vector3& interPt, Vector3& interNormal)
+bool IntersectSegmentInfiniteCylinder(Segment seg, InfiniteCylinder cyl, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	// Convertir les positions du segment en coordonnées locales par rapport au référentiel du cylindre
+	Vector3 localSegment = Vector3Subtract(GlobalToLocalPos(seg.pt2, cyl.ref), GlobalToLocalPos(seg.pt1, cyl.ref));
+	Vector3 localOriginPt1 = Vector3Subtract(GlobalToLocalPos(seg.pt1, cyl.ref), cyl.ref.origin);
+
+	// On ignore la composante Y de la segment et de la position de départ pour ne travailler qu'avec les positions sur le plan xz
+	localSegment.y = 0.0f;
+	localOriginPt1.y = 0.0f;
+
+	// On calcule les coefficients de la forme quadratique pour résoudre l'équation pour trouver le point d'intersection
+	float a = Vector3DotProduct(localSegment, localSegment);
+	float b = 2 * Vector3DotProduct(localSegment, localOriginPt1);
+	float c = Vector3DotProduct(localOriginPt1, localOriginPt1) - (cyl.radius * cyl.radius);
+
+	float delta = b * b - 4 * a * c;
+	if (delta < 0.0f) return false; // Pas de solution, pas d'intersection
+
+	float sqrtDelta = sqrt(delta);
+
+	t = (-b - sqrtDelta) / (2 * a);
+
+	if (t < 0.0f || t > 1.0f) return false; // Intersection en dehors du segment (t !€ [0,1])
+
+	// On calcule les informations de sortie de la fonction(point d'intersection et normale)
+	interPt = Vector3Add(seg.pt1, Vector3Scale(Vector3Subtract(seg.pt2, seg.pt1), t));
+	Vector3 localInterPt = GlobalToLocalPos(interPt, cyl.ref);
+	localInterPt.y = 0.0f;
+	interNormal = Vector3Normalize(LocalToGlobalPos(localInterPt, cyl.ref));
+	return true;
 }
 
-bool IntersectSegmentCylinder(Segment segment, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal)
+bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal)
 {
 	return false;
 }

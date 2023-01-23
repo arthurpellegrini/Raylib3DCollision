@@ -42,17 +42,17 @@ template <typename T> int sgn(T val) {
 * *******************************************************************************************/
 void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 {
-	static Spherical sphPos = { 10, PI / 4.f, PI / 4.f }; // la position de départ de la caméra est rho=10m, theta=45° et phi=45°
+	static Spherical sphPos = { 10.0f, PI / 4.0f, PI / 4.0f }; // la position de départ de la caméra est rho=10m, theta=45° et phi=45°
 	Spherical sphSpeed = { 2.0f, 0.04f, 0.04f }; // 2m/incrément de molette et 0.04 radians/pixel
 
-	float rhoMin = 4; // 4m
-	float rhoMax = 40; // 40m
+	float rhoMin = 4.0f; // 4m
+	float rhoMax = 40.0f; // 40m
 
 	float phiMin = 1.0f * DEG2RAD; 
 	float phiMax = 179.0f * DEG2RAD; 
 
 	Vector2 mousePos;
-	static Vector2 prevMousePos = { 0, 0 };
+	static Vector2 prevMousePos = { 0.0f, 0.0f };
 	Vector2 mouseVect;
 	Spherical sphDelta;
 
@@ -64,7 +64,7 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 
 	sphDelta.rho = mouseWheelRotation * sphSpeed.rho;
 	sphDelta.theta = mouseVect.x * DEG2RAD * sphSpeed.theta;
-	sphDelta.phi = Clamp(mouseVect.y, -179.0f, 179.0f) * DEG2RAD * sphSpeed.phi;
+	sphDelta.phi = Clamp(mouseVect.y, -180.0f, 180.0f) * DEG2RAD * sphSpeed.phi;
 	
 	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 	{
@@ -88,7 +88,6 @@ int main(int argc, char* argv[])
 	const int screenHeight = 1080 * screenSizeCoef;
 
 	InitWindow(screenWidth, screenHeight, "ESIEE - E3FI - 2022/2023 - Maths3D - Arthur PELLEGRINI, Clement BRISSARD, Tristan MARTIN");
-
 	SetTargetFPS(60);
 
 	//Set Camera
@@ -247,9 +246,18 @@ int main(int argc, char* argv[])
 			sph.phi += 1 * DEG2RAD;
 
 			// TEST SPHERE INTERSECTION
-			Sphere sphere = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({0,2,1},time * .2f)}, 2.0f};
-			MyDrawSphere(sphere, 20, 20, false, true);
-			if (IntersectSegmentSphere(segment, sphere, t, interPt, interNormal))
+			//Sphere sphere = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({0,2,1},time * .2f)}, 2.0f};
+			//MyDrawSphere(sphere, 20, 20, true, true);
+			//if (IntersectSegmentSphere(segment, sphere, t, interPt, interNormal))
+			//{
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
+			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//}
+
+			// TEST INFINITE_CYLINDER INTERSECTION
+			InfiniteCylinder inf_cyl = { { { 0, 0, 0 }, QuaternionFromAxisAngle({0,2,1}, time * 0.2f)}, 2.0f};
+			MyDrawInfiniteCylinder(inf_cyl, 12, true, true);
+			if (IntersectSegmentInfiniteCylinder(segment, inf_cyl, t, interPt, interNormal))
 			{
 				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
 				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
