@@ -146,7 +146,34 @@ bool IntersectSegmentDisk(Segment seg, Disk disk, float& t, Vector3& interPt, Ve
 
 bool IntersectSegmentSphere(Segment seg, Sphere s, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	// On converti les points du segment et le centre de la sphere dans le référentiel local de la sphere
+	Vector3 localSegment = Vector3Subtract(GlobalToLocalPos(seg.pt2, s.ref), GlobalToLocalPos(seg.pt1, s.ref));
+	Vector3 originPt1 = GlobalToLocalPos(seg.pt1, s.ref);
+
+	// On calcule les coefficients de la forme quadratique pour résoudre l'équation
+	float a = Vector3DotProduct(localSegment, localSegment);
+	float b = 2 * Vector3DotProduct(localSegment, originPt1);
+	float c = Vector3DotProduct(originPt1, originPt1) - (s.radius * s.radius);
+
+	// On calcule le delta de la forme quadratique
+	float delta = b * b - 4 * a * c;
+	if (delta < 0.0f) return false; // Si delta est négatif, il n'y a pas d'intersection
+
+	// On calcule les racines de l'équation
+	float sqrtDelta = sqrt(delta);
+	t = (-b - sqrtDelta) / (2 * a);
+
+	// On vérifie si les racines sont dans l'intervalle [0,1] pour valider l'intersection
+	if (t < 0.0f || t > 1.0f)
+	{
+		t = (-b + sqrtDelta) / (2 * a);
+		if (t < 0.0f || t > 1.0f) return false;
+	}
+
+	// On calcule les informations de sortie de la fonction (point d'intersection et normale)
+	interPt = Vector3Add(seg.pt1, Vector3Scale(Vector3Subtract(seg.pt2, seg.pt1), t));
+	interNormal = Vector3Normalize(Vector3Subtract(interPt, s.ref.origin));
+	return true;
 }
 
 bool IntersectSegmentInfiniteCylinder(Segment segment, InfiniteCylinder cyl, float& t, Vector3& interPt, Vector3& interNormal)
