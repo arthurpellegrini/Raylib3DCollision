@@ -752,30 +752,30 @@ void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	Sphere sph_bottom_back_left = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
 
 	// Initialisation des parties cylindriques de la RoundedBox (12)
-	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
-	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
-	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
-	Cylinder cyl_bottom_left = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_left = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
 
 	// Initialisation des Quads de la RoundedBox (6)
 	Quad quad_top = { ReferenceFrame({ 0,roundedBox.extents.y + roundedBox.radius,0 }, q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
-	Quaternion quad_q = QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI));
+	Quaternion quad_q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI));
 	Quad quad_bottom = { ReferenceFrame({ 0,-(roundedBox.extents.y + roundedBox.radius),0 }, quad_q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2));
 	Quad quad_front = { ReferenceFrame({ roundedBox.extents.x + roundedBox.radius,0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 1,0,0 }, PI));
 	Quad quad_back = { ReferenceFrame({ -(roundedBox.extents.x + roundedBox.radius),0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2));
 	Quad quad_right = { ReferenceFrame({ 0,0,-(roundedBox.extents.z + roundedBox.radius) }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 1,0,0 }, PI));
 	Quad quad_left = { ReferenceFrame({ 0,0,roundedBox.extents.z + roundedBox.radius }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
 
 	// Affichage des différentes parties de la RoundedBox en Polygon
@@ -833,30 +833,30 @@ void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color)
 	Sphere sph_bottom_back_left = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
 
 	// Initialisation des parties cylindriques de la RoundedBox (12)
-	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2))), roundedBox.extents.z, roundedBox.radius };
-	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,1,0 }), PI / 2))), roundedBox.extents.y, roundedBox.radius };
-	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
-	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
-	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
-	Cylinder cyl_bottom_left = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_top_front = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_top_back = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_back = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_bottom_front = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	Cylinder cyl_front_right = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_right = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_back_left = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_front_left = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	Cylinder cyl_top_left = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_top_right = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_right = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	Cylinder cyl_bottom_left = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
 
 	// Initialisation des Quads de la RoundedBox (6)
 	Quad quad_top = { ReferenceFrame({ 0,roundedBox.extents.y + roundedBox.radius,0 }, q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
-	Quaternion quad_q = QuaternionMultiply(q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI));
+	Quaternion quad_q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI));
 	Quad quad_bottom = { ReferenceFrame({ 0,-(roundedBox.extents.y + roundedBox.radius),0 }, quad_q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2));
 	Quad quad_front = { ReferenceFrame({ roundedBox.extents.x + roundedBox.radius,0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 1,0,0 }, PI));
 	Quad quad_back = { ReferenceFrame({ -(roundedBox.extents.x + roundedBox.radius),0,0 }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI / 2));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2));
 	Quad quad_right = { ReferenceFrame({ 0,0,-(roundedBox.extents.z + roundedBox.radius) }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
-	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle(Vector3Normalize({ 1,0,0 }), PI));
+	quad_q = QuaternionMultiply(quad_q, QuaternionFromAxisAngle({ 1,0,0 }, PI));
 	Quad quad_left = { ReferenceFrame({ 0,0,roundedBox.extents.z + roundedBox.radius }, quad_q), { roundedBox.extents.y, 0, roundedBox.extents.x} };
 	
 	// Affichage des différentes parties de la RoundedBox en Wireframe

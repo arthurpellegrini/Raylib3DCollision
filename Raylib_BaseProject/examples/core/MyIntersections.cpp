@@ -320,10 +320,10 @@ bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3& interPt, Vecto
 	return hasIntersect;
 }
 
-bool IntersectSegmentRoundedBox(Segment seg, RoundedBox rndBox, float& t, Vector3& interPt, Vector3& interNormal)
+bool IntersectSegmentRoundedBox(Segment seg, RoundedBox roundedBox, float& t, Vector3& interPt, Vector3& interNormal)
 {
 	// On vérifie que l'OBB de la RoundedBox soit intersecté
-	if (!IntersectSegmentBox(seg, { rndBox.ref, { rndBox.extents.x + rndBox.radius , rndBox.extents.y + rndBox.radius, rndBox.extents.z + rndBox.radius } }, t, interPt, interNormal)) return false;
-	
+	if (!IntersectSegmentBox(seg, { roundedBox.ref, { roundedBox.extents.x + roundedBox.radius , roundedBox.extents.y + roundedBox.radius, roundedBox.extents.z + roundedBox.radius } }, t, interPt, interNormal)) return false;
+
 	return false;
 }
