@@ -231,7 +231,27 @@ bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& inte
 
 bool IntersectSegmentCapsule(Segment seg, Capsule capsule, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	// On vérifie si le segment intersecte un cylindre infini contenant le cylindre donné
+	if (!IntersectSegmentInfiniteCylinder(seg, { capsule.ref, capsule.radius }, t, interPt, interNormal))
+		return false;
+
+	// On calcule les vecteurs PQ, P utilisés pour vérifier si l'intersection se trouve entre les deux disques fermant le cylindre
+	Vector3 PQ = Vector3Scale(capsule.ref.j, 2 * capsule.halfHeight);
+	Vector3 P = Vector3Subtract(capsule.ref.origin, Vector3Scale(capsule.ref.j, capsule.halfHeight));
+	// On calcule le produit scalaire entre (interPt - P) et PQ pour vérifier si l'intersection se trouve entre les deux disques fermant le cylindre
+	float InterPtDotPQ = Vector3DotProduct(Vector3Subtract(interPt, P), PQ);
+
+	// Si l'intersection se trouve entre les deux disques fermant le cylindre, on la retourne
+	if (!(InterPtDotPQ < 0 || InterPtDotPQ > Vector3DotProduct(PQ, PQ))) return true;
+
+	// Sinon, on crée un disque en utilisant les informations du cylindre (rayon et référentiel)
+	// On déplace le référentiel du disque pour qu'il soit au bon endroit par rapport au cylindre (soit en haut, soit en bas)
+	Sphere sph = { capsule.ref, capsule.radius };
+	if (InterPtDotPQ < 0) sph.ref.Translate(Vector3Scale(capsule.ref.j, -capsule.halfHeight));
+	else sph.ref.Translate(Vector3Scale(capsule.ref.j, capsule.halfHeight));
+
+	// On vérifie si le segment intersecte ce disque, et on retourne le résultat
+	return IntersectSegmentSphere(seg, sph, t, interPt, interNormal);
 }
 
 bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3& interPt, Vector3& interNormal)
