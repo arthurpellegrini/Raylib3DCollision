@@ -283,9 +283,19 @@ int main(int argc, char* argv[])
 			//}
 
 			// TEST BOX INTERSECTION
-			Box box = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, { 3, 4, 3.5f } };
-			MyDrawBox(box, false, true);
-			if (IntersectSegmentBox(segment, box, t, interPt, interNormal))
+			//Box box = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, { 3, 4, 3.5f } };
+			//MyDrawBox(box, false, true);
+			//if (IntersectSegmentBox(segment, box, t, interPt, interNormal))
+			//{
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
+			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//}
+			
+			// TEST ROUNDEDBOX INTERSECTION
+			//RoundedBox rndBox = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, { 3.0f, 4.0f, 3.5f }, 1.0f };
+			RoundedBox rndBox = { { {0}, QuaternionFromAxisAngle({1,1,1},0)}, {3.0f, 4.0f, 3.5f}, 1.0f};
+			MyDrawRoundedBox(rndBox, 10, false, true);
+			if (IntersectSegmentRoundedBox(segment, rndBox, t, interPt, interNormal))
 			{
 				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
 				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);

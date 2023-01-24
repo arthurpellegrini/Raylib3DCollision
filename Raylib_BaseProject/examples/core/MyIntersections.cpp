@@ -144,16 +144,19 @@ bool IntersectSegmentDisk(Segment seg, Disk disk, float& t, Vector3& interPt, Ve
 	return true;
 }
 
-bool IntersectSegmentSphere(Segment seg, Sphere s, float& t, Vector3& interPt, Vector3& interNormal)
+bool IntersectSegmentSphere(Segment seg, Sphere sph, float& t, Vector3& interPt, Vector3& interNormal)
 {
+	// On vérifie que l'OBB de la Sphere soit intersecté
+	if (!IntersectSegmentBox(seg, { sph.ref, { sph.radius , sph.radius, sph.radius } }, t, interPt, interNormal)) return false;
+
 	// On converti les points du segment et le centre de la sphere dans le référentiel local de la sphere
-	Vector3 localSegment = Vector3Subtract(GlobalToLocalPos(seg.pt2, s.ref), GlobalToLocalPos(seg.pt1, s.ref));
-	Vector3 originPt1 = GlobalToLocalPos(seg.pt1, s.ref);
+	Vector3 localSegment = Vector3Subtract(GlobalToLocalPos(seg.pt2, sph.ref), GlobalToLocalPos(seg.pt1, sph.ref));
+	Vector3 originPt1 = GlobalToLocalPos(seg.pt1, sph.ref);
 
 	// On calcule les coefficients de la forme quadratique pour résoudre l'équation
 	float a = Vector3DotProduct(localSegment, localSegment);
 	float b = 2 * Vector3DotProduct(localSegment, originPt1);
-	float c = Vector3DotProduct(originPt1, originPt1) - (s.radius * s.radius);
+	float c = Vector3DotProduct(originPt1, originPt1) - (sph.radius * sph.radius);
 
 	// On calcule le delta de la forme quadratique
 	float delta = b * b - 4 * a * c;
@@ -168,7 +171,7 @@ bool IntersectSegmentSphere(Segment seg, Sphere s, float& t, Vector3& interPt, V
 
 	// On calcule les informations de sortie de la fonction (point d'intersection et normale)
 	interPt = Vector3Add(seg.pt1, Vector3Scale(Vector3Subtract(seg.pt2, seg.pt1), t));
-	interNormal = Vector3Normalize(Vector3Subtract(interPt, s.ref.origin));
+	interNormal = Vector3Normalize(Vector3Subtract(interPt, sph.ref.origin));
 	return true;
 }
 
@@ -206,6 +209,9 @@ bool IntersectSegmentInfiniteCylinder(Segment seg, InfiniteCylinder cyl, float& 
 }
 
 bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal) {
+	// On vérifie que l'OBB du Cylindre soit intersecté
+	if (!IntersectSegmentBox(seg, { cyl.ref, { cyl.radius , cyl.halfHeight, cyl.radius } }, t, interPt, interNormal)) return false;
+
 	// On vérifie si le segment intersecte un cylindre infini contenant le cylindre donné
 	if (!IntersectSegmentInfiniteCylinder(seg, { cyl.ref, cyl.radius }, t, interPt, interNormal))
 		return false;
@@ -231,6 +237,9 @@ bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& inte
 
 bool IntersectSegmentCapsule(Segment seg, Capsule capsule, float& t, Vector3& interPt, Vector3& interNormal)
 {
+	// On vérifie que l'OBB de la Capsule soit intersecté
+	if (!IntersectSegmentBox(seg, { capsule.ref, { capsule.radius , capsule.halfHeight + capsule.radius , capsule.radius } }, t, interPt, interNormal)) return false;
+
 	// On vérifie si le segment intersecte un cylindre infini contenant le cylindre donné
 	if (!IntersectSegmentInfiniteCylinder(seg, { capsule.ref, capsule.radius }, t, interPt, interNormal))
 		return false;
@@ -256,8 +265,8 @@ bool IntersectSegmentCapsule(Segment seg, Capsule capsule, float& t, Vector3& in
 
 bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	if (IsPointInsideBox(box, seg.pt1))
-		return false;
+	// On vérifie si l'intersection se situe à l'intérieur ou à l'extérieur de la Box
+	if (IsPointInsideBox(box, seg.pt1)) return false;
 
 	Quad box_faces[6];
 	Quaternion q = box.ref.q;
@@ -287,7 +296,6 @@ bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3& interPt, Vecto
 
 	// Check pour chaque face de la Box
 	for (int i = 0; i < 6; i++) {
-		MyDrawPolygonQuad(box_faces[i]);
 		// Calcul t, interPt et interNormal pour la face en cours
 		if (IntersectSegmentQuad(seg, box_faces[i], t, interPt, interNormal)) {
 			// Si l'intersection est la plus proche de seg.pt1, on met à jour les variables
@@ -312,5 +320,8 @@ bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3& interPt, Vecto
 
 bool IntersectSegmentRoundedBox(Segment seg, RoundedBox rndBox, float& t, Vector3& interPt, Vector3& interNormal)
 {
+	// On vérifie que l'OBB de la RoundedBox soit intersecté
+	if (!IntersectSegmentBox(seg, { rndBox.ref, { rndBox.extents.x + rndBox.radius , rndBox.extents.y + rndBox.radius, rndBox.extents.z + rndBox.radius } }, t, interPt, interNormal)) return false;
+	
 	return false;
 }
