@@ -176,7 +176,7 @@ bool IntersectSegmentInfiniteCylinder(Segment seg, InfiniteCylinder cyl, float& 
 {
 	// Convertir les positions du segment en coordonnées locales par rapport au référentiel du cylindre
 	Vector3 localSegment = Vector3Subtract(GlobalToLocalPos(seg.pt2, cyl.ref), GlobalToLocalPos(seg.pt1, cyl.ref));
-	Vector3 localOriginPt1 = Vector3Subtract(GlobalToLocalPos(seg.pt1, cyl.ref), cyl.ref.origin);
+	Vector3 localOriginPt1 = Vector3Subtract(GlobalToLocalPos(seg.pt1, cyl.ref), {0});
 
 	// On ignore la composante Y de la segment et de la position de départ pour ne travailler qu'avec les positions sur le plan xz
 	localSegment.y = 0.0f;
@@ -198,15 +198,35 @@ bool IntersectSegmentInfiniteCylinder(Segment seg, InfiniteCylinder cyl, float& 
 
 	// On calcule les informations de sortie de la fonction(point d'intersection et normale)
 	interPt = Vector3Add(seg.pt1, Vector3Scale(Vector3Subtract(seg.pt2, seg.pt1), t));
-	Vector3 localInterPt = GlobalToLocalPos(interPt, cyl.ref);
-	localInterPt.y = 0.0f;
-	interNormal = Vector3Normalize(LocalToGlobalPos(localInterPt, cyl.ref));
+	// On calcule le vecteur normal à partir du projecté du point d'intersection sur l'axe central du cylindre
+	Vector3 P = Vector3Subtract(cyl.ref.origin, cyl.ref.j);
+	Vector3 Q = Vector3Add(cyl.ref.origin, cyl.ref.j);
+	interNormal = Vector3Normalize(Vector3Subtract(interPt, ProjectedPointOnLine({ P, Vector3Subtract(Q, P) }, interPt)));
 	return true;
 }
 
-bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal)
-{
-	return false;
+bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal) {
+	// On vérifie si le segment intersecte un cylindre infini contenant le cylindre donné
+	if (!IntersectSegmentInfiniteCylinder(seg, { cyl.ref, cyl.radius }, t, interPt, interNormal))
+		return false;
+
+	// On calcule les vecteurs PQ, P utilisés pour vérifier si l'intersection se trouve entre les deux disques fermant le cylindre
+	Vector3 PQ = Vector3Scale(cyl.ref.j, 2 * cyl.halfHeight);
+	Vector3 P = Vector3Subtract(cyl.ref.origin, Vector3Scale(cyl.ref.j, cyl.halfHeight));
+	// On calcule le produit scalaire entre (interPt - P) et PQ pour vérifier si l'intersection se trouve entre les deux disques fermant le cylindre
+	float InterPtDotPQ = Vector3DotProduct(Vector3Subtract(interPt, P), PQ);
+
+	// Si l'intersection se trouve entre les deux disques fermant le cylindre, on la retourne
+	if (!(InterPtDotPQ < 0 || InterPtDotPQ > Vector3DotProduct(PQ, PQ))) return true;
+
+	// Sinon, on crée un disque en utilisant les informations du cylindre (rayon et référentiel)
+	// On déplace le référentiel du disque pour qu'il soit au bon endroit par rapport au cylindre (soit en haut, soit en bas)
+	Disk disk = { cyl.ref, cyl.radius };
+	if (InterPtDotPQ < 0) disk.ref.Translate(Vector3Scale(cyl.ref.j, -cyl.halfHeight));
+	else disk.ref.Translate(Vector3Scale(cyl.ref.j, cyl.halfHeight));
+
+	// On vérifie si le segment intersecte ce disque, et on retourne le résultat
+	return IntersectSegmentDisk(seg, disk, t, interPt, interNormal);
 }
 
 bool IntersectSegmentCapsule(Segment seg, Capsule capsule, float& t, Vector3& interPt, Vector3& interNormal)

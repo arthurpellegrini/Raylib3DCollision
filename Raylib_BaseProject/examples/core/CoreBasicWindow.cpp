@@ -207,6 +207,11 @@ int main(int argc, char* argv[])
 			MyDrawPolygonSphere({ {pt1,QuaternionIdentity()},.10f }, 8, 8, RED);
 			MyDrawPolygonSphere({ {pt2,QuaternionIdentity()},.10f }, 8, 8, GREEN);
 		
+			//Calcul des coordonnées de l'objet (déplacement pour tester les intersections)
+			static Spherical sph = { 5, 0, 90 * DEG2RAD };
+			sph.theta += 1 * DEG2RAD;
+			sph.phi += 1 * DEG2RAD;
+
 			// TEST PLANE INTERSECTION
 			//Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
 			//MyDrawPlane(plane);
@@ -233,17 +238,13 @@ int main(int argc, char* argv[])
 			//}
 
 			// TEST DISK INTERSECTION
-			//Disk disk = { { {0, 1, 2}, QuaternionFromAxisAngle({1,0,0},time * .5f) }, 1.0f};
+			//Disk disk = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,0,0},time * .5f) }, 5.0f};
 			//MyDrawDisk(disk, 20);
 			//if (IntersectSegmentDisk(segment, disk, t, interPt, interNormal))
 			//{
 			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
-
-			static Spherical sph = { 5, 0, 90 * DEG2RAD };
-			sph.theta += 1 * DEG2RAD;
-			sph.phi += 1 * DEG2RAD;
 
 			// TEST SPHERE INTERSECTION
 			//Sphere sphere = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({0,2,1},time * .2f)}, 2.0f};
@@ -255,9 +256,18 @@ int main(int argc, char* argv[])
 			//}
 
 			// TEST INFINITE_CYLINDER INTERSECTION
-			InfiniteCylinder inf_cyl = { { { 0, 0, 0 }, QuaternionFromAxisAngle({0,2,1}, time * 0.2f)}, 2.0f};
-			MyDrawInfiniteCylinder(inf_cyl, 12, true, true);
-			if (IntersectSegmentInfiniteCylinder(segment, inf_cyl, t, interPt, interNormal))
+			//InfiniteCylinder inf_cyl = { { {0,0,2}, QuaternionFromAxisAngle({1,2,4},time * .2f)}, 2.0f};
+			//MyDrawInfiniteCylinder(inf_cyl, 12, true, true);
+			//if (IntersectSegmentInfiniteCylinder(segment, inf_cyl, t, interPt, interNormal))
+			//{
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
+			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//}
+
+			// TEST CYLINDER INTERSECTION
+			Cylinder cyl = { { {1,-2,2}, QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
+			MyDrawCylinder(cyl, 20, true, true, true);
+			if (IntersectSegmentCylinder(segment, cyl, t, interPt, interNormal))
 			{
 				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
 				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
