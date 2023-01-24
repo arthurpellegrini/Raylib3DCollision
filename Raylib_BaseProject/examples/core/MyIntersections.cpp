@@ -28,6 +28,7 @@ Vector3 GlobalToLocalPos(Vector3 globalPos, ReferenceFrame localRef)
 	return { Vector3DotProduct(local_origin_to_global_pt, localRef.i), Vector3DotProduct(local_origin_to_global_pt, localRef.j), Vector3DotProduct(local_origin_to_global_pt, localRef.k) };
 }
 
+
 /************************************************
 * Méthodes Géométriques Diverses				*
 *************************************************/
@@ -55,6 +56,7 @@ bool IsPointInsideBox(Box box, Vector3 globalPt)
 	return fabsf(local_pt_pos.x) <= box.extents.x && fabsf(local_pt_pos.y) <= box.extents.y && fabsf(local_pt_pos.z) <= box.extents.z;
 }
 
+
 /************************************************
 * Méthodes d’intersection Segment/Primitives3D	*
 *************************************************/
@@ -73,10 +75,10 @@ bool IntersectLinePlane(Line line, Plane plane, float& t, Vector3& interPt, Vect
 
 bool IntersectSegmentPlane(Segment seg, Plane plane, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	Vector3 ab = Vector3Subtract(seg.pt2, seg.pt1);
+	Vector3 segment = Vector3Subtract(seg.pt2, seg.pt1);
 
 	// no intersection if line is parallel to the plane
-	float dotProd = Vector3DotProduct(plane.n, ab);
+	float dotProd = Vector3DotProduct(plane.n, segment);
 	if (fabsf(dotProd) < EPSILON) return false;
 
 	// Formule :   t = d - (OA.n) / AB.n
@@ -85,7 +87,7 @@ bool IntersectSegmentPlane(Segment seg, Plane plane, float& t, Vector3& interPt,
 	// On vérifie si l'intersection se trouve bien sur le segment en utilisant la variable t
 	if (t < 0.f || t > 1.f) return false;
 
-	interPt = Vector3Add(seg.pt1, Vector3Scale(ab, t));
+	interPt = Vector3Add(seg.pt1, Vector3Scale(segment, t));
 	interNormal = dotProd < 0.f ? plane.n : Vector3Negate(plane.n);
 	return true;
 }
