@@ -185,8 +185,8 @@ int main(int argc, char* argv[])
 			//// FIN CAPSULE		
 
 			//// ROUNDED BOX
-			//ReferenceFrame ref_rounded_box = { { 7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 5,1,0 }), time) };
-			//RoundedBox rounded_box = { ref_rounded_box, { 2,1,3 }, 1.0f };
+			//ReferenceFrame ref_rounded_box = { { 7,5,-8 }, QuaternionFromAxisAngle(Vector3Normalize({ 5,1,0 }), 0) };
+			//RoundedBox rounded_box = { ref_rounded_box, { 1,1,1 }, 1.0f };
 			//MyDrawRoundedBox(rounded_box, 8, true, true, GREEN);
 			//// FIN ROUNDED BOX
 
@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
 			//}
 
 			// TEST QUAD INTERSECTION
-			//Quad quad = { { {0, 1, 2}, QuaternionFromAxisAngle({1,0,0},time * .5f) }, {2, 0, 2}};
+			//Quad quad = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,0,0},time * .5f) }, {2, 0, 2}};
 			//MyDrawQuad(quad);
 			//if (IntersectSegmentQuad(segment, quad, t, interPt, interNormal))
 			//{
@@ -265,7 +265,7 @@ int main(int argc, char* argv[])
 			//}
 
 			// TEST CYLINDER INTERSECTION
-			//Cylinder cyl = { { {1,-2,2}, QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
+			//Cylinder cyl = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
 			//MyDrawCylinder(cyl, 20, true, true, true);
 			//if (IntersectSegmentCylinder(segment, cyl, t, interPt, interNormal))
 			//{
@@ -274,22 +274,22 @@ int main(int argc, char* argv[])
 			//}
 
 			// TEST CAPSULE INTERSECTION
-			Capsule capsule = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
-			MyDrawCapsule(capsule, 10, 10, true, true);
-			if (IntersectSegmentCapsule(segment, capsule, t, interPt, interNormal))
-			{
-				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
-				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
-			}
-
-			// TEST BOX INTERSECTION
-			//Box box = { { {1,-2,2}, QuaternionFromAxisAngle({1,2,4},time * .2f)}, { 1, 5, 3 } };
-			//MyDrawBox(box, true, true);
-			//if (IntersectSegmentBox(segment, box, t, interPt, interNormal))
+			//Capsule capsule = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
+			//MyDrawCapsule(capsule, 10, 10, true, true);
+			//if (IntersectSegmentCapsule(segment, capsule, t, interPt, interNormal))
 			//{
 			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
+
+			// TEST BOX INTERSECTION
+			Box box = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, { 3, 4, 3.5f } };
+			MyDrawBox(box, false, true);
+			if (IntersectSegmentBox(segment, box, t, interPt, interNormal))
+			{
+				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
+				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			}
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);

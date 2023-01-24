@@ -256,7 +256,58 @@ bool IntersectSegmentCapsule(Segment seg, Capsule capsule, float& t, Vector3& in
 
 bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3& interPt, Vector3& interNormal)
 {
-	return false;
+	if (IsPointInsideBox(box, seg.pt1))
+		return false;
+
+	Quad box_faces[6];
+	Quaternion q = box.ref.q;
+
+	// TOP & BOTTOM FACES
+	box_faces[0] = { ReferenceFrame(LocalToGlobalPos({0, box.extents.y, 0}, box.ref), q), {box.extents.x, 0, box.extents.z} };
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI));
+	box_faces[1] = { ReferenceFrame(LocalToGlobalPos({ 0, -box.extents.y, 0 }, box.ref), q), { box.extents.x, 0, box.extents.z } };
+
+	// FRONT & BACK FACES
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2));
+	box_faces[2] = { ReferenceFrame(LocalToGlobalPos({ box.extents.x, 0, 0 }, box.ref), q), { box.extents.y, 0, box.extents.z } };
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI));
+	box_faces[3] = { ReferenceFrame(LocalToGlobalPos({ -box.extents.x, 0, 0 }, box.ref), q), { box.extents.y, 0, box.extents.z } };
+
+	// LEFT & RIGHT FACES
+	q = QuaternionMultiply(QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, -PI / 2)), QuaternionFromAxisAngle({ 1,0,0 }, PI / 2));
+	box_faces[4] = { ReferenceFrame(LocalToGlobalPos({ 0, 0, box.extents.z}, box.ref), q), { box.extents.x, 0, box.extents.y } };
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI));
+	box_faces[5] = { ReferenceFrame(LocalToGlobalPos({0, 0, -box.extents.z}, box.ref), q), { box.extents.x, 0, box.extents.y } };
+
+	// Initialisation des variables pour stocker les valeurs correspondantes au point le plus proche de l'origine du segment
+	float closest_t = FLT_MAX;
+	Vector3 closest_interPt;
+	Vector3 closest_interNormal;
+	bool hasIntersect = false;
+
+	// Check pour chaque face de la Box
+	for (int i = 0; i < 6; i++) {
+		MyDrawPolygonQuad(box_faces[i]);
+		// Calcul t, interPt et interNormal pour la face en cours
+		if (IntersectSegmentQuad(seg, box_faces[i], t, interPt, interNormal)) {
+			// Si l'intersection est la plus proche de seg.pt1, on met à jour les variables
+			if (t >= 0 && t < closest_t) {
+				closest_t = t;
+				closest_interPt = interPt;
+				closest_interNormal = interNormal;
+				hasIntersect = true;
+			}
+		}
+	}
+
+	// Si il y a une intersection, on met à jour les variables de sortie t, interPt et interNormal
+	if (hasIntersect) {
+		t = closest_t;
+		interPt = closest_interPt;
+		interNormal = closest_interNormal;
+	}
+
+	return hasIntersect;
 }
 
 bool IntersectSegmentRoundedBox(Segment seg, RoundedBox rndBox, float& t, Vector3& interPt, Vector3& interNormal)
