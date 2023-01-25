@@ -3,7 +3,8 @@
 #ifndef _3D_PRIMITIVES 
 #define _3D_PRIMITIVES
 
-struct Line {
+struct Line 
+{
 	Vector3 pt;
 	Vector3 dir;			// dir != { 0, 0, 0 }
 
@@ -14,35 +15,43 @@ struct Line {
 	}
 };
 
-struct Segment {			// pt1 != pt2
+struct Segment 
+{		
+	// pt1 != pt2
 	Vector3 pt1;
 	Vector3 pt2; 
 };
 
-struct Triangle {			// pt1 != pt2 && pt1 != pt3 && pt2 != pt3
+struct Triangle 
+{	
+	// pt1 != pt2 && pt1 != pt3 && pt2 != pt3
 	Vector3 pt1;
 	Vector3 pt2;
 	Vector3 pt3; 
 
-	Triangle(Vector3 pt1, Vector3 pt2, Vector3 pt3) {
+	Triangle(Vector3 pt1, Vector3 pt2, Vector3 pt3) 
+	{
 		this->pt1 = pt1;
 		this->pt2 = pt2;
 		this->pt3 = pt3;
 	}
 
-	Triangle(Vector3 triangle[3]) {
+	Triangle(Vector3 triangle[3]) 
+	{
 		this->pt1 = triangle[0];
 		this->pt2 = triangle[1];
 		this->pt3 = triangle[2];
 	}
 };
 
-struct Quad {
+struct Quad 
+{
 	ReferenceFrame ref;
 	Vector3 extents;		// Demi-Longueurs depuis le centre du Quad (ici seuls X et Z sont utilisés)
 };
 
-struct Plane {				// Plan "Infini" (effort d’imagination)
+struct Plane // "Infini" (effort d’imagination)
+{				
 	Vector3 n;				// Vecteur normal
 	float d;				// Distance à l’origine signée
 
@@ -76,39 +85,46 @@ struct Plane {				// Plan "Infini" (effort d’imagination)
 	}
 };
 
-struct Disk {
+struct Disk 
+{
 	ReferenceFrame ref;
 	float radius;			// Rayon
 };
 
-struct Box {
+struct Box 
+{
 	ReferenceFrame ref;
 	Vector3 extents;		// Demi-Longueurs depuis le centre de la Box
 };
 
-struct Sphere {
+struct Sphere 
+{
 	ReferenceFrame ref;
 	float radius;			// Rayon
 };
 
-struct InfiniteCylinder {	// Demi-Hauteur "Infinie" (effort d’imagination)
+struct InfiniteCylinder // Cylinder avec Demi-Hauteur "Infinie" (effort d’imagination)
+{	
 	ReferenceFrame ref;
 	float radius;			// Rayon
 };
 
-struct Cylinder {
+struct Cylinder 
+{
 	ReferenceFrame ref;
 	float halfHeight;		// Demi-Hauteur depuis le centre
 	float radius;			// Rayon
 };
 
-struct Capsule {
+struct Capsule 
+{
 	ReferenceFrame ref;
 	float halfHeight;		// Demi-Hauteur depuis le centre
 	float radius;			// Rayon du Cylindre et des Demi-Sphères
 };
 
-struct RoundedBox {
+struct RoundedBox 
+{
 	ReferenceFrame ref;
 	Vector3 extents;		// Demi-Longueurs depuis le centre de la RoundedBox
 	float radius;			// Rayon du Cylindre et des Demi-Sphères
@@ -214,7 +230,7 @@ void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolyg
 * RoundedBox									*
 *************************************************/
 // nSectors -> Nombre de sections dessinées qui vont permettre de former les portions de Cylinder qui composent la RoundedBox
-// Pour les portions de Sphere : nSectors <==> nMeridians <==> nParrallels 
+// Pour les portions de Sphere : nSectors <=> nMeridians <=> nParrallels 
 void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color = LIGHTGRAY);
 void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color = LIGHTGRAY);
 void MyDrawRoundedBox(RoundedBox roundedBox, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);

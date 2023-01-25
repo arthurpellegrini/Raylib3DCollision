@@ -210,7 +210,8 @@ bool IntersectSegmentInfiniteCylinder(Segment seg, InfiniteCylinder cyl, float& 
 	return true;
 }
 
-bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal) {
+bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& interPt, Vector3& interNormal) 
+{
 	// On vérifie que l'OBB du Cylindre soit intersecté
 	if (!IntersectSegmentBox(seg, { cyl.ref, { cyl.radius , cyl.halfHeight, cyl.radius } }, t, interPt, interNormal)) return false;
 

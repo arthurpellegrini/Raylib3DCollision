@@ -80,7 +80,9 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 	camera->position = SphericalToCartesian(sphPos);
 }
 
-
+/********************************************************************************************
+* Boucle Principale (Main)																	*
+* *******************************************************************************************/
 int main(int argc, char* argv[])
 {
 	float screenSizeCoef = 0.9f;

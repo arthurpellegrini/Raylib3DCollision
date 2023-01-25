@@ -12,7 +12,8 @@
 #define COORDINATES_STRUCTS
 
 // Stocke les informations relatives à un référentiel dans l'espace 3D
-struct ReferenceFrame {
+struct ReferenceFrame 
+{
     Vector3 origin;
     Vector3 i, j, k;
     Quaternion q;
@@ -50,20 +51,23 @@ struct ReferenceFrame {
 };
 
 // Représente un point dans un système de coordonnées polaires(2D)
-struct Polar {
+struct Polar 
+{
 	float rho;
 	float theta;
 };
 
 // Représente un point dans un système de coordonnées cylindriques(3D)
-struct Cylindrical {
+struct Cylindrical 
+{
 	float rho;
 	float theta;
 	float y;
 };
 
 // Représente un point dans un système de coordonnées sphériques(3D)
-struct Spherical {
+struct Spherical 
+{
 	float rho;
 	float theta;
 	float phi;
