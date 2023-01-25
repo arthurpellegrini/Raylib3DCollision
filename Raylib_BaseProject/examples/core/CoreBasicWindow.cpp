@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 		// Update variables
 		//----------------------------------------------------------------------------------
 
-		float deltaTime = GetFrameTime();
+		float deltaTime = GetFrameTime(); //tn+1 - tn
 		float time = (float)GetTime();
 
 		MyUpdateOrbitalCamera(&camera, deltaTime);
@@ -118,29 +118,29 @@ int main(int argc, char* argv[])
 	/************************************************
 	* TD1											*
 	*************************************************/
-			// LINE
+			//// LINE
 			//Line line = { { 8,4,8 }, { 1,9,0 } };
 			//MyDrawLine(line, DARKGRAY);
-			// FIN LINE			
+			//// FIN LINE			
 			
-			// SEGMENT
+			//// SEGMENT
 			//Segment segment = { { 8,4,8 }, { 1,9,0 } };
 			//MyDrawSegment(segment, DARKGRAY);
-			// FIN SEGMENT
+			//// FIN SEGMENT
 
-			// TRIANGLE
+			//// TRIANGLE
 			//Triangle triangle = { { 8,4,8 }, {8,9,1}, { 7,3,2 } };
 			//MyDrawTriangle(triangle, true, true, DARKBLUE);
-			// FIN TRIANGLE
+			//// FIN TRIANGLE
 
-			// PLANE
+			//// PLANE
 			//Plane plane1 = Plane({ 1, 1,0 }, 5.0f);
 			//Plane plane2 = Plane({ 7, 2, 6 }, { 5, 1, 3 });
 			//Plane plane3 = Plane({ 5, 1, 3 }, { 3, 2, 4 }, { 9, 3, 6 });
 			//MyDrawPlane(plane1, true, true, DARKGRAY);
 			//MyDrawPlane(plane2, true, true, RED);
 			//MyDrawPlane(plane3, true, true, ORANGE);
-			// FIN PLANE
+			//// FIN PLANE
 
 			//// QUAD
 			//ReferenceFrame ref_quad = ReferenceFrame({ -7,-5,-8 },QuaternionFromAxisAngle({ 0,1,0 }, time));
@@ -171,13 +171,13 @@ int main(int argc, char* argv[])
 			//Cylinder cylinder = { ref_cylinder, 3.0f, 2.0f };
 			//MyDrawCylinder(cylinder, 20, true, true, true, BLUE);
 			//// FIN CYLINDER			
-			// 
+			
 			//// INFINITE CYLINDER
-			////ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0}, 0));
-			////InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
-			////MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
+			//ReferenceFrame ref_infinite_cylinder = ReferenceFrame({ -7,5,8 }, QuaternionFromAxisAngle({0}, 0));
+			//InfiniteCylinder infinite_cylinder = { ref_infinite_cylinder, 5.0f };
+			//MyDrawInfiniteCylinder(infinite_cylinder, 10, true, true, BLUE);
 			//// FIN INFINITE CYLINDER
-			//
+			
 			//// CAPSULE
 			//ReferenceFrame ref_capsule = ReferenceFrame({ 7,5,8 }, QuaternionFromAxisAngle({ 0,1,1 }, -time));
 			//Capsule capsule = { ref_capsule, 3.0f, 2.0f };
@@ -193,43 +193,41 @@ int main(int argc, char* argv[])
 	/************************************************
 	* TD2											*
 	*************************************************/
-			//TESTS INTERSECTIONS
-			Vector3 interPt;
-			Vector3 interNormal;
-			float t;
+			//Vector3 interPt;
+			//Vector3 interNormal;
+			//float t;
 			
-			//Draw Line & Segment
-			//Vector3 pt1 = { 2,8,3 };
-			Vector3 pt1 = { -5,8,0 };
-			Vector3 pt2 = { 5,-8,3 };
-			Segment segment = { pt1, pt2 };
-			Line line = { pt1,Vector3Subtract(pt2,pt1) };
-			MyDrawLine(line, BLACK);
-			MyDrawPolygonSphere({ {pt1,QuaternionIdentity()},.10f }, 8, 8, RED);
-			MyDrawPolygonSphere({ {pt2,QuaternionIdentity()},.10f }, 8, 8, GREEN);
+			////Draw Line & Segment
+			//Vector3 pt1 = { -5,8,0 };
+			//Vector3 pt2 = { 5,-8,3 };
+			//Segment segment = { pt1, pt2 };
+			//Line line = { pt1,Vector3Subtract(pt2,pt1) };
+			//MyDrawLine(line, BLACK);
+			//MyDrawPolygonSphere({ {pt1,QuaternionIdentity()},.10f }, 8, 8, RED);
+			//MyDrawPolygonSphere({ {pt2,QuaternionIdentity()},.10f }, 8, 8, GREEN);
 		
-			//Calcul des coordonnées de l'objet (déplacement pour tester les intersections)
-			static Spherical sph = { 5, 0, 90 * DEG2RAD };
-			sph.theta += 1 * DEG2RAD;
-			sph.phi += 1 * DEG2RAD;
+			////Calcul des coordonnées de l'objet (déplacement pour tester les intersections)
+			//static Spherical sph = { 5, 0, 90 * DEG2RAD };
+			//sph.theta += 1 * DEG2RAD;
+			//sph.phi += 1 * DEG2RAD;
 
-			// TEST PLANE INTERSECTION
+			//// TEST PLANE INTERSECTION
 			//Plane plane = { Vector3RotateByQuaternion({0,1,0}, QuaternionFromAxisAngle({1,0,0},time * .5f)), 2 };
 			//MyDrawPlane(plane);
-			// WITH LINE
+			//// WITH LINE
 			//if (IntersectLinePlane(line, plane, t, interPt, interNormal))
 			//{
 			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
-			// WITH SEGMENT
+			//// WITH SEGMENT
 			//if (IntersectSegmentPlane(segment, plane, t, interPt, interNormal))
 			//{
 			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.1f }, 8, 8, RED);
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST QUAD INTERSECTION
+			//// TEST QUAD INTERSECTION
 			//Quad quad = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,0,0},time * .5f) }, {2, 0, 2}};
 			//MyDrawQuad(quad);
 			//if (IntersectSegmentQuad(segment, quad, t, interPt, interNormal))
@@ -238,7 +236,7 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST DISK INTERSECTION
+			//// TEST DISK INTERSECTION
 			//Disk disk = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,0,0},time * .5f) }, 5.0f};
 			//MyDrawDisk(disk, 20);
 			//if (IntersectSegmentDisk(segment, disk, t, interPt, interNormal))
@@ -247,7 +245,7 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST SPHERE INTERSECTION
+			//// TEST SPHERE INTERSECTION
 			//Sphere sphere = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({0,2,1},time * .2f)}, 2.0f};
 			//MyDrawSphere(sphere, 20, 20, true, true);
 			//if (IntersectSegmentSphere(segment, sphere, t, interPt, interNormal))
@@ -256,8 +254,8 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST INFINITE_CYLINDER INTERSECTION
-			//InfiniteCylinder inf_cyl = { { {0,0,2}, QuaternionFromAxisAngle({1,2,4},time * .2f)}, 2.0f};
+			//// TEST INFINITE_CYLINDER INTERSECTION
+			//InfiniteCylinder inf_cyl = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,2,4},time * .2f)}, 2.0f};
 			//MyDrawInfiniteCylinder(inf_cyl, 12, true, true);
 			//if (IntersectSegmentInfiniteCylinder(segment, inf_cyl, t, interPt, interNormal))
 			//{
@@ -265,7 +263,7 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST CYLINDER INTERSECTION
+			//// TEST CYLINDER INTERSECTION
 			//Cylinder cyl = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
 			//MyDrawCylinder(cyl, 20, true, true, true);
 			//if (IntersectSegmentCylinder(segment, cyl, t, interPt, interNormal))
@@ -274,7 +272,7 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST CAPSULE INTERSECTION
+			//// TEST CAPSULE INTERSECTION
 			//Capsule capsule = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,2,4},time * .2f)}, 3.0f, 2.0f};
 			//MyDrawCapsule(capsule, 10, 10, true, true);
 			//if (IntersectSegmentCapsule(segment, capsule, t, interPt, interNormal))
@@ -283,7 +281,7 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 
-			// TEST BOX INTERSECTION
+			//// TEST BOX INTERSECTION
 			//Box box = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, { 3, 4, 3.5f } };
 			//MyDrawBox(box, false, true);
 			//if (IntersectSegmentBox(segment, box, t, interPt, interNormal))
@@ -292,15 +290,19 @@ int main(int argc, char* argv[])
 			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
 			//}
 			
-			// TEST ROUNDEDBOX INTERSECTION
-			RoundedBox rndBox = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, {1.0f, 2.0f, 1.5f}, 1.0f };
-			//RoundedBox rndBox = { { {0}, QuaternionMultiply(QuaternionFromAxisAngle({0,1,0},0), QuaternionFromAxisAngle({1,0,0},0))}, {1.0f, 2.0f, 1.5f}, 3.0f};
-			MyDrawRoundedBox(rndBox, 10, true, true);
-			if (IntersectSegmentRoundedBox(segment, rndBox, t, interPt, interNormal))
-			{
-				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
-				DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
-			}
+			//// TEST ROUNDEDBOX INTERSECTION
+			//RoundedBox rndBox = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, {1.0f, 2.0f, 1.5f}, 1.0f };
+			//MyDrawRoundedBox(rndBox, 10, true, true);
+			//if (IntersectSegmentRoundedBox(segment, rndBox, t, interPt, interNormal))
+			//{
+			//	MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
+			//	DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//}
+
+
+	/************************************************
+	* TD3											*
+	*************************************************/
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);
