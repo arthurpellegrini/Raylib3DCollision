@@ -23,6 +23,18 @@ struct Triangle {			// pt1 != pt2 && pt1 != pt3 && pt2 != pt3
 	Vector3 pt1;
 	Vector3 pt2;
 	Vector3 pt3; 
+
+	Triangle(Vector3 pt1, Vector3 pt2, Vector3 pt3) {
+		this->pt1 = pt1;
+		this->pt2 = pt2;
+		this->pt3 = pt3;
+	}
+
+	Triangle(Vector3 triangle[3]) {
+		this->pt1 = triangle[0];
+		this->pt2 = triangle[1];
+		this->pt3 = triangle[2];
+	}
 };
 
 struct Quad {
