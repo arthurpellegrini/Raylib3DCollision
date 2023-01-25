@@ -199,6 +199,7 @@ int main(int argc, char* argv[])
 			float t;
 			
 			//Draw Line & Segment
+			//Vector3 pt1 = { 2,8,3 };
 			Vector3 pt1 = { -5,8,0 };
 			Vector3 pt2 = { 5,-8,3 };
 			Segment segment = { pt1, pt2 };
@@ -292,9 +293,9 @@ int main(int argc, char* argv[])
 			//}
 			
 			// TEST ROUNDEDBOX INTERSECTION
-			RoundedBox rndBox = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, { 3.0f, 4.0f, 3.5f }, 1.0f };
-			//RoundedBox rndBox = { { {0}, QuaternionFromAxisAngle({1,1,1},0)}, {3.0f, 4.0f, 3.5f}, 1.0f};
-			//MyDrawRoundedBox(rndBox, 10, true, true);
+			RoundedBox rndBox = { { SphericalToCartesian(sph), QuaternionFromAxisAngle({1,1,1},time)}, {1.0f, 2.0f, 1.5f}, 1.0f };
+			//RoundedBox rndBox = { { {0}, QuaternionMultiply(QuaternionFromAxisAngle({0,1,0},0), QuaternionFromAxisAngle({1,0,0},0))}, {1.0f, 2.0f, 1.5f}, 3.0f};
+			MyDrawRoundedBox(rndBox, 10, true, true);
 			if (IntersectSegmentRoundedBox(segment, rndBox, t, interPt, interNormal))
 			{
 				MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
