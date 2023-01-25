@@ -329,23 +329,14 @@ bool IntersectSegmentRoundedBox(Segment seg, RoundedBox rndBox, float& t, Vector
 
 	// Initialisation des parties sphériques de la RoundedBox (8)
 	Sphere spheres[8];
-	Vector3 spheres_pos[8] = {
-		{ 1, 1, 1},
-		{ 1, 1,-1},
-		{ 1,-1, 1},
-		{ 1,-1,-1},
-		{-1, 1, 1},
-		{-1, 1,-1},
-		{-1,-1, 1},
-		{-1,-1,-1},
-	};
-
-	for (int i = 0; i < 8; i++) {
-		spheres[i] = { rndBox.ref, rndBox.radius };
-		spheres[i].ref.Translate(Vector3Scale(rndBox.ref.i, rndBox.extents.x * spheres_pos[i].x));
-		spheres[i].ref.Translate(Vector3Scale(rndBox.ref.j, rndBox.extents.y * spheres_pos[i].y));
-		spheres[i].ref.Translate(Vector3Scale(rndBox.ref.k, rndBox.extents.z * spheres_pos[i].z));
-	}
+	spheres[0] = { ReferenceFrame(LocalToGlobalPos({ rndBox.extents.x,rndBox.extents.y,rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[1] = { ReferenceFrame(LocalToGlobalPos({ rndBox.extents.x,rndBox.extents.y,-rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[2] = { ReferenceFrame(LocalToGlobalPos({ -rndBox.extents.x,rndBox.extents.y,-rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[3] = { ReferenceFrame(LocalToGlobalPos({ -rndBox.extents.x,rndBox.extents.y,rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[4] = { ReferenceFrame(LocalToGlobalPos({ rndBox.extents.x,-rndBox.extents.y,rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[5] = { ReferenceFrame(LocalToGlobalPos({ rndBox.extents.x,-rndBox.extents.y,-rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[6] = { ReferenceFrame(LocalToGlobalPos({ -rndBox.extents.x,-rndBox.extents.y,-rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
+	spheres[7] = { ReferenceFrame(LocalToGlobalPos({ -rndBox.extents.x,-rndBox.extents.y,rndBox.extents.z }, rndBox.ref), q), rndBox.radius };
 
 	// Initialisation des parties cylindriques de la RoundedBox (12)
 	Cylinder cylinders[12];
