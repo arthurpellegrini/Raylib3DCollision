@@ -1,6 +1,7 @@
 #include "My3DPrimitives.hpp"
 
-
+#ifndef INTERSECTION_METHODS
+#define INTERSECTION_METHODS
 /************************************************
 * Méthodes Changement Référentiel				*
 *************************************************/
@@ -34,3 +35,5 @@ bool IntersectSegmentCylinder(Segment seg, Cylinder cyl, float& t, Vector3& inte
 bool IntersectSegmentCapsule(Segment seg, Capsule capsule, float& t, Vector3& interPt, Vector3& interNormal);
 bool IntersectSegmentBox(Segment seg, Box box, float& t, Vector3 & interPt, Vector3 & interNormal);
 bool IntersectSegmentRoundedBox(Segment seg, RoundedBox roundedBox, float& t, Vector3& interPt, Vector3& interNormal);
+
+#endif

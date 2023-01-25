@@ -25,7 +25,7 @@
 #include <float.h>
 #include <vector>
 
-#include "MyIntersections.hpp"
+#include "MyCollisions.hpp"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 			//Vector3 interPt;
 			//Vector3 interNormal;
 			//float t;
-			
+			//
 			////Draw Line & Segment
 			//Vector3 pt1 = { -5,8,0 };
 			//Vector3 pt2 = { 5,-8,3 };
@@ -303,6 +303,8 @@ int main(int argc, char* argv[])
 	/************************************************
 	* TD3											*
 	*************************************************/
+
+
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);

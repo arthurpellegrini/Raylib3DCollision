@@ -322,15 +322,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\examples\core\Coordinates.cpp" />
-    <ClCompile Include="..\..\..\examples\core\CoreBasicWindow.cpp" />
-    <ClCompile Include="..\..\..\examples\core\My3DPrimitives.cpp" />
-    <ClCompile Include="..\..\..\examples\core\MyIntersections.cpp" />
+    <ClCompile Include="..\..\..\examples\core\src\Coordinates.cpp" />
+    <ClCompile Include="..\..\..\examples\core\src\CoreBasicWindow.cpp" />
+    <ClCompile Include="..\..\..\examples\core\src\My3DPrimitives.cpp" />
+    <ClCompile Include="..\..\..\examples\core\src\MyCollisions.cpp" />
+    <ClCompile Include="..\..\..\examples\core\src\MyIntersections.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\examples\core\Coordinates.hpp" />
-    <ClInclude Include="..\..\..\examples\core\My3DPrimitives.hpp" />
-    <ClInclude Include="..\..\..\examples\core\MyIntersections.hpp" />
+    <ClInclude Include="..\..\..\examples\core\src\Coordinates.hpp" />
+    <ClInclude Include="..\..\..\examples\core\src\My3DPrimitives.hpp" />
+    <ClInclude Include="..\..\..\examples\core\src\MyCollisions.hpp" />
+    <ClInclude Include="..\..\..\examples\core\src\MyIntersections.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -116,6 +116,9 @@ struct RoundedBox {
 
 #endif
 
+
+#ifndef _3D_PRIMITIVES_DRAWING_METHODS
+#define _3D_PRIMITIVES_DRAWING_METHODS
 /************************************************
 * Line											*
 *************************************************/
@@ -215,3 +218,5 @@ void MyDrawCapsule(Capsule capsule, int nSectors, int nParallels, bool drawPolyg
 void MyDrawPolygonRoundedBox(RoundedBox roundedBox, int nSectors, Color color = LIGHTGRAY);
 void MyDrawWireframeRoundedBox(RoundedBox roundedBox, int nSectors, Color color = LIGHTGRAY);
 void MyDrawRoundedBox(RoundedBox roundedBox, int nSectors, bool drawPolygon = true, bool drawWireframe = true, Color polygonColor = LIGHTGRAY, Color wireframeColor = DARKGRAY);
+
+#endif

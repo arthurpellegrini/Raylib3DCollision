@@ -71,6 +71,8 @@ struct Spherical {
 
 #endif
 
+#ifndef COORDINATES_CONVERSIONS_METHODS
+#define COORDINATES_CONVERSIONS_METHODS
 // Fonctions de conversion de coordonnées cartésiennes en coordonnées polaires (et inversement)
 Polar CartesianToPolar(Vector2 cart, bool keepThetaPositive);
 Vector2 PolarToCartesian(Polar polar);
@@ -82,3 +84,5 @@ Vector3 CylindricalToCartesien(Cylindrical cyl);
 // Fonctions de conversion de coordonnées cartésiennes en coordonnées sphériques (et inversement)
 Spherical CartesianToSpherical(Vector3 cart);
 Vector3 SphericalToCartesian(Spherical sph);
+
+#endif
