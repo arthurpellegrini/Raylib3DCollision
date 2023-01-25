@@ -325,5 +325,110 @@ bool IntersectSegmentRoundedBox(Segment seg, RoundedBox roundedBox, float& t, Ve
 	// On vérifie que l'OBB de la RoundedBox soit intersecté
 	if (!IntersectSegmentBox(seg, { roundedBox.ref, { roundedBox.extents.x + roundedBox.radius , roundedBox.extents.y + roundedBox.radius, roundedBox.extents.z + roundedBox.radius } }, t, interPt, interNormal)) return false;
 
-	return false;
+	Quaternion q = roundedBox.ref.q;
+
+	// Initialisation des parties sphériques de la RoundedBox (8)
+	Sphere spheres[8];
+	spheres[0] = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[1] = { ReferenceFrame({ roundedBox.extents.x,roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[2] = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[3] = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[4] = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[5] = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[6] = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,-roundedBox.extents.z }, q), roundedBox.radius };
+	spheres[7] = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,roundedBox.extents.z }, q), roundedBox.radius };
+
+	// Initialisation des parties cylindriques de la RoundedBox (12)
+	Cylinder cylinders[12];
+	cylinders[0] = {ReferenceFrame({roundedBox.extents.x,roundedBox.extents.y,0}, QuaternionMultiply(q, QuaternionFromAxisAngle({1,0,0}, PI / 2))), roundedBox.extents.z, roundedBox.radius};
+	cylinders[1] = { ReferenceFrame({ -roundedBox.extents.x,roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	cylinders[2] = { ReferenceFrame({ -roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	cylinders[3] = { ReferenceFrame({ roundedBox.extents.x,-roundedBox.extents.y,0 }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI / 2))), roundedBox.extents.z, roundedBox.radius };
+	cylinders[4] = { ReferenceFrame({ roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	cylinders[5] = { ReferenceFrame({ -roundedBox.extents.x,0,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	cylinders[6] = { ReferenceFrame({ -roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	cylinders[7] = { ReferenceFrame({ roundedBox.extents.x,0,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2))), roundedBox.extents.y, roundedBox.radius };
+	cylinders[8] = { ReferenceFrame({ 0,roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	cylinders[9] = { ReferenceFrame({ 0,roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	cylinders[10] = { ReferenceFrame({ 0,-roundedBox.extents.y,-roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+	cylinders[11] = { ReferenceFrame({ 0,-roundedBox.extents.y,roundedBox.extents.z }, QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2))), roundedBox.extents.x, roundedBox.radius };
+
+	// Initialisation des Quads de la RoundedBox (6)
+	Quad quad_faces[6];
+	// TOP & BOTTOM FACES
+	quad_faces[0] = { ReferenceFrame(LocalToGlobalPos({0, roundedBox.extents.y + roundedBox.radius, 0}, roundedBox.ref), q), {roundedBox.extents.x, 0, roundedBox.extents.z} };
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI));
+	quad_faces[1] = { ReferenceFrame(LocalToGlobalPos({ 0, -(roundedBox.extents.y + roundedBox.radius), 0 }, roundedBox.ref), q), { roundedBox.extents.x, 0, roundedBox.extents.z } };
+
+	// FRONT & BACK FACES
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI / 2));
+	quad_faces[2] = { ReferenceFrame(LocalToGlobalPos({ roundedBox.extents.x + roundedBox.radius, 0, 0 }, roundedBox.ref), q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, PI));
+	quad_faces[3] = { ReferenceFrame(LocalToGlobalPos({ -(roundedBox.extents.x + roundedBox.radius), 0, 0 }, roundedBox.ref), q), { roundedBox.extents.y, 0, roundedBox.extents.z } };
+
+	// LEFT & RIGHT FACES
+	q = QuaternionMultiply(QuaternionMultiply(q, QuaternionFromAxisAngle({ 0,0,1 }, -PI / 2)), QuaternionFromAxisAngle({ 1,0,0 }, PI / 2));
+	quad_faces[4] = { ReferenceFrame(LocalToGlobalPos({ 0, 0, roundedBox.extents.z + roundedBox.radius}, roundedBox.ref), q), { roundedBox.extents.x, 0, roundedBox.extents.y } };
+	q = QuaternionMultiply(q, QuaternionFromAxisAngle({ 1,0,0 }, PI));
+	quad_faces[5] = { ReferenceFrame(LocalToGlobalPos({0, 0, -(roundedBox.extents.z + roundedBox.radius)}, roundedBox.ref), q), { roundedBox.extents.x, 0, roundedBox.extents.y } };
+	 
+	// Initialisation des variables pour stocker les valeurs correspondantes au point le plus proche de l'origine du segment
+	float closest_t = FLT_MAX;
+	Vector3 closest_interPt;
+	Vector3 closest_interNormal;
+	bool hasIntersect = false;
+
+	// Check pour chaque sphere de la RoundedBox
+	for (int i = 0; i < 8; i++) {
+		MyDrawSphere(spheres[i], 10, 10);
+		// Calcul t, interPt et interNormal pour la face en cours
+		if (IntersectSegmentSphere(seg, spheres[i], t, interPt, interNormal)) {
+			// Si l'intersection est la plus proche de seg.pt1, on met à jour les variables
+			if (t >= 0 && t < closest_t) {
+				closest_t = t;
+				closest_interPt = interPt;
+				closest_interNormal = interNormal;
+				hasIntersect = true;
+			}
+		}
+	}
+
+	// Check pour chaque cylindre de la RoundedBox
+	for (int i = 0; i < 12; i++) {
+		MyDrawCylinder(cylinders[i], 10, false);
+		// Calcul t, interPt et interNormal pour la face en cours
+		if (IntersectSegmentCylinder(seg, cylinders[i], t, interPt, interNormal)) {
+			// Si l'intersection est la plus proche de seg.pt1, on met à jour les variables
+			if (t >= 0 && t < closest_t) {
+				closest_t = t;
+				closest_interPt = interPt;
+				closest_interNormal = interNormal;
+				hasIntersect = true;
+			}
+		}
+	}
+
+	// Check pour chaque face de la RoundedBox
+	for (int i = 0; i < 6; i++) {
+		MyDrawQuad(quad_faces[i]);
+		// Calcul t, interPt et interNormal pour la face en cours
+		if (IntersectSegmentQuad(seg, quad_faces[i], t, interPt, interNormal)) {
+			// Si l'intersection est la plus proche de seg.pt1, on met à jour les variables
+			if (t >= 0 && t < closest_t) {
+				closest_t = t;
+				closest_interPt = interPt;
+				closest_interNormal = interNormal;
+				hasIntersect = true;
+			}
+		}
+	}
+
+	// Si il y a une intersection, on met à jour les variables de sortie t, interPt et interNormal
+	if (hasIntersect) {
+		t = closest_t;
+		interPt = closest_interPt;
+		interNormal = closest_interNormal;
+	}
+
+	return hasIntersect;
 }
