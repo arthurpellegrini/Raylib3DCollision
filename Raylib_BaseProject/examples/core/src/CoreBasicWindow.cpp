@@ -21,6 +21,8 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include <raymath.h>
+#include <iostream>
+#include <cstdlib>
 #include <math.h>
 #include <float.h>
 #include <vector>
@@ -85,12 +87,15 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 * *******************************************************************************************/
 int main(int argc, char* argv[])
 {
-	float screenSizeCoef = 0.9f;
+	float screenSizeCoef = 0.5f;
 	const int screenWidth = 1920 * screenSizeCoef;
 	const int screenHeight = 1080 * screenSizeCoef;
 
 	InitWindow(screenWidth, screenHeight, "ESIEE - E3FI - 2022/2023 - Maths3D - Arthur PELLEGRINI, Clement BRISSARD, Tristan MARTIN");
 	SetTargetFPS(60);
+
+	// Providing a seed value
+	srand((unsigned)std::time(NULL));
 
 	//Set Camera
 	Vector3 cameraPos = { 8.0f, 15.0f, 14.0f };
@@ -305,6 +310,46 @@ int main(int argc, char* argv[])
 	/************************************************
 	* TD3											*
 	*************************************************/
+			static RoundedBox rndBox = { { { 0.0f, 2.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI/3)}, {2.0f, 1.0f, 1.5f}, 0.5f};
+
+			MyDrawRoundedBox(rndBox, 10, true, true, GREEN);
+			
+			// RAND -> min + rand() % range
+			//Vector3 sph_pos = { -15 + rand() % 31, 20, -15 + rand() % 31 };
+			//std::cout << "{ " << sph_pos.x << ", " << sph_pos.y << ", " << sph_pos.z << " }" << std::endl;
+			//Sphere sphere = { ReferenceFrame(sph_pos, QuaternionIdentity()), 2.5f };
+
+			static Sphere sphere = { ReferenceFrame({-2, 6, 10}, QuaternionIdentity()), 1.5f};
+
+
+			// MOMENT INERTIE SPHERE
+			// I = 2/5 * mR² -> Moment d'inertie d'une Sphere Homogène
+			float i = (2 / 5 * MASSE_SPHERE * sphere.radius * sphere.radius);
+			//Vector3 LG = ;
+			
+			// VELOCITE SPHERE
+			// OΩn+1 = OΩn + (Tn+1 - Tn) * Vn + (Tn+1 - Tn) * G
+			Vector3 velocity = Vector3Scale(Vector3Add(VITESSE, Vector3Scale(PESANTEUR, MASSE_SPHERE * deltaTime)), deltaTime);
+
+			// COLLISION SPHERE
+			float colT;
+			Vector3 colSpherePos, colNormal, newPosition, newVelocity;
+
+			if(GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBox, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
+			{
+				//velocity = newVelocity;
+				std::cout << "true" << std::endl;
+			}
+
+			// AFFICHAGE
+			MyDrawLine({ sphere.ref.origin, velocity });
+			MyDrawPolygonSphere({ ReferenceFrame(Vector3Add(sphere.ref.origin, Vector3Scale(Vector3Normalize(velocity), sphere.radius)), QuaternionIdentity()), 0.2f }, 10, 10, GREEN);
+
+			sphere.ref.Translate(velocity);
+			MyDrawSphere(sphere, 20, 20, false, true, RED);
+
+
+
 
 
 
@@ -316,7 +361,7 @@ int main(int argc, char* argv[])
 			DrawSphere({ 0,0,15 }, .2f, BLUE);
 		}
 		EndMode3D();
-		DrawFPS(1800 * screenSizeCoef, 20 * screenSizeCoef);
+		DrawFPS(10, 10);
 		EndDrawing();
 	}
 	CloseWindow();        // Close window and OpenGL context
