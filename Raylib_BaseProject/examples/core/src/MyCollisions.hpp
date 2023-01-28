@@ -1,8 +1,9 @@
 #include "MyIntersections.hpp"
 
-#define PESANTEUR { 0.0f, -9.80665f, 0.0f } // g = 9,80665 m/s² ~~ 9,81 m/s² ou 9,81 N/kg (sur Terre)
-#define MASSE_SPHERE 1.0f // En kg
-#define VITESSE { 0.5f, 0.0f, -2.0f}
+#define PESANTEUR 9.80665f // g = 9,80665 m/s² ~~ 9,81 m/s² ou 9,81 N/kg (sur Terre)
+#define VPESANTEUR { 0.0f, -PESANTEUR, 0.0f } // Vecteur Pesanteur
+#define ENERGIE 1.0f // Energie du système 
+
 
 #ifndef COLLISIONS_METHODS
 #define COLLISIONS_METHODS
