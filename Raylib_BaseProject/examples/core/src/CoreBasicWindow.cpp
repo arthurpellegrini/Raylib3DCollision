@@ -29,6 +29,8 @@
 
 #include "MyCollisions.hpp"
 
+using namespace std;
+
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
 #else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
@@ -88,7 +90,7 @@ void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 * *******************************************************************************************/
 int main(int argc, char* argv[])
 {
-	float screenSizeCoef = 0.5f;
+	float screenSizeCoef = 0.8f;
 	const int screenWidth = 1920 * screenSizeCoef;
 	const int screenHeight = 1080 * screenSizeCoef;
 
@@ -115,21 +117,37 @@ int main(int argc, char* argv[])
 	
 	// GENERATION ALEATOIRE DE LA POSITION X ET Z (Y FIXE) 
 	// RAND USAGE => min + rand() % range
-	Vector3 newPosition, initPosition = { -15 + rand() % 31, 20, -15 + rand() % 31 };
+	Vector3 newPosition, initPosition = { -15 + rand() % 31, 10, -15 + rand() % 31 };
 	//Vector3 newPosition, initPosition = { 0.0f, 2.5f, 10.0f };
 	Vector3 position = initPosition;
 	//Vector3 newVelocity, velocity = Vector3Normalize({ 0.0f, 0.0f, -1.0f });
-	Vector3 newVelocity, velocity = Vector3Normalize({ 0.0f, 0.0f, 0.0f });
+	Vector3 newVelocity, init_velocity = { 4.0f, -3.0f, 1.5f };
+	Vector3 velocity = init_velocity;
 
 	// Init 3DPrimitives
 	Sphere sphere = { ReferenceFrame(position, QuaternionIdentity()), 1.5f };
 	//RoundedBox rndBox = { { { 0.0f, 0.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI / 3)}, {2.0f, 1.0f, 1.5f}, 0.5f };
-	RoundedBox rndBox = { { { 0.0f, 0.0f, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {20.0f, 1.0f, 20.0f}, 2.0f };
 
+	// ROUNDEDBOXES VECTOR
+	vector<RoundedBox> rndBoxes;
+	// Zone de Test
+	float taille_zone = 20.0f;
+	rndBoxes.push_back( { { { 0.0f, taille_zone, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, 0.5f, taille_zone}, 0.0f } );
+	rndBoxes.push_back( { { { 0.0f, -taille_zone, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, 0.5f, taille_zone}, 0.0f } );
+	rndBoxes.push_back( { { { taille_zone, 0.0f, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {0.5f, taille_zone, taille_zone}, 0.0f } ); // FRONT
+	rndBoxes.push_back( { { { -taille_zone, 0.0f, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {0.5f, taille_zone, taille_zone}, 0.0f } ); // BACK
+	rndBoxes.push_back( { { { 0.0f, 0.0f, taille_zone }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, taille_zone, 0.5f}, 0.0f } );	 // LEFT
+	rndBoxes.push_back( { { { 0.0f, 0.0f, -taille_zone }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, taille_zone, 0.5f}, 0.0f } );	// RIGHT
+
+	// Obstacles
+	rndBoxes.push_back( { { { -9.0f, -10.0f, -7.0f }, QuaternionFromAxisAngle({1,0,1}, PI/2)}, {4.0f, 3.0f, 3.0f}, 1.0f } );
+	rndBoxes.push_back( { { { 9.0f, 10.0f, 8.0f }, QuaternionFromAxisAngle({1,1,1}, PI/3)}, {1.0f, 2.0f, 2.0f}, 4.0f } );
+	rndBoxes.push_back( { { { -6.0f, -4.0f, 8.0f }, QuaternionFromAxisAngle({1,1,0}, PI/6)}, {2.0f, 1.0f, 2.0f}, 3.0f } );
+	rndBoxes.push_back( { { { 6.0f, 12.0f, -4.0f }, QuaternionFromAxisAngle({0,1,1}, PI)}, {3.0f, 1.0f, 3.0f}, 2.0f } );
 
 	// Init Sphere Variables
 	float masse = 100.0f; // Masse de la Sphère
-	float energie = 1.00f; // Energie du système 
+	float energie = 10.00f; // Energie du système 
 	// I = 2/5 * mR² -> Moment d'inertie d'une Sphere Homogène
 	float I = 2 * masse * sphere.radius * sphere.radius / 5;
 	// Vitesse Angulaire, en rad/s
@@ -160,35 +178,29 @@ int main(int argc, char* argv[])
 		printf("SpherePos at time (+%f): \n", deltaTime);
 		printf("\tOmegaPos : { %f, %f, %f }\n", sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
 
-		if (!has_collide && GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBox, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
+		if (!has_collide && GetSphereNewPositionAndVelocityIfCollidingWithRoundedBoxes(sphere, rndBoxes, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
 		{
-			// LOGS
-			//printf("Collide at time (+%f): \n", deltaTime);
-			//printf("\tcolT -> %f\n", colT);
-			//printf("\tColPos : { %f, %f, %f }\n", colSpherePos.x, colSpherePos.y, colSpherePos.z);
-			//printf("\tColNormal : { %f, %f, %f }\n", colNormal.x, colNormal.y, colNormal.z);
-			//printf("\tnewPosition : { %f, %f, %f }\n", newPosition.x, newPosition.y, newPosition.z);
-			//printf("\tnewVelocity : { %f, %f, %f }\n", newVelocity.x, newVelocity.y, newVelocity.z);
-			//printf("\n");
-
-			//PROCESSING ACTIONS
-			has_collide = true;
-			velocity = newVelocity;
+			// Position & Vitesse;
 			position = newPosition;
+			init_velocity = newVelocity;
+			velocity = newVelocity;
 
+			// Rotation
 			colOmega = Vector3Subtract(colSpherePos, sphere.ref.origin);
 			rot = Vector3Normalize(Vector3CrossProduct(colOmega, Vector3Scale(velocity, masse)));
 
-			newLG = Vector3Subtract(LG,
+			newLG = Vector3Subtract(Vector3Normalize(LG),
 				Vector3Scale(Vector3CrossProduct(colOmega,
 					Vector3Subtract(velocity,
 						Vector3Add(Vector3Scale(colNormal, Vector3DotProduct(velocity, colNormal)), Vector3CrossProduct(rot, colOmega)))),
 					kf * deltaTime));
+
+			has_collide = true;
 		}
 		else
 		{
 			// v = sqrt( 2/m * (E - mgh) )
-			velocity = Vector3Scale(Vector3Normalize(velocity), sqrtf((2 * (energie - (masse * PESANTEUR * (position.y - initPosition.y)))) / masse));
+			velocity = Vector3Scale(Vector3Normalize(init_velocity), sqrtf((2 * (energie - (masse * PESANTEUR * (position.y - initPosition.y)))) / masse));
 			// Vn+1 = Vn + (Tn+1 - Tn) * G
 			newVelocity = Vector3Add(velocity, Vector3Scale(VPESANTEUR, deltaTime));
 			velocity = newVelocity;
@@ -402,12 +414,17 @@ int main(int argc, char* argv[])
 		* TD3											*
 		*************************************************/
 			// PRINT 3D_PRIMITIVES
-			//Segment V = { sphere.ref.origin, Vector3Add(sphere.ref.origin, Vector3Scale(velocity, 1000))};
-			//MyDrawSegment(V, DARKBLUE); //DRAW SPHERE MOVE UNTIL COLLIDING (WITH a SEGMENT)
+			Segment V = { sphere.ref.origin, Vector3Add(sphere.ref.origin, Vector3Scale(velocity, 1000))};
+			MyDrawSegment(V, DARKBLUE); //DRAW SPHERE MOVE UNTIL COLLIDING (WITH a SEGMENT)
 
 			MyDrawSphere(sphere, 10, 20, true, true, RED);
-			MyDrawRoundedBox(rndBox, 10, true, true, GREEN);
 
+			//Scène de test
+			for (int j = 0; j < rndBoxes.size(); j++) {
+				if(j < 6) MyDrawWireframeRoundedBox(rndBoxes[j], 2);
+				else if(j % 2 == 0) MyDrawRoundedBox(rndBoxes[j], 2, true, true, GREEN);
+				else MyDrawRoundedBox(rndBoxes[j], 2, true, true, BLUE);
+			}
 
 			//3D REFERENTIAL
 			DrawGrid(30, 1.0f);
