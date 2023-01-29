@@ -46,8 +46,7 @@ template <typename T> int sgn(T val) {
 * *******************************************************************************************/
 void MyUpdateOrbitalCamera(Camera* camera, float deltaTime)
 {
-	//static Spherical sphPos = { 10.0f, PI / 4.0f, PI / 4.0f }; // la position de départ de la caméra est rho=10m, theta=45° et phi=45°
-	static Spherical sphPos = { 40.0f, PI/2.0f, PI/3.0f };
+	static Spherical sphPos = { 10.0f, PI / 4.0f, PI / 4.0f }; // la position de départ de la caméra est rho=10m, theta=45° et phi=45°
 	Spherical sphSpeed = { 2.0f, 0.04f, 0.04f }; // 2m/incrément de molette et 0.04 radians/pixel
 
 	float rhoMin = 4.0f; // 4m
@@ -117,15 +116,13 @@ int main(int argc, char* argv[])
 	
 	// GENERATION ALEATOIRE DE LA POSITION X ET Z (Y FIXE) 
 	// RAND USAGE => min + rand() % range
-	//Vector3 newPosition, initPosition = { -15 + rand() % 31, 10, -15 + rand() % 31 };
-	Vector3 newPosition, initPosition = { 0.0f, 2.5f, 10.0f };
+	Vector3 newPosition, initPosition = { -15 + rand() % 31, 10, -15 + rand() % 31 };
 	Vector3 position = initPosition;
 	Vector3 newVelocity, init_velocity = { 10.0f, -2.0f, 6.0f };
 	Vector3 velocity = init_velocity;
 
 	// Init 3DPrimitives
 	Sphere sphere = { ReferenceFrame(position, QuaternionIdentity()), 1.5f };
-	//RoundedBox rndBox = { { { 0.0f, 0.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI / 3)}, {2.0f, 1.0f, 1.5f}, 0.5f };
 
 	// ROUNDEDBOXES VECTOR
 	vector<RoundedBox> rndBoxes;
@@ -137,13 +134,12 @@ int main(int argc, char* argv[])
 	rndBoxes.push_back( { { { -taille_zone, 0.0f, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {0.5f, taille_zone, taille_zone}, 0.0f } ); // BACK
 	rndBoxes.push_back( { { { 0.0f, 0.0f, taille_zone }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, taille_zone, 0.5f}, 0.0f } );	 // LEFT
 	rndBoxes.push_back( { { { 0.0f, 0.0f, -taille_zone }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, taille_zone, 0.5f}, 0.0f } );	// RIGHT
-
 	// Obstacles
-	rndBoxes.push_back( { { { -6.0f, -4.0f, 8.0f }, QuaternionFromAxisAngle({1,1,0}, PI/6)}, {2.0f, 1.0f, 2.0f}, 1.0f } );
-	rndBoxes.push_back( { { { 7.0f, -8.0f, -8.0f }, QuaternionFromAxisAngle({0,1,1}, PI/5)}, {3.0f, 1.0f, 3.0f}, 1.0f } );
+	rndBoxes.push_back( { { { -6.0f, -5.0f, 6.0f }, QuaternionFromAxisAngle({1,1,0}, PI/6)}, {2.0f, 1.0f, 2.0f}, 1.0f } );
+	rndBoxes.push_back( { { { 3.0f, -10.0f, -5.0f }, QuaternionFromAxisAngle({0,1,1}, PI/5)}, {3.0f, 1.0f, 3.0f}, 1.0f } );
 
 	// Init Sphere Variables
-	float masse = 100.0f; // Masse de la Sphère
+	float masse = 10.0f; // Masse de la Sphère
 	float energie = 100.00f; // Energie du système 
 	// I = 2/5 * mR² -> Moment d'inertie d'une Sphere Homogène
 	float I = 2 * masse * sphere.radius * sphere.radius / 5;
@@ -171,9 +167,6 @@ int main(int argc, char* argv[])
 		time = (float)GetTime();
 
 		MyUpdateOrbitalCamera(&camera, deltaTime);
-
-		printf("SpherePos at time (+%f): \n", deltaTime);
-		printf("\tOmegaPos : { %f, %f, %f }\n", sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
 
 		if (!has_collide && GetSphereNewPositionAndVelocityIfCollidingWithRoundedBoxes(sphere, rndBoxes, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
 		{
@@ -410,11 +403,7 @@ int main(int argc, char* argv[])
 		/************************************************
 		* TD3											*
 		*************************************************/
-			// PRINT 3D_PRIMITIVES
-			Segment V = { sphere.ref.origin, Vector3Add(sphere.ref.origin, Vector3Scale(velocity, 1000))};
-			MyDrawSegment(V, DARKBLUE); //DRAW SPHERE MOVE UNTIL COLLIDING (WITH a SEGMENT)
-
-			MyDrawSphere(sphere, 15, 30, true, false, RED);
+			MyDrawSphere(sphere, 20, 20, true, true, RED);
 
 			//Scène de test
 			for (int j = 0; j < rndBoxes.size(); j++) {
