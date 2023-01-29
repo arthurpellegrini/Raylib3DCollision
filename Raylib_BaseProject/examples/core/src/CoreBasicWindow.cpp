@@ -117,11 +117,10 @@ int main(int argc, char* argv[])
 	
 	// GENERATION ALEATOIRE DE LA POSITION X ET Z (Y FIXE) 
 	// RAND USAGE => min + rand() % range
-	Vector3 newPosition, initPosition = { -15 + rand() % 31, 10, -15 + rand() % 31 };
-	//Vector3 newPosition, initPosition = { 0.0f, 2.5f, 10.0f };
+	//Vector3 newPosition, initPosition = { -15 + rand() % 31, 10, -15 + rand() % 31 };
+	Vector3 newPosition, initPosition = { 0.0f, 2.5f, 10.0f };
 	Vector3 position = initPosition;
-	//Vector3 newVelocity, velocity = Vector3Normalize({ 0.0f, 0.0f, -1.0f });
-	Vector3 newVelocity, init_velocity = { 4.0f, -3.0f, 1.5f };
+	Vector3 newVelocity, init_velocity = { 10.0f, -2.0f, 6.0f };
 	Vector3 velocity = init_velocity;
 
 	// Init 3DPrimitives
@@ -140,14 +139,12 @@ int main(int argc, char* argv[])
 	rndBoxes.push_back( { { { 0.0f, 0.0f, -taille_zone }, QuaternionFromAxisAngle({1,0,0}, 0)}, {taille_zone, taille_zone, 0.5f}, 0.0f } );	// RIGHT
 
 	// Obstacles
-	rndBoxes.push_back( { { { -9.0f, -10.0f, -7.0f }, QuaternionFromAxisAngle({1,0,1}, PI/2)}, {4.0f, 3.0f, 3.0f}, 1.0f } );
-	rndBoxes.push_back( { { { 9.0f, 10.0f, 8.0f }, QuaternionFromAxisAngle({1,1,1}, PI/3)}, {1.0f, 2.0f, 2.0f}, 4.0f } );
-	rndBoxes.push_back( { { { -6.0f, -4.0f, 8.0f }, QuaternionFromAxisAngle({1,1,0}, PI/6)}, {2.0f, 1.0f, 2.0f}, 3.0f } );
-	rndBoxes.push_back( { { { 6.0f, 12.0f, -4.0f }, QuaternionFromAxisAngle({0,1,1}, PI)}, {3.0f, 1.0f, 3.0f}, 2.0f } );
+	rndBoxes.push_back( { { { -6.0f, -4.0f, 8.0f }, QuaternionFromAxisAngle({1,1,0}, PI/6)}, {2.0f, 1.0f, 2.0f}, 1.0f } );
+	rndBoxes.push_back( { { { 7.0f, -8.0f, -8.0f }, QuaternionFromAxisAngle({0,1,1}, PI/5)}, {3.0f, 1.0f, 3.0f}, 1.0f } );
 
 	// Init Sphere Variables
 	float masse = 100.0f; // Masse de la Sphère
-	float energie = 10.00f; // Energie du système 
+	float energie = 100.00f; // Energie du système 
 	// I = 2/5 * mR² -> Moment d'inertie d'une Sphere Homogène
 	float I = 2 * masse * sphere.radius * sphere.radius / 5;
 	// Vitesse Angulaire, en rad/s
@@ -417,13 +414,13 @@ int main(int argc, char* argv[])
 			Segment V = { sphere.ref.origin, Vector3Add(sphere.ref.origin, Vector3Scale(velocity, 1000))};
 			MyDrawSegment(V, DARKBLUE); //DRAW SPHERE MOVE UNTIL COLLIDING (WITH a SEGMENT)
 
-			MyDrawSphere(sphere, 10, 20, true, true, RED);
+			MyDrawSphere(sphere, 15, 30, true, false, RED);
 
 			//Scène de test
 			for (int j = 0; j < rndBoxes.size(); j++) {
-				if(j < 6) MyDrawWireframeRoundedBox(rndBoxes[j], 2);
-				else if(j % 2 == 0) MyDrawRoundedBox(rndBoxes[j], 2, true, true, GREEN);
-				else MyDrawRoundedBox(rndBoxes[j], 2, true, true, BLUE);
+				if(j < 6) MyDrawWireframeRoundedBox(rndBoxes[j], 10);
+				else if(j % 2 == 0) MyDrawRoundedBox(rndBoxes[j], 10, true, true, GREEN);
+				else MyDrawRoundedBox(rndBoxes[j], 10, true, true, BLUE);
 			}
 
 			//3D REFERENTIAL

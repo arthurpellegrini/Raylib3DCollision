@@ -8,6 +8,9 @@ bool GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(Sphere sphere, Rou
 	Segment seg_vel_sph = { sphere.ref.origin, Vector3Add(sphere.ref.origin,Vector3Scale(Vector3Normalize(velocity), 0.5f)) };
 	RoundedBox minkowski = { rndBox.ref, rndBox.extents, rndBox.radius + sphere.radius };
 
+	MyDrawSegment(seg_vel_sph, ORANGE);
+	MyDrawRoundedBox(minkowski, 10, false, true, BLACK, BROWN);
+
 	if (IntersectSegmentRoundedBox(seg_vel_sph, minkowski, colT, colSpherePos, colNormal))
 	{
 		// Nouvelle position du centre de la sphère en prennant en compte le T correspondant à la collision sur le segment
@@ -22,7 +25,7 @@ bool GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(Sphere sphere, Rou
 }
 
 
-bool GetSphereNewPositionAndVelocityIfCollidingWithRoundedBoxes(Sphere sphere, const vector<RoundedBox>& rndBoxes, Vector3 velocity, float deltaTime, float& colT, Vector3& colSpherePos, Vector3& colNormal, Vector3& newPosition, Vector3& newVelocity) 
+bool GetSphereNewPositionAndVelocityIfCollidingWithRoundedBoxes(Sphere sphere, const std::vector<RoundedBox>& rndBoxes, Vector3 velocity, float deltaTime, float& colT, Vector3& colSpherePos, Vector3& colNormal, Vector3& newPosition, Vector3& newVelocity) 
 {
 	// Initialisation des variables pour stocker les valeurs correspondantes au point de collision de la RoundedBox la plus proche
 	float closest_colT = FLT_MAX;
@@ -33,8 +36,8 @@ bool GetSphereNewPositionAndVelocityIfCollidingWithRoundedBoxes(Sphere sphere, c
 	bool hasIntersect = false;
 
 	// On parcourt les roundedBoxes pour vérifier si l'un d'entre elles est en collision avec la sphere
-	for (RoundedBox rndBox : rndBoxes) {
-		if (GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBox, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
+	for (int i = 0; i < rndBoxes.size(); i++) {
+		if (GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBoxes[i], velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
 		{
 			if (colT >= 0 && colT < closest_colT) 
 			{
