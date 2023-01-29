@@ -115,15 +115,18 @@ int main(int argc, char* argv[])
 	
 	// GENERATION ALEATOIRE DE LA POSITION X ET Z (Y FIXE) 
 	// RAND USAGE => min + rand() % range
-	// Vector3 position = { -15 + rand() % 31, 20, -15 + rand() % 31 }
-	Vector3 newPosition, init_position = { 0.0f, 2.5f, 10.0f };
-	Vector3 position = init_position;
-	Vector3 newVelocity, init_velocity = Vector3Normalize({ 0, 0.0f, -1 });
-	Vector3 velocity = init_velocity;
+	Vector3 newPosition, initPosition = { -15 + rand() % 31, 20, -15 + rand() % 31 };
+	//Vector3 newPosition, initPosition = { 0.0f, 2.5f, 10.0f };
+	Vector3 position = initPosition;
+	//Vector3 newVelocity, velocity = Vector3Normalize({ 0.0f, 0.0f, -1.0f });
+	Vector3 newVelocity, velocity = Vector3Normalize({ 0.0f, 0.0f, 0.0f });
 
 	// Init 3DPrimitives
 	Sphere sphere = { ReferenceFrame(position, QuaternionIdentity()), 1.5f };
-	RoundedBox rndBox = { { { 0.0f, 0.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI / 3)}, {2.0f, 1.0f, 1.5f}, 0.5f };
+	//RoundedBox rndBox = { { { 0.0f, 0.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI / 3)}, {2.0f, 1.0f, 1.5f}, 0.5f };
+	RoundedBox rndBox = { { { 0.0f, 0.0f, 0.0f }, QuaternionFromAxisAngle({1,0,0}, 0)}, {20.0f, 1.0f, 20.0f}, 2.0f };
+
+
 	// Init Sphere Variables
 	float masse = 100.0f; // Masse de la Sphère
 	float energie = 1.00f; // Energie du système 
@@ -154,6 +157,8 @@ int main(int argc, char* argv[])
 
 		MyUpdateOrbitalCamera(&camera, deltaTime);
 
+		printf("SpherePos at time (+%f): \n", deltaTime);
+		printf("\tOmegaPos : { %f, %f, %f }\n", sphere.ref.origin.x, sphere.ref.origin.y, sphere.ref.origin.z);
 
 		if (!has_collide && GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBox, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
 		{
@@ -168,7 +173,6 @@ int main(int argc, char* argv[])
 
 			//PROCESSING ACTIONS
 			has_collide = true;
-			init_velocity = newVelocity;
 			velocity = newVelocity;
 			position = newPosition;
 
@@ -184,7 +188,7 @@ int main(int argc, char* argv[])
 		else
 		{
 			// v = sqrt( 2/m * (E - mgh) )
-			velocity = Vector3Scale(init_velocity, sqrtf((2 * (energie - (masse * PESANTEUR * (position.y - init_position.y)))) / masse));
+			velocity = Vector3Scale(Vector3Normalize(velocity), sqrtf((2 * (energie - (masse * PESANTEUR * (position.y - initPosition.y)))) / masse));
 			// Vn+1 = Vn + (Tn+1 - Tn) * G
 			newVelocity = Vector3Add(velocity, Vector3Scale(VPESANTEUR, deltaTime));
 			velocity = newVelocity;
