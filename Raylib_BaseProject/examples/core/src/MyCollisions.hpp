@@ -2,13 +2,9 @@
 
 #define PESANTEUR 9.80665f // g = 9,80665 m/s² ~~ 9,81 m/s² ou 9,81 N/kg (sur Terre)
 #define VPESANTEUR { 0.0f, -PESANTEUR, 0.0f } // Vecteur Pesanteur
-#define ENERGIE 1.0f // Energie du système 
-
 
 #ifndef COLLISIONS_METHODS
 #define COLLISIONS_METHODS
-
-void MoveSphere(Sphere sphere, Vector3 velocity, float deltaTime);
 
 bool GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(
 	Sphere sphere,

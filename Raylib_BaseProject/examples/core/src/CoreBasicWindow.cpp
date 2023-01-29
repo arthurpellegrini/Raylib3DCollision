@@ -105,6 +105,7 @@ int main(int argc, char* argv[])
 	camera.type = CAMERA_PERSPECTIVE;
 	SetCameraMode(camera, CAMERA_CUSTOM);  // Set an orbital camera mode
 
+	//----------------------------------------------------------------------------------
 	// Init Time Variables
 	float deltaTime;
 	float time;
@@ -113,8 +114,8 @@ int main(int argc, char* argv[])
 	srand((unsigned)std::time(NULL));
 	
 	// Init Sphere Variables
-	float masse_sphere = 1.0f;
-	Vector3 force = Vector3Scale(VPESANTEUR, masse_sphere);
+	float masse = 100.0f;
+	float energie = 1.00f; // Energie du système 
 
 	Vector3 newVelocity, newPosition;
 	Vector3 init_velocity = Vector3Normalize({ 0, 0.0f, -1 });
@@ -122,17 +123,33 @@ int main(int argc, char* argv[])
 	// GENERATION ALEATOIRE DE LA POSITION X ET Z (Y FIXE) 
 	// RAND USAGE => min + rand() % range
 	// Vector3 position = { -15 + rand() % 31, 20, -15 + rand() % 31 }
-	Vector3 init_position = { 0.0f, 5.0f, 10.0f };
+	Vector3 init_position = { 0.0f, 2.5f, 10.0f };
 	Vector3 position = init_position;
 
 	// Init 3DPrimitives
 	Sphere sphere = { ReferenceFrame(position, QuaternionIdentity()), 1.5f };
-	RoundedBox rndBox = { { { 0.0f, 2.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI / 3)}, {2.0f, 1.0f, 1.5f}, 0.5f };
+	RoundedBox rndBox = { { { 0.0f, 0.5f, -8.0f }, QuaternionFromAxisAngle({1,0,0}, PI / 3)}, {2.0f, 1.0f, 1.5f}, 0.5f };
+
+	// I = 2/5 * mR² -> Moment d'inertie d'une Sphere Homogène
+	float I = 2 * masse * sphere.radius * sphere.radius / 5;
+	// Vitesse Angulaire, en rad/s
+	float angular_velocity = PI/12;
+	// Norme Moment Cinétique 
+	float LG_Lenght = I * angular_velocity;
+	Vector3 LG = { 0 }, newLG;
+	float kf = 2.12f;
+
+	bool stop = false;
+	
+	//printf("LG_Lenght : %f\n", LG_Lenght);
+	//printf("I : %f\n", I);
+	//printf("angular velocity : %f\n", angular_velocity);
 
 	// Init Colliding Variables
+	bool has_collide = false;
 	float colT;
 	Vector3 colSpherePos, colNormal;
-
+	//----------------------------------------------------------------------------------
 
 	while (!WindowShouldClose())    // Detect window close button or ESC key
 	{
@@ -338,67 +355,93 @@ int main(int argc, char* argv[])
 		/************************************************
 		* TD3											*
 		*************************************************/
-			// MOMENT INERTIE SPHERE
-			// I = 2/5 * mR² -> Moment d'inertie d'une Sphere Homogène
-			float i = (2 / 5 * masse_sphere * sphere.radius * sphere.radius);
-			//Vector3 LG = ;
+			if (!has_collide)
+			{
+				if (GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBox, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
+				{
+					// LOGS
+					printf("Collide at time (+%f): \n", deltaTime);
+					printf("\tcolT -> %f\n", colT);
+					printf("\tColPos : { %f, %f, %f }\n", colSpherePos.x, colSpherePos.y, colSpherePos.z);
+					printf("\tColNormal : { %f, %f, %f }\n", colNormal.x, colNormal.y, colNormal.z);
+					printf("\tnewPosition : { %f, %f, %f }\n", newPosition.x, newPosition.y, newPosition.z);
+					printf("\tnewVelocity : { %f, %f, %f }\n", newVelocity.x, newVelocity.y, newVelocity.z);
+					printf("\n");
+
+					has_collide = true;
+
+					//PROCESSING ACTIONS
+					init_velocity = newVelocity;
+					velocity = newVelocity;
+					//sphere.ref.origin = newPosition;
+					position = newPosition;
 
 
+					//Vector3 rot = { 2, 3, 5 };
 
+					//Vector3 colOmega = Vector3Subtract(colSpherePos, sphere.ref.origin);
+					//newLG = Vector3Subtract(LG, 
+					//	Vector3Scale(Vector3CrossProduct(colOmega, 
+					//		Vector3Subtract(velocity, 
+					//			Vector3Add(Vector3Scale(colNormal, Vector3DotProduct(velocity, colNormal)), Vector3CrossProduct(rot, colOmega)))), 
+					//	kf * deltaTime));
 
+					//printf("\tnewLG : { %f, %f, %f }\n", newLG.x, newLG.y, newLG.z);
 
-			//static bool has_collide = false;
+					//sphere.ref.RotateByQuaternion(QuaternionFromVector3ToVector3(Vector3Normalize(LG), Vector3Normalize(newLG)));
+				}
+			}
+			if(!stop)
+				//else
+				{
+					// v = sqrt( 2/m * (E - mgh) )
+					velocity = Vector3Scale(init_velocity, sqrtf((2 * (energie - (masse * PESANTEUR * (position.y - init_position.y) ) ) ) / masse));
+					// Vn+1 = Vn + (Tn+1 - Tn) * G
+					newVelocity = Vector3Add(velocity, Vector3Scale(VPESANTEUR, deltaTime));
+					velocity = newVelocity;
 
-			//if (GetSphereNewPositionAndVelocityIfCollidingWithRoundedBox(sphere, rndBox, velocity, deltaTime, colT, colSpherePos, colNormal, newPosition, newVelocity))
-			//{
-			//	// LOGS
-			//	printf("Collide at time (+%f): \n", deltaTime);
-			//	printf("\tcolT -> %f\n", colT);
-			//	printf("\tColPos : { %f, %f, %f }\n", colSpherePos.x, colSpherePos.y, colSpherePos.z);
-			//	printf("\tColNormal : { %f, %f, %f }\n", colNormal.x, colNormal.y, colNormal.z);
-			//	printf("\tnewPosition : { %f, %f, %f }\n", newPosition.x, newPosition.y, newPosition.z);
-			//	printf("\tnewVelocity : { %f, %f, %f }\n", newVelocity.x, newVelocity.y, newVelocity.z);
-			//	printf("\n");
+					//if (has_collide)
+					//	stop = true;
+					// OΩn+1 = OΩn + (Tn+1 - Tn) * Vn+1
+					sphere.ref.Translate(Vector3Scale(newVelocity, deltaTime));
+					//newPosition = Vector3Add(position, Vector3Scale(newVelocity, deltaTime));
+					//sphere.ref.origin = newPosition;
+					position = newPosition;		
 
-			//	has_collide = true;
-
-			//	//PROCESSING ACTIONS
-			//	//oldPosition = sphere.ref.origin;
-			//	velocity = newVelocity;
-			//	position = newPosition;
-			//	sphere.ref.Translate(newPosition);
+				
+					// printf("\tposition : { %f, %f, %f }\n", position.x, position.y, position.z);
+				}
 			//}
 			//else
-			{
-				// v = sqrt( 2/m * (E - mgh) )
-				velocity = Vector3Scale(init_velocity, sqrtf((2 / masse_sphere) * (ENERGIE - (masse_sphere * PESANTEUR * (position.y - init_position.y)))));
-				// Vn+1 = Vn + (Tn+1 - Tn) * G
-				newVelocity = Vector3Add(velocity, Vector3Scale(VPESANTEUR, deltaTime));
-				velocity = newVelocity;
-
-				// OΩn+1 = OΩn + (Tn+1 - Tn) * Vn+1
-				//sphere.ref.Translate(Vector3Scale(newVelocity, deltaTime));
-				newPosition = Vector3Add(position, Vector3Scale(newVelocity, deltaTime));
-				position = newPosition;
-				sphere.ref.origin = newPosition;
-			}
-
-			//if (has_collide)
 			//{
 			//	// PRINTING COL DATA
-			//	MyDrawLine( { sphere.ref.origin, Vector3Scale(velocity, colT) }, GREEN); //DRAW SPHERE MOVE UNTIL COLLIDING
-			//	MyDrawLine( { colSpherePos, Vector3Scale(velocity, 1-colT) }, BLUE); //DRAW INITIAL SPHERE MOVE IF NOT COLLIDING
+			//	MyDrawSegment( { sphere.ref.origin, Vector3Add(sphere.ref.origin, Vector3Scale(velocity, colT)) }, GREEN); //DRAW SPHERE MOVE UNTIL COLLIDING
+			//	MyDrawSegment( { colSpherePos, Vector3Add(colSpherePos, Vector3Scale(velocity, 1-colT)) }, BLUE); //DRAW INITIAL SPHERE MOVE IF NOT COLLIDING
 
 			//	MyDrawPolygonSphere({ {colSpherePos,QuaternionIdentity()},.05f }, 8, 8, RED); //DRAW COLLIDING POINT
 			//	DrawLine3D(colSpherePos, Vector3Add(Vector3Scale(colNormal, 1), colSpherePos), RED); // DRAW NORMAL COLLIDING VECTOR
 			//}
 
 			// PRINT 3DPRIMITIVES
-			MyDrawLine({ sphere.ref.origin, velocity });
-			MyDrawSphere(sphere, 10, 5, false, true, RED);
+			Segment V = { sphere.ref.origin, Vector3Add(sphere.ref.origin, Vector3Scale(velocity, 1000))};
+			MyDrawSegment(V, DARKBLUE); //DRAW SPHERE MOVE UNTIL COLLIDING
 
+
+			MyDrawSphere(sphere, 15, 30, true, true, RED);
 			MyDrawRoundedBox(rndBox, 10, true, true, GREEN);
 
+
+			//RoundedBox minkowski = { rndBox.ref, rndBox.extents, rndBox.radius + sphere.radius };
+			//MyDrawRoundedBox(minkowski, 4, false, true);
+
+			//float t; 
+			//Vector3 interPt, interNormal;
+
+			//if (IntersectSegmentRoundedBox(V, minkowski, t, interPt, interNormal))
+			//	{
+			//		MyDrawPolygonSphere({ {interPt,QuaternionIdentity()},.05f }, 8, 8, RED);
+			//		DrawLine3D(interPt, Vector3Add(Vector3Scale(interNormal, 1), interPt), RED);
+			//	}
 
 
 
