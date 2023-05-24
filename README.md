@@ -1,24 +1,100 @@
+Raylib C/C++ - Maths 3D Project
+==============================================================
+
+Description
+--------------------------------------------------------------
+This project is a culmination of three practical sessions (TD1, TD2, and TD3) carried out as part of the first year of the Application Development and 3D Engineering cycle at ESIEE-IT. The project was developed by a group of three students.
+
+TD1
+--------------------------------------------------------------
+### Prerequisites:
+* Basic Raylib project provided beforehand
+* Development of Cylindrical and Spherical structures
+* Implementation of Cartesian ↔ Cylindrical and Cartesian ↔ Spherical conversion methods:
+  * Cylindrical CartesianToCylindrical(Vector3 cart)
+  * Vector3 CylindricalToCartesian(Cylindrical cyl)
+  * Spherical CartesianToSpherical(Vector3 cart)
+  * Vector3 SphericalToCartesian(Spherical sph)
+
+### Objectives:
+* Applying the spherical coordinate system to the development of an orbital camera
+* Implementing C structures to define 3D primitive objects
+* Developing and optimizing rendering methods for these 3D objects using immediate OpenGL rendering
+
+### Additional goals:
+* Implementing rendering methods for a portion of a cylinder
+* Implementing rendering methods for a portion of a sphere
+
+
+TD2
+--------------------------------------------------------------
+### Prerequisites:
+* Basic Raylib project provided beforehand
+* Development of Cylindrical and Spherical structures
+* Implementation of Cartesian ↔ Cylindrical and Cartesian ↔ Spherical conversion methods:
+  * Cylindrical CartesianToCylindrical(Vector3 cart)
+  * Vector3 CylindricalToCartesian(Cylindrical cyl)
+  * Spherical CartesianToSpherical(Vector3 cart)
+  * Vector3 SphericalToCartesian(Spherical sph)
+* Sufficient progress in TD1 to have the display methods for 3D primitives used in TD2:
+  * Plane, Quad
+  * Disk
+  * Sphere
+  * Cylinder
+  * Capsule
+  * Box
+  * RoundedBox
+  
+### Objectives:
+* Implementing methods to calculate intersection between a segment and various 3D objects
+
+TD3
+--------------------------------------------------------------
+### Prerequisites:
+* Completion of TD1 and TD2, specifically:
+    * Display methods for Sphere and RoundedBox
+    * Intersection calculation method for a Segment and a RoundedBox
+
+### Objectives:
+* Modeling and implementing dynamic behavior of a Sphere subject to a gravitational field
+* Developing a collision detection method between a Sphere moving in a straight line and a single static Box (or RoundedBox)
+  * Calculating the Sphere's position and movement direction after rebound
+* Developing a collision detection method between a Sphere moving in a straight line and a group of static Boxes (or RoundedBoxes)
+  * Calculating the Sphere's position and movement direction after rebound
+  * This method relies on the previous method
+
+### Additional goals:
+* Developing a method for detecting multiple collisions (within one frame) between a Sphere moving in a straight line and a group of static Boxes (or RoundedBoxes)
+  * Calculating the Sphere's position and movement direction after rebound(s)
+  * This method also relies on the previous method
+
+Remarks
+--------------------------------------------------------------
+The main limitation of this project is the absence of the function "GetSphereNewPositionAndVelocityIfMultiCollidingWithRoundedBoxes" due to its complexity.
+During the development of our project, we realized that when using the Sphere-Vector<RoundedBox> collision, it could malfunction after multiple collisions.
+Possible areas of improvement include optimizing the algorithms and calculations in the code, but this would require a deeper understanding of certain mathematical concepts underlying this project.
+
+Conclusion
+--------------------------------------------------------------
+We found this project to be very interesting and enriching, although we initially spent a bit too much time understanding the workings of Raylib.
+
+Raylib README
+--------------------------------------------------------------
+
 <img align="left" src="https://github.com/raysan5/raylib/blob/master/logo/raylib_256x256.png" width=256>
 
-**raylib is a simple and easy-to-use library to enjoy videogames programming.**
+**Raylib is a simple and easy-to-use library to enjoy videogames programming.**
 
-raylib is highly inspired by Borland BGI graphics lib and by XNA framework and it's specially well suited for prototyping, tooling, graphical applications, embedded systems and education.
+Raylib is highly inspired by Borland BGI graphics lib and by XNA framework and it's specially well suited for prototyping, tooling, graphical applications, embedded systems and education.
 
-*NOTE for ADVENTURERS: raylib is a programming library to enjoy videogames programming; no fancy interface, no visual helpers, no auto-debugging... just coding in the most pure spartan-programmers way.*
+* NOTE for ADVENTURERS: Raylib is a programming library to enjoy videogames programming; no fancy interface, no visual helpers, no auto-debugging... just coding in the most pure spartan-programmers way.*
 
 Ready to learn? Jump to [code examples!](http://www.raylib.com/examples.html)
 
-<br>
-
 [![GitHub contributors](https://img.shields.io/github/contributors/raysan5/raylib)](https://github.com/raysan5/raylib/graphs/contributors)
 [![GitHub All Releases](https://img.shields.io/github/downloads/raysan5/raylib/total)](https://github.com/raysan5/raylib/releases)
-[![GitHub commits since tagged version](https://img.shields.io/github/commits-since/raysan5/raylib/3.5.0)](https://github.com/raysan5/raylib/commits/master)
 [![License](https://img.shields.io/badge/license-zlib%2Flibpng-blue.svg)](LICENSE)
-
 [![Chat on Discord](https://img.shields.io/discord/426912293134270465.svg?logo=discord)](https://discord.gg/VkzNHUE)
-[![GitHub stars](https://img.shields.io/github/stars/raysan5/raylib?style=social)](https://github.com/raysan5/raylib/stargazers)
-[![Twitter Follow](https://img.shields.io/twitter/follow/raysan5?style=social)](https://twitter.com/raysan5)
-[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/raylib?style=social)](https://www.reddit.com/r/raylib/)
 
 [![Windows](https://github.com/raysan5/raylib/workflows/Windows/badge.svg)](https://github.com/raysan5/raylib/actions?query=workflow%3AWindows)
 [![Linux](https://github.com/raysan5/raylib/workflows/Linux/badge.svg)](https://github.com/raysan5/raylib/actions?query=workflow%3ALinux)
@@ -26,9 +102,9 @@ Ready to learn? Jump to [code examples!](http://www.raylib.com/examples.html)
 [![Android](https://github.com/raysan5/raylib/workflows/Android/badge.svg)](https://github.com/raysan5/raylib/actions?query=workflow%3AAndroid)
 [![WebAssembly](https://github.com/raysan5/raylib/workflows/WebAssembly/badge.svg)](https://github.com/raysan5/raylib/actions?query=workflow%3AWebAssembly)
 
-features
+Raylib Features
 --------
-  - **NO external dependencies**, all required libraries are bundled into raylib
+  - **NO external dependencies**, all required libraries are bundled into Raylib
   - Multiple platforms supported: **Windows, Linux, MacOS, RPI, Android, HTML5... and more!**
   - Written in plain C code (C99) in PascalCase/camelCase notation
   - Hardware accelerated with OpenGL (**1.1, 2.1, 3.3 or ES 2.0**)
@@ -46,43 +122,37 @@ features
   - Bindings to [+50 programming languages](https://github.com/raysan5/raylib/blob/master/BINDINGS.md)!
   - Free and open source.
 
-raylib uses on its [core](https://github.com/raysan5/raylib/blob/master/src/core.c) module the outstanding [GLFW3](http://www.glfw.org/) library, embedded in the form of [rglfw](https://github.com/raysan5/raylib/blob/master/src/rglfw.c) module, to avoid external dependencies.
+Raylib uses on its [core](https://github.com/raysan5/raylib/blob/master/src/core.c) module the outstanding [GLFW3](http://www.glfw.org/) library, embedded in the form of [rglfw](https://github.com/raysan5/raylib/blob/master/src/rglfw.c) module, to avoid external dependencies.
 
-raylib uses on its [raudio](https://github.com/raysan5/raylib/blob/master/src/raudio.c) module, the amazing [miniaudio](https://github.com/dr-soft/miniaudio) library to support multiple platforms and multiple audio backends.
+Raylib uses on its [raudio](https://github.com/raysan5/raylib/blob/master/src/raudio.c) module, the amazing [miniaudio](https://github.com/dr-soft/miniaudio) library to support multiple platforms and multiple audio backends.
 
-raylib uses internally several single-file header-only libraries to support different fileformats loading and saving, all those libraries are embedded with raylib and available in [src/external](https://github.com/raysan5/raylib/tree/master/src/external) directory. Check [raylib Wiki](https://github.com/raysan5/raylib/wiki/raylib-dependencies) for a detailed list.
+Raylib uses internally several single-file header-only libraries to support different fileformats loading and saving, all those libraries are embedded with Raylib and available in [src/external](https://github.com/raysan5/raylib/tree/master/src/external) directory. Check [raylib Wiki](https://github.com/raysan5/raylib/wiki/raylib-dependencies) for a detailed list.
 
-*On Android platform, `native_app_glue` module (provided by Android NDK) and native Android libraries are used to manage window/context, inputs and activity life cycle.*
+* On Android platform, `native_app_glue` module (provided by Android NDK) and native Android libraries are used to manage window/context, inputs and activity life cycle.*
 
-*On Raspberry Pi 0,1,2,3 platform (native mode), `Videocore API` and `EGL` libraries are used for window/context management. Inputs are processed using `evdev` Linux libraries*
+* On Raspberry Pi 0,1,2,3 platform (native mode), `Videocore API` and `EGL` libraries are used for window/context management. Inputs are processed using `evdev` Linux libraries*
 
-*On Raspberry Pi 4 platform (native mode), `DRM subsystem` and `GBM API` libraries are used for window/context management. Inputs are processed using `evdev` Linux libraries*
+* On Raspberry Pi 4 platform (native mode), `DRM subsystem` and `GBM API` libraries are used for window/context management. Inputs are processed using `evdev` Linux libraries*
 
-*On Web platform, raylib uses `emscripten` provided libraries for several input events management, specially noticeable the touch events support.*
+* On Web platform, Raylib uses `emscripten` provided libraries for several input events management, specially noticeable the touch events support.*
 
-build and installation
+Build and Installation
 ----------------------
+Raylib binary releases for Windows, Linux and macOS are available at the [Github Releases page](https://github.com/raysan5/raylib/releases).
+Raylib is also available via multiple [package managers](https://github.com/raysan5/raylib/issues/613) on multiple OS distributions.
 
-raylib binary releases for Windows, Linux and macOS are available at the [Github Releases page](https://github.com/raysan5/raylib/releases).
-
-raylib is also available via multiple [package managers](https://github.com/raysan5/raylib/issues/613) on multiple OS distributions.
-
-#### Installing and building raylib via vcpkg
-
-You can download and install raylib using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
-
+#### Installing and building Raylib via vcpkg
+You can download and install Raylib using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
       git clone https://github.com/Microsoft/vcpkg.git
       cd vcpkg
       ./bootstrap-vcpkg.sh
       ./vcpkg integrate install
       vcpkg install raylib
 
-*The raylib port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.*
+* The Raylib port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.*
 
-#### Building raylib on multiple platforms
-
+#### Building Raylib on multiple platforms
 [raylib Wiki](https://github.com/raysan5/raylib/wiki#development-platforms) contains detailed instructions on building and usage on multiple platforms.
-
  - [Working on Windows](https://github.com/raysan5/raylib/wiki/Working-on-Windows)
  - [Working on macOS](https://github.com/raysan5/raylib/wiki/Working-on-macOS)
  - [Working on GNU Linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux)
@@ -93,19 +163,17 @@ You can download and install raylib using the [vcpkg](https://github.com/Microso
  - [Working for UWP (Universal Window Platform)](https://github.com/raysan5/raylib/wiki/Working-for-UWP)
  - [Working anywhere with CMake](https://github.com/raysan5/raylib/wiki/Working-with-CMake)
 
-*Note that Wiki is open for edit, if you find some issue while building raylib for your target platform, feel free to edit the Wiki or open and issue related to it.*
+* Note that Wiki is open for edit, if you find some issue while building Raylib for your target platform, feel free to edit the Wiki or open and issue related to it.*
 
-#### Using raylib with multiple IDEs
+#### Using Raylib with multiple IDEs
 
-raylib has been developed on Windows platform using [Notepad++](https://notepad-plus-plus.org/) and [MinGW GCC](http://mingw-w64.org/doku.php) compiler but it can be used with other IDEs on multiple platforms.
+Raylib has been developed on Windows platform using [Notepad++](https://notepad-plus-plus.org/) and [MinGW GCC](http://mingw-w64.org/doku.php) compiler but it can be used with other IDEs on multiple platforms.
+[Projects directory](https://github.com/raysan5/raylib/tree/master/projects) contains several ready-to-use **project templates** to build Raylib and code examples with multiple IDEs.
 
-[Projects directory](https://github.com/raysan5/raylib/tree/master/projects) contains several ready-to-use **project templates** to build raylib and code examples with multiple IDEs.
+* Note that there are lots of IDEs supported, some of the provided templates could require some review, please, if you find some issue with some template or you think they could be improved, feel free to send a PR or open a related issue.*
 
-*Note that there are lots of IDEs supported, some of the provided templates could require some review, please, if you find some issue with some template or you think they could be improved, feel free to send a PR or open a related issue.*
-
-contact
+Contact
 -------
-
    * Webpage: [http://www.raylib.com](http://www.raylib.com)
    * Discord: [https://discord.gg/raylib](https://discord.gg/VkzNHUE)
    * Twitter: [http://www.twitter.com/raysan5](http://www.twitter.com/raysan5)
@@ -114,9 +182,8 @@ contact
    * Patreon: [https://www.patreon.com/raylib](https://www.patreon.com/raylib)
    * YouTube: [https://www.youtube.com/channel/raylib](https://www.youtube.com/channel/UC8WIBkhYb5sBNqXO1mZ7WSQ)
 
-If you are using raylib and enjoying it, please, join our [Discord server](https://discord.gg/VkzNHUE) and let us know! :)
+If you are using Raylib and enjoying it, please, join our [Discord server](https://discord.gg/VkzNHUE) and let us know! :)
 
-license
+License
 -------
-
-raylib is licensed under an unmodified zlib/libpng license, which is an OSI-certified, BSD-like license that allows static linking with closed source software. Check [LICENSE](LICENSE) for further details.
+Raylib is licensed under an unmodified zlib/libpng license, which is an OSI-certified, BSD-like license that allows static linking with closed source software. Check [LICENSE](LICENSE) for further details.
