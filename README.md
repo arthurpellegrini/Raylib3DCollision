@@ -5,6 +5,13 @@ Description
 --------------------------------------------------------------
 This project is a culmination of three practical sessions (TD1, TD2, and TD3) carried out as part of the first year of the Application Development and 3D Engineering cycle at ESIEE-IT. The project was developed by a group of three students.
 
+Visual
+--------------------------------------------------------------
+
+Here is a screenshot of the 3D Primitives built.
+![3D Primitives][visuals]
+
+
 TD1
 --------------------------------------------------------------
 ### Prerequisites:
@@ -77,6 +84,9 @@ Possible areas of improvement include optimizing the algorithms and calculations
 Conclusion
 --------------------------------------------------------------
 We found this project to be very interesting and enriching, although we initially spent a bit too much time understanding the workings of Raylib.
+
+[//]: # (Reference link used in the body of the Markdown)
+[visuals]: https://i.goopics.net/s9nyf4.jpg
 
 Raylib README
 --------------------------------------------------------------
