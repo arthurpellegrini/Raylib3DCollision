@@ -3,7 +3,7 @@ Raylib C/C++ - Maths 3D Project
 
 Description
 --------------------------------------------------------------
-This project is a culmination of three practical sessions (TD1, TD2, and TD3) carried out as part of the first year of the Application Development and 3D Engineering cycle at ESIEE-IT. The project was developed by a group of three students.
+This project is a culmination of three practical sessions (TD1, TD2, and TD3) carried out as part of the first year of the Application Development and 3D Engineering cycle at ESIEE. The project was developed by a group of three students.
 
 Visual
 --------------------------------------------------------------
